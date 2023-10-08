@@ -6,7 +6,7 @@ import { ApiStack } from "./stacks/ApiStack";
 export default {
   config(_input) {
     return {
-      name: "codecatalyst-sst-app",
+      name: "uob-genai-quiz-generator",
       region: "us-east-1",
     };
   },
