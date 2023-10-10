@@ -2,6 +2,7 @@ import { SSTConfig } from "sst";
 import { FrontendStack } from "./stacks/FrontendStack";
 import { DBStack } from "./stacks/DBStack";
 import { ApiStack } from "./stacks/ApiStack";
+import { FunctionStack } from "./stacks/FunctionStack";
 
 export default {
   config(_input) {
@@ -16,6 +17,10 @@ export default {
       app.setDefaultRemovalPolicy("destroy");
     }
 
-    app.stack(DBStack).stack(ApiStack).stack(FrontendStack);
+    app
+      .stack(DBStack)
+      .stack(FunctionStack)
+      .stack(ApiStack)
+      .stack(FrontendStack);
   },
 } satisfies SSTConfig;

@@ -1,4 +1,4 @@
-import { Table, StackContext } from "sst/constructs";
+import { Bucket, Table, StackContext } from "sst/constructs";
 
 export function DBStack({ stack }: StackContext) {
   // Create the table
@@ -9,5 +9,7 @@ export function DBStack({ stack }: StackContext) {
     primaryIndex: { partitionKey: "counter" },
   });
 
-  return { table };
+  const materialBucket = new Bucket(stack, "Material-Bucket");
+
+  return { table, materialBucket };
 }
