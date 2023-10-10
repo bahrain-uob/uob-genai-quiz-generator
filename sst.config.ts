@@ -15,9 +15,7 @@ export default {
     if (app.stage !== "prod") {
       app.setDefaultRemovalPolicy("destroy");
     }
-    
-    app.stack(DBStack)
-    .stack(ApiStack)
-    .stack(FrontendStack);
-  }
+
+    app.stack(DBStack).stack(ApiStack).stack(FrontendStack);
+  },
 } satisfies SSTConfig;

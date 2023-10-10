@@ -11,9 +11,8 @@ import { StaticSite, StackContext, use } from "sst/constructs";
 import { ApiStack } from "./ApiStack";
 
 export function FrontendStack({ stack }: StackContext) {
+  const { api, apiCachePolicy } = use(ApiStack);
 
-  const {api, apiCachePolicy} = use(ApiStack);
-  
   // Deploy our React app
   const site = new StaticSite(stack, "ReactSite", {
     path: "packages/frontend",
@@ -39,7 +38,7 @@ export function FrontendStack({ stack }: StackContext) {
           },
         },
       },
-    }
+    },
   });
 
   // Show the URLs in the output
