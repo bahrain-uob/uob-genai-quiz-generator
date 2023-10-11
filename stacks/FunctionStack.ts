@@ -1,8 +1,10 @@
-import { StackContext, use } from "sst/constructs";
+import { Bucket, StackContext, use } from "sst/constructs";
 import { DBStack } from "./DBStack";
 
 export function FunctionStack({ stack }: StackContext) {
   const { materialBucket } = use(DBStack);
+
+  const materialText = new Bucket(stack, "Material-Text");
 
   materialBucket.addNotifications(stack, {
     pdf: {
