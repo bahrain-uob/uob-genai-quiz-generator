@@ -6,7 +6,11 @@ export function ApiStack({ stack }: StackContext) {
   // Create the HTTP API
   const api = new Api(stack, "Api", {
     routes: {
-      // TODO
+      "GET /courses": "packages/api/src/courses.get",
+      "GET /materials": "packages/api/src/materials.get",
+      "POST /materials": "packages/api/src/materials.post",
+      "GET /quizzes": "packages/api/src/quizzes.get",
+      "POST /quizzes": "packages/api/src/quizzes.post",
     },
   });
 
