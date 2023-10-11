@@ -2,17 +2,19 @@ import boto3
 from PyPDF2 import PdfReader
 import io
 from botocore.exceptions import ClientError
+import os
 
-s3 = boto3.client("s3")
+S3 = boto3.client("s3")
+OUTPUT_BUCKET = os.environ["OUTPUT_BUCKET"]
 
 
 def handler(event, context):
     text = ""
     bucket_name = event["Records"][0]["s3"]["bucket"]["name"]
-    fileName = event["Records"][0]["s3"]["object"]["key"]
+    object_key = event["Records"][0]["s3"]["object"]["key"]
 
     try:
-        response = s3.get_object(Bucket=bucket_name, Key=fileName)
+        response = S3.get_object(Bucket=bucket_name, Key=object_key)
         data = response["Body"].read()
         remote_file_bytes = io.BytesIO(data)
 
@@ -23,9 +25,7 @@ def handler(event, context):
             page = reader.pages[index]
             text += page.extract_text()
 
-        s3_key = fileName + ".txt"
-
-        response = s3.put_object(Body=text, Bucket=bucket_name, Key=s3_key)
+        response = S3.put_object(Body=text, Bucket=OUTPUT_BUCKET, Key=object_key)
 
     except ClientError as e:
         print(f"Error parsing the PDF: {e}")
