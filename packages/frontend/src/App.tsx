@@ -6,14 +6,6 @@ import "./App.css";
 function App() {
   const [count, setCount] = useState(0);
 
-  function onClick() {
-    fetch(import.meta.env.VITE_APP_API_URL, {
-      method: "POST",
-    })
-      .then((response) => response.text())
-      .then(setCount as any);
-  }
-
   return (
     <>
       <div>
@@ -26,7 +18,9 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button onClick={onClick}>count is {count ?? 0}</button>
+        <button onClick={() => setCount(count + 1)}>
+          count is {count ?? 0}
+        </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>

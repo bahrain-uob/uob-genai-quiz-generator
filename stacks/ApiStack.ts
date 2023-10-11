@@ -1,21 +1,12 @@
-import { Api, StackContext, use } from "sst/constructs";
-import { DBStack } from "./DBStack";
+import { Api, StackContext } from "sst/constructs";
 import { CacheHeaderBehavior, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 import { Duration } from "aws-cdk-lib/core";
 
 export function ApiStack({ stack }: StackContext) {
-  const { table } = use(DBStack);
-
   // Create the HTTP API
   const api = new Api(stack, "Api", {
-    defaults: {
-      function: {
-        // Bind the table name to our API
-        bind: [table],
-      },
-    },
     routes: {
-      "POST /": "packages/functions/src/lambda.main",
+      // TODO
     },
   });
 
