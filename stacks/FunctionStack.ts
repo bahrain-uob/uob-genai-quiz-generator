@@ -28,9 +28,20 @@ export function FunctionStack({ stack }: StackContext) {
           OUTPUT_BUCKET: materialText.bucketName,
         },
       },
-
       events: ["object_created"],
       filters: [{ suffix: ".docx" }],
+    },
+    pptx: {
+      function: {
+        handler: "packages/functions/src/process_pptx.handler",
+        runtime: "python3.11",
+        permissions: ["s3"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".pptx" }],
     },
   });
 
