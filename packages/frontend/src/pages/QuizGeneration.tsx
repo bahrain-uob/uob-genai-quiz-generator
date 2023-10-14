@@ -2,6 +2,8 @@ import { useState } from "react";
 import Titles from "../components/Title";
 import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
+import MaterialsTable from "../components/MaterialsTable";
+import QuizSetupForm from "../components/QuizSetup";
 
 function Quizzes() {
   const [stepNo, setStepNo] = useState(0);
@@ -12,12 +14,10 @@ function Quizzes() {
       <div className="context">
         <Titles title={["ITCS448 CLOUD COMPUTING", "Create quiz"]} />
       </div>
-      <StepProgressBar
-        stepNo={stepNo}
-      />
+      <StepProgressBar stepNo={stepNo} />
       <div className="step-container">
-        {stepNo == 0 && <h1>materials</h1>}
-        {stepNo == 1 && <h1>quiz</h1>}
+        {stepNo == 0 && <MaterialsTable isSelecting={true} />}
+        {stepNo == 1 && <QuizSetupForm />}
         {stepNo == 2 && <h1>question</h1>}
         {stepNo == 3 && <h1>review</h1>}
       </div>
