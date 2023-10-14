@@ -300,7 +300,7 @@ label {
   content: none;
 }
 .next,
-.back {
+.previous {
   margin-top: 40px;
   cursor: pointer;
   font-size: 15px;
@@ -309,9 +309,9 @@ label {
   border: none;
   color: #fff;
   padding: 10px 20px;
-  width: 80px;
+  width: 6rem;
   height: 45px;
-  border-radius: 9%;
+  border-radius: 6%;
   box-shadow: 1px 1px 2px #00000077;
   margin-left: 20px;
 }

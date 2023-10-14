@@ -22,9 +22,16 @@ function Quizzes() {
         {stepNo == 3 && <h1>review</h1>}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
-        <button className="next" onClick={() => setStepNo(stepNo + 1)}>
-          Next
-        </button>
+        {stepNo > 0 && (
+          <button className="previous" onClick={() => setStepNo(stepNo - 1)}>
+            Previous
+          </button>
+        )}
+        {stepNo < 4 && (
+          <button className="next" onClick={() => setStepNo(stepNo + 1)}>
+            Next
+          </button>
+        )}
       </div>
     </>
   );
