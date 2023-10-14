@@ -1,10 +1,17 @@
-import { Api, StackContext } from "sst/constructs";
+import { Api, StackContext, use } from "sst/constructs";
 import { CacheHeaderBehavior, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 import { Duration } from "aws-cdk-lib/core";
+import { DBStack } from "./DBStack";
 
 export function ApiStack({ stack }: StackContext) {
+  const { cluster } = use(DBStack);
   // Create the HTTP API
   const api = new Api(stack, "Api", {
+    defaults: {
+      function: {
+        bind: [cluster],
+      },
+    },
     routes: {
       "GET /courses": "packages/api/src/courses.get",
       "GET /materials": "packages/api/src/materials.get",
@@ -23,7 +30,7 @@ export function ApiStack({ stack }: StackContext) {
       "Accept",
       "Authorization",
       "Content-Type",
-      "Referer",
+      "Referer"
     ),
   });
 
