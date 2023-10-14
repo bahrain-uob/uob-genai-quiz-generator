@@ -458,39 +458,9 @@ input[type="time"] {
 /* upload section components for materials page */
 
 .upload-container {
-  background-color: #c9ada7;
-  border-radius: 10px;
   box-shadow: 2px 3px 5px #00000077;
-  display: Flex;
-  justify-content: center;
-  padding: 10px;
   margin-left: auto;
   margin-right: 10px;
-}
-.dropzone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.upload-container img {
-  width: 33px;
-  height: 33px;
-  margin: auto;
-}
-.upload-container p {
-  font-size: 9px;
-  text-align: center;
-}
-
-.upload-container button {
-  margin: auto;
-  border: none;
-  background-color: #ffffff;
-  box-shadow: 2px 2px 2px #00000077;
-  width: 70px;
-  height: 20px;
-  border-radius: 3px;
 }
 
 .materials table {
