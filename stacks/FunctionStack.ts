@@ -43,6 +43,18 @@ export function FunctionStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".pptx" }],
     },
+    mp4: {
+      function: {
+        handler: "packages/functions/src/process_video.lambda_handler",
+        runtime: "python3.11",
+        permissions: ["s3", "transcribe"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".mp4" }],
+    },
   });
 
   // This is an example of creating notification, modify for your use
