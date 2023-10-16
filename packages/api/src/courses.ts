@@ -28,3 +28,29 @@ export const get = async () => {
 
 }
 
+export const post = async (event: APIGatewayProxyEventV2) => {
+  if (!event.body) return { statusCode: 400 }
+
+  const course_name: string = JSON.parse(event.body).course_name;
+  if (!course_name) return { statusCode: 400 }
+
+  const course_id = randomUUID();
+
+  const command = new PutItemCommand({
+    TableName: Table.courses.tableName,
+    Item: {
+      // TODO get the user id from the authenticated request
+      "user_id": { "S": "1" },
+      "course_id": { "S": course_id },
+      "course_name": { "S": course_name }
+    }
+  })
+
+  try { await dynamodb.send(command) } catch { return { statusCode: 500 } }
+
+  return {
+    statusCode: 201,
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ course_id, course_name })
+  };
+}

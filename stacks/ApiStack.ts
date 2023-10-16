@@ -27,6 +27,7 @@ export function ApiStack({ stack }: StackContext) {
     },
     routes: {
       "GET /courses": "packages/api/src/courses.get",
+      "POST /courses": "packages/api/src/courses.post",
       "GET /materials": "packages/api/src/materials.get",
       "POST /materials": "packages/api/src/materials.post",
       "GET /quizzes": "packages/api/src/quizzes.get",
