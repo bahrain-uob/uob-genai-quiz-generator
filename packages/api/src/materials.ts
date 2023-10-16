@@ -1,10 +1,31 @@
-export async function get() {
+import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
+import { APIGatewayProxyEventV2 } from "aws-lambda";
+import { Bucket } from "sst/node/bucket";
+
+const s3 = new S3Client();
+
+export const get = async (event: APIGatewayProxyEventV2) => {
+  if (!event.body) return { statusCode: 400 }
+
+  const course_id: string = JSON.parse(event.body).course_id;
+  if (!course_id) return { statusCode: 400 }
+
+  const prefix = `${course_id}/`;
+  const command = new ListObjectsV2Command({
+    Bucket: Bucket["Material-Bucket"].bucketName,
+    Prefix: prefix,
+    StartAfter: prefix
+  })
+
+  let response;
+  try { response = await s3.send(command) } catch { return { statusCode: 500 } }
+  if (!response.Contents) return { statusCode: 200, headers: { "content-type": "application/json" }, body: "{}" }
+  let content = response.Contents.map(e => ({ key: e.Key?.slice(prefix.length), last_modified: e.LastModified, size: e.Size }));
+
   return {
     statusCode: 200,
-    body: JSON.stringify([
-      { name: "Chapter 1", size: 120, upload_date: "01-01-2023" },
-      { name: "Chapter 2", size: 240, upload_date: "02-02-2023" },
-    ]),
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(content)
   };
 }
 
