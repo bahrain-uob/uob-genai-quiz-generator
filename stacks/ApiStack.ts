@@ -1,10 +1,12 @@
 import { Api, StackContext, use } from "sst/constructs";
 import { CacheHeaderBehavior, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 import { Duration } from "aws-cdk-lib/core";
+import { DBStack } from "./DBStack";
 import { AuthStack } from "./AuthStack";
 
 export function ApiStack({ stack }: StackContext) {
   const { auth } = use(AuthStack);
+  const { materialBucket, quiz_bucket, courses_table } = use(DBStack);
 
   // Create the HTTP API
   const api = new Api(stack, "Api", {
@@ -19,6 +21,9 @@ export function ApiStack({ stack }: StackContext) {
     },
     defaults: {
       authorizer: "jwt",
+      function: {
+        bind: [materialBucket, quiz_bucket, courses_table]
+      },
     },
     routes: {
       "GET /courses": "packages/api/src/courses.get",
