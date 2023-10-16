@@ -203,12 +203,37 @@ label {
   padding: 40px;
   background-color: #00000006;
 }
+.create {
+  background-color: #c9ada7;
+  color: white;
+}
 .course-container:hover {
   background-color: #4a4e69e5;
   color: white;
   cursor: pointer;
 }
+.x {
+  width: 25px;
+  height: 25px;
+  margin-left: auto;
+  cursor: pointer;
+}
+.modal-content h1 {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  color: #4a4e69e5;
+  margin-bottom: 40px;
+}
+.modal-content {
+  text-align: center;
+}
+.modal-content button {
+  align-self: center;
+}
+
 /* end of courses page */
+
 /* create quiz page */
 
 .context {
