@@ -14,9 +14,8 @@ function StepProgressBar(props: { stepNo: number }) {
             />
           )}
         </div>
-        <div className="step-name">Select Material</div>
+        <div className="step-name">Select Course</div>
       </div>
-
       <div
         className={props.stepNo == 1 ? "stepper-item active" : "stepper-item"}
       >
@@ -28,7 +27,7 @@ function StepProgressBar(props: { stepNo: number }) {
             />
           )}
         </div>
-        <div className="step-name">Quiz Setup</div>
+        <div className="step-name">Select Material</div>
       </div>
 
       <div
@@ -42,14 +41,28 @@ function StepProgressBar(props: { stepNo: number }) {
             />
           )}
         </div>
+        <div className="step-name">Quiz Setup</div>
+      </div>
+
+      <div
+        className={props.stepNo == 3 ? "stepper-item active" : "stepper-item"}
+      >
+        <div className="step-counter">
+          {props.stepNo > 3 && (
+            <FontAwesomeIcon
+              icon={faCircleCheck}
+              style={{ color: "#3eb526", width: "20px", height: "20px" }}
+            />
+          )}
+        </div>
         <div className="step-name">Questions Setup</div>
       </div>
 
       <div
-        className={props.stepNo == 3 ? "stepper-item activ" : "stepper-item"}
+        className={props.stepNo == 4 ? "stepper-item active" : "stepper-item"}
       >
         <div className="step-counter">
-          {props.stepNo > 3 && (
+          {props.stepNo > 4 && (
             <FontAwesomeIcon
               icon={faCircleCheck}
               style={{ color: "#3eb526", width: "20px", height: "20px" }}

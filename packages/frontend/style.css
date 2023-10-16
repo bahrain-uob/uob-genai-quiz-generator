@@ -500,10 +500,36 @@ thead th {
   align-items: center;
   justify-content: center;
 }
-
-.materials img {
-  width: 30px;
-  height: 30px;
-  align-self: center;
-}
 /* end of materials page */
+/* Quiz Generation page */
+.courses-table {
+  margin-top: 100px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.courses-table td {
+  background-color: #f2e9e4;
+  border: none;
+  padding: 20px;
+  border-bottom: 1px solid #0000007c;
+}
+.courses-table tr {
+  border: none;
+  padding: 20px;
+}
+.courses-table table {
+  margin-top: 100px;
+  align-self: center;
+  margin: auto;
+  width: 100%;
+  max-width: 100%;
+  table-layout: fixed;
+  text-align: left;
+  letter-spacing: 3px;
+  border-collapse: collapse;
+  font-weight: lighter;
+}
+
+/* end of Quiz Generation page */
