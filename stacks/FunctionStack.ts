@@ -56,6 +56,17 @@ export function FunctionStack({ stack }: StackContext) {
       filters: [{ suffix: ".mp4" }],
     },
   });
+  materialText.addNotifications(stack, {
+    json: {
+      function: {
+        handler: "packages/functions/src/process_json.extract_transcript",
+        runtime: "python3.11",
+        permissions: ["s3"],
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".json" }],
+    },
+  });
 
   // This is an example of creating notification, modify for your use
   //
