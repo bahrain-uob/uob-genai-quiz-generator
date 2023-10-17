@@ -20,7 +20,7 @@ def lambda_handler(event, context):
                 'MediaFileUri': s3Path
             },
             OutputBucketName=os.environ["OUTPUT_BUCKET"],
-            OutputKey = jobName + '.txt'
+            OutputKey = jobName + '.json'
         )
 
         return {
