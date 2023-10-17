@@ -25,7 +25,9 @@ def handler(event, context):
             page = reader.pages[index]
             text += page.extract_text()
 
-        response = S3.put_object(Body=text, Bucket=OUTPUT_BUCKET, Key=object_key)
+        response = S3.put_object(
+            Body=text, Bucket=OUTPUT_BUCKET, Key=object_key + ".txt"
+        )
 
     except ClientError as e:
         print(f"Error parsing the PDF: {e}")
