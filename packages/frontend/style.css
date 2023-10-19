@@ -657,8 +657,8 @@ thead th {
   padding-bottom: 20px;
   flex-wrap: wrap;
 }
-.course-quiz-container h2 {
-  letter-spacing: 3px;
+.quizzes-container h1 {
+  letter-spacing: 5px;
   margin-bottom: 20px;
 }
 .course-quiz-container {
