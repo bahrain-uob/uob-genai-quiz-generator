@@ -694,6 +694,15 @@ thead th {
   background-color: #f5f5f5;
   margin-bottom: 20px;
   margin-left: 20px;
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+  cursor: pointer;
+  &:hover {
+    transform: scale(1);
+    box-shadow: 5px 20px 30px rgba(0, 0, 0, 0.2);
+    transform: translateY(5px);
+    transition: transform 0.5s;
+  }
 }
 .lines {
   border-left: 1px solid #ffaa9f;
@@ -713,36 +722,34 @@ thead th {
 }
 .spiral-1 {
   position: absolute;
-  border-top: 20px solid #9f9f9f;
+  border-top: 20px solid #f2e9e4;
   width: 10%;
-  top: -10px;
+  top: -2px;
   z-index: 2;
   left: 20%;
-  border-top-right-radius: 50px;
-  border-top-left-radius: 50px;
-  box-shadow: 2px 2px 2px #c6c6c6;
+  border-radius: 50px;
+  box-shadow: 0px 2px 2px #c6c6c6;
 }
 .spiral-2 {
   position: absolute;
-  border-top: 20px solid #9f9f9f;
+  border-top: 20px solid #f2e9e4;
   width: 10%;
-  top: -10px;
+  top: -2px;
   z-index: 2;
   left: 44%;
-  border-top-right-radius: 50px;
-  border-top-left-radius: 50px;
-  box-shadow: 2px 2px 2px #c6c6c6;
+  border-bottom-right-radius: 50px;
+  border-radius: 50px;
+  box-shadow: 1px 2px 2px #c6c6c6;
 }
 .spiral-3 {
   position: absolute;
-  border-top: 20px solid #9f9f9f;
+  border-top: 20px solid #f2e9e4;
   width: 10%;
-  top: -10px;
+  top: -2px;
   z-index: 2;
   left: 67%;
-  border-top-right-radius: 50px;
-  border-top-left-radius: 50px;
-  box-shadow: 2px 2px 2px #c6c6c6;
+  border-radius: 50px;
+  box-shadow: 1px 2px 2px #c6c6c6;
 }
 .information {
   position: absolute;
@@ -791,5 +798,11 @@ thead th {
 
 .contents span {
   font-size: 10px;
+}
+.contents span:hover {
+  text-decoration: underline;
+  transition: opacity 0.2s, transform 0.8s;
+  transform: scale(0.5);
+  transform: translateY(-200%);
 }
 /* end of quizzes page */

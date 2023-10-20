@@ -49,7 +49,6 @@ function Spirals() {
       <div className="spiral-1"></div>
       <div className="spiral-2"></div>
       <div className="spiral-3"></div>
-      <div className="spiral-4"></div>
     </>
   );
 }
