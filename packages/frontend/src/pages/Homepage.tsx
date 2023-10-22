@@ -238,12 +238,12 @@ const bg = {
   content: {
     background: "#F5F5F5",
   },
-  overlay: {
-    top: 40,
-    left: 280,
-    right: 280,
-    bottom: 40,
-    background: "rgba(245, 39, 145, 0)",
-  },
+  // overlay: {
+  //   top: 40,
+  //   left: 280,
+  //   right: 280,
+  //   bottom: 40,
+  //   background: "rgba(245, 39, 145, 0)",
+  // },
 };
 export default Homepage;
