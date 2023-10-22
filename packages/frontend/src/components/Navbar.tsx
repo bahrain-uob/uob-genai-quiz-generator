@@ -13,7 +13,7 @@ function Navbar() {
         </div>
 
         <div className="links">
-          <a href="/">
+          <a href="/home">
             {" "}
             <p>HOME</p>{" "}
           </a>
