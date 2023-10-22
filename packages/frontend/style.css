@@ -473,6 +473,19 @@ input[type="time"] {
   display: flex;
   justify-content: space-between;
 }
+.top-navbar p {
+  letter-spacing: 3px;
+  color: #4a4e69;
+  padding-top: 30px;
+  margin-right: 40px;
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+  cursor: pointer;
+  &:hover {
+    transform: translateY(5px);
+    transition: transform 0.5s;
+  }
+}
 .links p {
   margin-left: 10px;
   margin-right: 10px;
@@ -783,3 +796,11 @@ thead th {
   transform: translateY(-200%);
 }
 /* end of quizzes page */
+
+/* signin page */
+.auth-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+/* end of signin page */
