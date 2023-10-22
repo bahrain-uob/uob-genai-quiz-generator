@@ -74,7 +74,7 @@ function CreateCourse() {
           icon={faBook}
           style={{ color: "white", width: "3rem", height: "3rem" }}
         />
-        <h1>CREATE COURSE +</h1>
+        <h3>CREATE COURSE +</h3>
       </div>
       <Modal
         isOpen={modalIsOpen}
@@ -127,12 +127,12 @@ const bg = {
   content: {
     background: "#F5F5F5",
   },
-  overlay: {
-    top: 50,
-    left: 280,
-    right: 280,
-    bottom: 50,
-    background: "rgba(245, 39, 145, 0)",
-  },
+  // overlay: {
+  //   top: 50,
+  //   left: 280,
+  //   right: 280,
+  //   bottom: 50,
+  //   background: "rgba(245, 39, 145, 0)",
+  // },
 };
 export default Courses;
