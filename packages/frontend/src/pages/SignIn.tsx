@@ -35,7 +35,7 @@ export function Login() {
       <Authenticator loginMechanisms={['email']} components={{
         SignIn: {
           Header() {
-            return <h3>Login</h3>
+            return <h3>Sign In</h3>
           }
         },
         SignUp: {
