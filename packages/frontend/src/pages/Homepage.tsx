@@ -7,7 +7,7 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
-import { TextField } from "@aws-amplify/ui-react";
+import { TextField, useAuthenticator } from "@aws-amplify/ui-react";
 import Upload from "../components/Upload";
 
 import { useState } from "react";
@@ -191,6 +191,7 @@ import Logo from "../assets/Logo.svg";
 import { Link } from "react-router-dom";
 
 function Navbar() {
+  const { signOut } = useAuthenticator((context) => [context.signOut]);
   return (
     <div>
       <nav>
@@ -199,6 +200,10 @@ function Navbar() {
             <div className="logo">
               <img src={Logo} alt="logo" />
             </div>
+          </a>
+
+          <a onClick={signOut}>
+            <p>SIGN OUT</p>
           </a>
         </div>
 

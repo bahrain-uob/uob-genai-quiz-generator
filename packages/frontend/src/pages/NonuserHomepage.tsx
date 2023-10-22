@@ -10,10 +10,9 @@ function NonuserHomepage() {
     <>
       <div className="homepage-logo logo">
         <img src={Logo} alt="logo" />
-        <a href="/courses">
-          <a href="/signin">
-            <p>SIGN IN</p>
-          </a>
+
+        <a href="/signin">
+          <p>SIGN IN</p>
         </a>
       </div>
       <div className="nonuser-navbar">
