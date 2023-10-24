@@ -3,7 +3,6 @@ import { DBStack } from "./DBStack";
 
 export function FunctionStack({ stack }: StackContext) {
   const { materialBucket } = use(DBStack);
-
   const materialText = new Bucket(stack, "Material-Text");
 
   materialBucket.addNotifications(stack, {
@@ -55,6 +54,42 @@ export function FunctionStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".mp4" }],
     },
+    png: {
+      function: {
+        handler: "packages/functions/src/process_image.lambda_handler",
+        runtime: "python3.11",
+        permissions: ["s3", "textract"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".png" }],
+    },
+    jpg: {
+      function: {
+        handler: "packages/functions/src/process_image.lambda_handler",
+        runtime: "python3.11",
+        permissions: ["s3", "textract"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".jpg" }],
+    },
+    jpeg: {
+      function: {
+        handler: "packages/functions/src/process_image.lambda_handler",
+        runtime: "python3.11",
+        permissions: ["s3", "textract"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".jpeg" }],
+    },
   });
   materialText.addNotifications(stack, {
     json: {
@@ -67,7 +102,6 @@ export function FunctionStack({ stack }: StackContext) {
       filters: [{ suffix: ".json" }],
     },
   });
-
   // This is an example of creating notification, modify for your use
   //
   // materialBucket.addNotifications(stack, {
