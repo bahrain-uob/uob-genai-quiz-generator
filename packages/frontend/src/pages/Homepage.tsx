@@ -31,10 +31,7 @@ function Homepage() {
     <>
       <Navbar />
       <div className="homepage-container">
-        <h2>
-          EduCraft AI Creates captivating quizzes effortlessly with just a few
-          clicks!
-        </h2>
+        <h2>Start creating your quizzes with just four steps</h2>
         <div className="stepper-wrapper">
           <div className="stepper-item active">
             <div className="step-counter"></div>
@@ -56,8 +53,12 @@ function Homepage() {
         <div className="quick-access">
           <h2>Quick Access</h2>
           <div className="access-cards">
-            <div className="access-item">
-              <Link to="/createquiz" style={{ color: "black" }}>
+            <Link
+              to="/createquiz"
+              style={{ color: "black" }}
+              className="access-item"
+            >
+              <div>
                 <FontAwesomeIcon
                   icon={faFilePen}
                   size="4x"
@@ -65,11 +66,15 @@ function Homepage() {
                 />
 
                 <p>GENERATE QUIZ</p>
-              </Link>
-            </div>
+              </div>
+            </Link>
 
-            <div className="access-item">
-              <Link to="/quizzes" style={{ color: "black" }}>
+            <Link
+              to="/quizzes"
+              style={{ color: "black" }}
+              className="access-item"
+            >
+              <div>
                 <FontAwesomeIcon
                   icon={faFileLines}
                   size="4x"
@@ -77,8 +82,8 @@ function Homepage() {
                 />
 
                 <p>MY QUIZZES</p>
-              </Link>
-            </div>
+              </div>
+            </Link>
 
             <div className="access-item" onClick={openModal}>
               <FontAwesomeIcon
@@ -238,12 +243,12 @@ const bg = {
   content: {
     background: "#F5F5F5",
   },
-  overlay: {
-    top: 40,
-    left: 280,
-    right: 280,
-    bottom: 40,
-    background: "rgba(245, 39, 145, 0)",
-  },
+  // overlay: {
+  //   top: 40,
+  //   left: 280,
+  //   right: 280,
+  //   bottom: 40,
+  //   background: "rgba(245, 39, 145, 0)",
+  // },
 };
 export default Homepage;

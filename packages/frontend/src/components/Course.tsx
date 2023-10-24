@@ -8,9 +8,9 @@ function Course(props: { code: String; name: String; id: String }) {
         icon={faBook}
         style={{ color: "#C9ADA7", width: "3rem", height: "3rem" }}
       />
-      <h3>
+      <h4>
         {props.code} {props.name}
-      </h3>
+      </h4>
     </div>
   );
 }
