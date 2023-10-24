@@ -8,6 +8,7 @@ export function DBStack({ stack }: StackContext) {
     fields: {
       user_id: "string",
       course_id: "string",
+      course_code: "string",
       course_name: "string",
     },
     primaryIndex: { partitionKey: "user_id", sortKey: "course_id" },
