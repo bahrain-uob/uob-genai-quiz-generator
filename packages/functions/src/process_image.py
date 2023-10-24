@@ -70,19 +70,14 @@ def lambda_handler(event, context):
                 Key=output_key,
                 ContentType="text/plain",
             )
-
-            # Return a successful response
-            return {"statusCode": 200, "body": "Text extraction successful"}
         else:
             # Handle the case where the job has failed
             error_message = response.get("StatusMessage", "Text extraction failed")
             print(f"Error message: {error_message}")
-
             # Return an error response
-            return {"statusCode": 500, "body": "Text extraction failed"}
+            print("Text extraction failed")
     except Exception as e:
         # Handle any errors that occur during the text detection process
         print(f"Error: {str(e)}")
-
         # Return an error response
-        return {"statusCode": 500, "body": "Text extraction failed"}
+        print("Text extraction failed")
