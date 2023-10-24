@@ -572,7 +572,22 @@ input[type="time"] {
   margin-left: auto;
   margin-right: 10px;
 }
-
+.upload-button-1,
+.upload-button-2 {
+  background-color: #4a4e69;
+  color: white;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+.upload-button-2 {
+  margin-top: 20px;
+}
+.upload-button-1 {
+  margin-left: auto;
+  margin-right: 10rem;
+}
 .materials table {
   margin-top: 100px;
   align-self: center;
