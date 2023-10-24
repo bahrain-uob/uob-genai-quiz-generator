@@ -3,6 +3,7 @@ import { FrontendStack } from "./stacks/FrontendStack";
 import { DBStack } from "./stacks/DBStack";
 import { ApiStack } from "./stacks/ApiStack";
 import { FunctionStack } from "./stacks/FunctionStack";
+import { AuthStack } from "./stacks/AuthStack";
 
 export default {
   config(_input) {
@@ -20,6 +21,7 @@ export default {
     app
       .stack(DBStack)
       .stack(FunctionStack)
+      .stack(AuthStack)
       .stack(ApiStack)
       .stack(FrontendStack);
   },

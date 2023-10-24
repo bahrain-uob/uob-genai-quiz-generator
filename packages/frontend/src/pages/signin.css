@@ -1,0 +1,21 @@
+[data-amplify-authenticator] {
+  --amplify-components-button-link-color: #4a4e69;
+  --amplify-components-button-primary-background-color: #4a4e69;
+  --amplify-components-button-primary-hover-background-color: #4a4e69da;
+
+  --amplify-components-tabs-item-active-border-color: #4a4e69;
+  --amplify-components-tabs-item-active-color: #4a4e69;
+  --amplify-components-tabs-item-hover-color: #4a4e69;
+
+  --amplify-components-field-label-color: #4a4e69;
+}
+
+h3 {
+  margin: auto;
+  text-align: center;
+  letter-spacing: 3px;
+  padding-top: 1em;
+  color: #4a4e69;
+  font-size: 2em;
+  padding-bottom: 20px;
+}

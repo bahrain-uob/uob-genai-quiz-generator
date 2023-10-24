@@ -42,6 +42,18 @@ export function FunctionStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".pptx" }],
     },
+    mp4: {
+      function: {
+        handler: "packages/functions/src/process_video.lambda_handler",
+        runtime: "python3.11",
+        permissions: ["s3", "transcribe"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".mp4" }],
+    },
     png: {
       function: {
         handler: "packages/functions/src/process_image.lambda_handler",
@@ -77,6 +89,17 @@ export function FunctionStack({ stack }: StackContext) {
       },
       events: ["object_created"],
       filters: [{ suffix: ".jpeg" }],
+    },
+  });
+  materialText.addNotifications(stack, {
+    json: {
+      function: {
+        handler: "packages/functions/src/process_json.extract_transcript",
+        runtime: "python3.11",
+        permissions: ["s3"],
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".json" }],
     },
   });
   // This is an example of creating notification, modify for your use

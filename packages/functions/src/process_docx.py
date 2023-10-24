@@ -20,7 +20,9 @@ def handler(event, context):
 
         text = docx2txt.process(remote_file_bytes)
 
-        response = s3.put_object(Body=text, Bucket=OUTPUT_BUCKET, Key=object_key)
+        response = s3.put_object(
+            Body=text, Bucket=OUTPUT_BUCKET, Key=object_key + ".txt"
+        )
 
     except ClientError as e:
         print(f"Error parsing the word file : {e}")

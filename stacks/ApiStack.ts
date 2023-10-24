@@ -1,10 +1,25 @@
-import { Api, StackContext } from "sst/constructs";
+import { Api, StackContext, use } from "sst/constructs";
 import { CacheHeaderBehavior, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 import { Duration } from "aws-cdk-lib/core";
+import { AuthStack } from "./AuthStack";
 
 export function ApiStack({ stack }: StackContext) {
+  const { auth } = use(AuthStack);
+
   // Create the HTTP API
   const api = new Api(stack, "Api", {
+    authorizers: {
+      jwt: {
+        type: "user_pool",
+        userPool: {
+          id: auth.userPoolId,
+          clientIds: [auth.userPoolClientId],
+        },
+      },
+    },
+    defaults: {
+      authorizer: "jwt",
+    },
     routes: {
       // TODO
     },
