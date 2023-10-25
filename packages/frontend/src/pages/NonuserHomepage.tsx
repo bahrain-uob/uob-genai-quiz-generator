@@ -34,7 +34,7 @@ function NonuserHomepage() {
             on a journey of continuous learning!
           </p>
         </div>
-        <a href="/signup">
+        <a href="/signin">
           <button>START NOW</button>
         </a>
       </div>
