@@ -8,19 +8,12 @@ function Quizzes() {
   return (
     <>
       <Navrbar />
-      <Title title={["My Quizzes"]} />
-      <Link to="/createquiz">
-        <button
-          className="generate-button"
-          style={{
-            position: "absolute",
-            right: "100px",
-            top: "55%",
-          }}
-        >
-          Generate Quiz
-        </button>
-      </Link>
+      <div className="top-quizzes">
+        <Title title={["My Quizzes"]} />
+        <Link style={{ marginLeft: "auto" }} to="/createquiz">
+          <button className="generate-button">Generate Quiz</button>
+        </Link>
+      </div>
 
       <div className="container">
         <div className="course-quiz-container">
@@ -35,7 +28,7 @@ function Quizzes() {
           <h2>ITCS444 Mobile Application</h2>
           <div className="quizzes-container">
             <Link to="/createquiz">
-              <button className="generate-button">Generate Quiz</button>
+              <button className="generate-button-2">Generate Quiz</button>
             </Link>
           </div>
         </div>
