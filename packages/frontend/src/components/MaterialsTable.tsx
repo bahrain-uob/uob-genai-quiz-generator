@@ -32,6 +32,17 @@ function MaterialsTable({
     setMaterials(results);
   };
 
+  const deleteMaterial = async (index: number) => {
+    const name = materials[index].key;
+    const copy = [...materials];
+    copy.splice(index, 1);
+    setMaterials(copy);
+
+    const userId = await getUserId();
+    const key = `${userId}/${courseId}/materials/${name}`;
+    await Storage.remove(key);
+  };
+
   return (
     <div className="materials">
       <table>
@@ -45,7 +56,7 @@ function MaterialsTable({
           </tr>
         </thead>
         <tbody>
-          {materials.map((material: any) => (
+          {materials.map((material: any, index: number) => (
             <tr>
               <td>
                 {isSelecting ? (
@@ -58,7 +69,16 @@ function MaterialsTable({
               <td>{material.size}</td>
               <td>{material.lastModified}</td>
               <td>
-                {!isSelecting && <FontAwesomeIcon icon={faTrash} size="xl" />}
+                {!isSelecting && (
+                  <FontAwesomeIcon
+                    style={{ cursor: "pointer" }}
+                    icon={faTrash}
+                    size="xl"
+                    onClick={() => {
+                      deleteMaterial(index);
+                    }}
+                  />
+                )}
               </td>
             </tr>
           ))}
