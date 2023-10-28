@@ -33,7 +33,10 @@ function Courses() {
     course_code: string,
     course_name: string
   ) {
-    nav("/materials", { state: { course_id, course_code, course_name } });
+    localStorage.setItem("courseId", course_id);
+    localStorage.setItem("courseCode", course_code);
+    localStorage.setItem("courseName", course_name);
+    nav("/materials");
   }
 
   return (

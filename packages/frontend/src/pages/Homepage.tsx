@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
 import { TextField, useAuthenticator } from "@aws-amplify/ui-react";
-import Upload from "../components/Upload";
+// import Upload from "../components/Upload";
 
 import { useState } from "react";
 function Homepage() {
@@ -178,7 +178,7 @@ function Homepage() {
                       height: "200px",
                     }}
                   >
-                    <Upload />
+                    {/* <Upload /> */}
                   </div>
                   <div className="input-container"></div>
                   <button className="next">Upload</button>
