@@ -8,20 +8,32 @@ import { faBook, faX } from "@fortawesome/free-solid-svg-icons";
 import { TextField } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { API } from "aws-amplify";
+import { useNavigate } from "react-router-dom";
 
 interface Course {
-  id: String,
-  code: String,
-  name: String,
+  id: string;
+  code: string;
+  name: string;
 }
 
 function Courses() {
   const [courses, setCourses] = useState([] as Course[]);
-  useEffect(() => { updateCourses() }, []);
+  useEffect(() => {
+    updateCourses();
+  }, []);
 
   const updateCourses = async () => {
     let courses = await API.get("api", "/courses", {});
     setCourses(courses);
+  };
+
+  const nav = useNavigate();
+  function navigate(
+    course_id: string,
+    course_code: string,
+    course_name: string
+  ) {
+    nav("/materials", { state: { course_id, course_code, course_name } });
   }
 
   return (
@@ -30,7 +42,13 @@ function Courses() {
       <Title title={["My Courses"]} />
       <div className="courses-container">
         {courses.map((course) => (
-          <Course id={course.id} code={course.code} name={course.name} />
+          <div
+            onClick={() => {
+              navigate(course.id, course.code, course.name);
+            }}
+          >
+            <Course id={course.id} code={course.code} name={course.name} />
+          </div>
         ))}
         <CreateCourse updateCourses={updateCourses} />
       </div>
@@ -46,7 +64,7 @@ function CreateCourse({ updateCourses }: any) {
   const createCourse = async () => {
     setModal(false);
     API.post("api", "/courses", {
-      body: { code, name }
+      body: { code, name },
     }).then(updateCourses);
   };
 
@@ -85,7 +103,9 @@ function CreateCourse({ updateCourses }: any) {
                 backgroundColor: "white",
                 width: "30rem",
               }}
-              onChange={(e) => { setCode(e.target.value) }}
+              onChange={(e) => {
+                setCode(e.target.value);
+              }}
             />
           </div>
           <div className="input-container">
@@ -97,9 +117,13 @@ function CreateCourse({ updateCourses }: any) {
                 backgroundColor: "white",
                 width: "30rem",
               }}
-              onChange={(e) => { setName(e.target.value) }}
+              onChange={(e) => {
+                setName(e.target.value);
+              }}
             />
-            <button className="next" onClick={createCourse}>Create</button>
+            <button className="next" onClick={createCourse}>
+              Create
+            </button>
           </div>
         </div>
       </Modal>

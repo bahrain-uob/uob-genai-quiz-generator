@@ -6,8 +6,11 @@ import Upload from "../components/Upload";
 import Modal from "react-modal";
 import { useState } from "react";
 import { faX, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { useLocation } from "react-router-dom";
+
 function Materials() {
   const [modalIsOpen, setIsOpen] = useState(false);
+  const { course_id, course_code, course_name } = useLocation().state as any;
 
   function openModal() {
     setIsOpen(true);
@@ -20,7 +23,7 @@ function Materials() {
     <div>
       <Navbar />
       <div className="top-materials">
-        <Titles title={["ITCS448 Cloud Computing", "Course Content"]} />
+        <Titles title={[`${course_code} ${course_name}`, "Course Content"]} />
         <button className="upload-button-1" onClick={openModal}>
           <FontAwesomeIcon
             icon={faCloudArrowUp}
