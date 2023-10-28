@@ -8,7 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
 import { TextField, useAuthenticator } from "@aws-amplify/ui-react";
-import Upload from "../components/Upload";
+// import Upload from "../components/Upload";
 
 import { useState } from "react";
 function Homepage() {
@@ -178,7 +178,7 @@ function Homepage() {
                       height: "200px",
                     }}
                   >
-                    <Upload />
+                    {/* <Upload /> */}
                   </div>
                   <div className="input-container"></div>
                   <button className="next">Upload</button>
@@ -214,24 +214,16 @@ function Navbar() {
 
         <div className="links homepage">
           <a href="/">
-            {" "}
-            <p>HOME</p>{" "}
+            <p>HOME</p>
           </a>
           <a href="/courses">
-            {" "}
-            <p>COURSES</p>{" "}
-          </a>
-          <a href="/dashboard">
-            {" "}
-            <p>DASHBOARD</p>{" "}
+            <p>COURSES</p>
           </a>
           <a href="/quizzes">
-            {" "}
-            <p>QUIZZES</p>{" "}
+            <p>QUIZZES</p>
           </a>
-          <a href="/materials">
-            {" "}
-            <p>MATERIALS</p>{" "}
+          <a href="/createquiz">
+            <p>CREATE QUIZ</p>
           </a>
         </div>
       </nav>

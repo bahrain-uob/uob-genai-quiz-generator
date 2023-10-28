@@ -13,7 +13,7 @@ a {
   margin-top: 20px;
 }
 .title {
-  margin-top: 10rem;
+  margin-top: 1rem;
   background-color: #4a4e69;
   color: white;
   letter-spacing: 4px;
@@ -294,7 +294,7 @@ label {
 /* create quiz page */
 
 .context {
-  margin-top: 170px;
+  margin-top: 1rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -559,7 +559,7 @@ input[type="time"] {
   /* margin-left:6px; */
 }
 .top-materials {
-  margin-top: 170px;
+  margin-top: 1rem;
   display: flex;
   flex-direction: row;
   align-items: center;

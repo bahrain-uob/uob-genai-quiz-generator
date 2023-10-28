@@ -1,7 +1,48 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { Storage } from "aws-amplify";
+import { getUserId } from "../lib/helpers";
+import { filesize } from "filesize";
 
-function MaterialsTable(props: { isSelecting: boolean }) {
+function MaterialsTable({
+  isSelecting,
+  courseId,
+}: {
+  isSelecting: boolean;
+  courseId: string;
+}) {
+  const [materials, setMaterials] = useState([] as any);
+  useEffect(() => {
+    updateMaterial();
+  }, []);
+
+  const updateMaterial = async () => {
+    let userId = await getUserId();
+    let { results } = await Storage.list(`${userId}/${courseId}/materials/`, {
+      pageSize: 1000,
+    });
+    const prefix_len = userId.length + courseId.length + 9 + 3;
+    results.forEach((obj) => {
+      obj.key = obj.key!.slice(prefix_len);
+      obj.lastModified = obj.lastModified!.toLocaleDateString("en-GB") as any;
+      obj.size = filesize(obj.size!, { round: 0 }) as any;
+    });
+
+    setMaterials(results);
+  };
+
+  const deleteMaterial = async (index: number) => {
+    const name = materials[index].key;
+    const copy = [...materials];
+    copy.splice(index, 1);
+    setMaterials(copy);
+
+    const userId = await getUserId();
+    const key = `${userId}/${courseId}/materials/${name}`;
+    await Storage.remove(key);
+  };
+
   return (
     <div className="materials">
       <table>
@@ -14,43 +55,33 @@ function MaterialsTable(props: { isSelecting: boolean }) {
             <th></th>
           </tr>
         </thead>
-
         <tbody>
-          <tr>
-            <td>
-              {props.isSelecting ? (
-                <input type="checkbox" />
-              ) : (
-                <FontAwesomeIcon icon={faFile} size="xl" />
-              )}
-            </td>
-            <td>Chapter 1.pdf</td>
-            <td>5 MB</td>
-            <td>29/09/2023</td>
-            <td>
-              {!props.isSelecting && (
-                <FontAwesomeIcon icon={faTrash} size="xl" />
-              )}
-            </td>
-          </tr>
-
-          <tr>
-            <td>
-              {props.isSelecting ? (
-                <input type="checkbox" />
-              ) : (
-                <FontAwesomeIcon icon={faFile} size="xl" />
-              )}
-            </td>
-            <td>Chapter 2.docx</td>
-            <td>10 MB</td>
-            <td>06/10/2023</td>
-            <td>
-              {!props.isSelecting && (
-                <FontAwesomeIcon icon={faTrash} size="xl" />
-              )}
-            </td>
-          </tr>
+          {materials.map((material: any, index: number) => (
+            <tr>
+              <td>
+                {isSelecting ? (
+                  <input type="checkbox" />
+                ) : (
+                  <FontAwesomeIcon icon={faFile} size="xl" />
+                )}
+              </td>
+              <td>{material.key}</td>
+              <td>{material.size}</td>
+              <td>{material.lastModified}</td>
+              <td>
+                {!isSelecting && (
+                  <FontAwesomeIcon
+                    style={{ cursor: "pointer" }}
+                    icon={faTrash}
+                    size="xl"
+                    onClick={() => {
+                      deleteMaterial(index);
+                    }}
+                  />
+                )}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

@@ -14,24 +14,16 @@ function Navbar() {
 
         <div className="links">
           <a href="/">
-            {" "}
-            <p>HOME</p>{" "}
+            <p>HOME</p>
           </a>
           <a href="/courses">
-            {" "}
-            <p>COURSES</p>{" "}
-          </a>
-          <a href="/dashboard">
-            {" "}
-            <p>DASHBOARD</p>{" "}
+            <p>COURSES</p>
           </a>
           <a href="/quizzes">
-            {" "}
-            <p>QUIZZES</p>{" "}
+            <p>QUIZZES</p>
           </a>
-          <a href="/materials">
-            {" "}
-            <p>MATERIALS</p>{" "}
+          <a href="/createquiz">
+            <p>CREATE QUIZ</p>
           </a>
         </div>
       </nav>

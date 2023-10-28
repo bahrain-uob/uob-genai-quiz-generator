@@ -2,12 +2,23 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import MaterialsTable from "../components/MaterialsTable";
 import Navbar from "../components/Navbar";
 import Titles from "../components/Title";
-import Upload from "../components/Upload";
+import { StorageManager } from "@aws-amplify/ui-react-storage";
+import "@aws-amplify/ui-react/styles.css";
 import Modal from "react-modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { faX, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { getUserId } from "../lib/helpers";
+
 function Materials() {
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [userId, setUserId] = useState("");
+  useEffect(() => {
+    getUserId(setUserId);
+  }, []);
+
+  const course_id = localStorage.getItem("courseId")!;
+  const course_code = localStorage.getItem("courseCode");
+  const course_name = localStorage.getItem("courseName");
 
   function openModal() {
     setIsOpen(true);
@@ -20,7 +31,7 @@ function Materials() {
     <div>
       <Navbar />
       <div className="top-materials">
-        <Titles title={["ITCS448 Cloud Computing", "Course Content"]} />
+        <Titles title={[`${course_code} ${course_name}`, "Course Content"]} />
         <button className="upload-button-1" onClick={openModal}>
           <FontAwesomeIcon
             icon={faCloudArrowUp}
@@ -47,12 +58,17 @@ function Materials() {
           </div>
           <div className="modal-content">
             <h3>Upload Course Content</h3>
-            <Upload />
-            <button className="upload-button-2">Upload</button>
+            <div className="upload-container">
+              <StorageManager
+                maxFileCount={5}
+                accessLevel="public"
+                path={`${userId}/${course_id}/materials/`}
+              />
+            </div>
           </div>
         </Modal>
       </div>
-      <MaterialsTable isSelecting={false} />
+      <MaterialsTable courseId={course_id} isSelecting={false} />
     </div>
   );
 }
