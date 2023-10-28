@@ -660,6 +660,11 @@ thead th {
 /* end of Quiz Generation page */
 
 /* quizzes page */
+.top-quizzes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 .container {
   display: flex;
   justify-content: center;
@@ -696,8 +701,21 @@ thead th {
   background-color: #4a4e69;
   color: white;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: 10rem;
+  margin-top: 10rem;
+}
+.generate-button-2 {
+  background-color: #4a4e69;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  margin: auto;
 }
 .quiz-item {
   text-align: center;

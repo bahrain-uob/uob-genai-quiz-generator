@@ -114,9 +114,7 @@
   justify-content: center;
   gap: 30px;
 }
-.card img {
-  width: 24rem;
-}
+
 .card p {
   font-weight: lighter;
   line-height: 25px;
@@ -130,21 +128,28 @@
   letter-spacing: 0px;
 }
 .card {
-  flex-basis: 33.3333%;
+  /* flex-basis: 33.33333%; */
   border-radius: 3px;
   border: 1px solid #9d9a9a;
   text-align: left;
-  width: 25rem;
+  width: 26rem;
   padding: 15px;
   box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.356);
   transform: scale(0.95);
   transition: box-shadow 0.5s, transform 0.5s;
+  overflow: hidden;
   &:hover {
     transform: scale(1);
     box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.372);
     transform: translateY(5px);
     transition: transform 0.5s;
   }
+}
+.card img {
+  width: 24rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 footer {
   font-weight: 100;
