@@ -116,4 +116,5 @@ export function FunctionStack({ stack }: StackContext) {
   //     filters: [{ suffix: ".txt" }],
   //   },
   // });
+  return { materialText };
 }
