@@ -38,6 +38,28 @@ export function ApiStack({ stack }: StackContext) {
           },
         },
       },
+      "POST /TrueFalse": {
+        function: {
+          handler: "packages/api/src/questionsGen.TF",
+          runtime: "python3.11",
+          // permissions : "*"
+          permissions: ["sagemaker", "s3"],
+          environment: {
+            TEXT_BUCKET: materialText.bucketName,
+          },
+        },
+      },
+      "POST /FillTheBlank": {
+        function: {
+          handler: "packages/api/src/questionsGen.fill_in_blank",
+          runtime: "python3.11",
+          // permissions : "*"
+          permissions: ["sagemaker", "s3"],
+          environment: {
+            TEXT_BUCKET: materialText.bucketName,
+          },
+        },
+      },
       "GET /courses": "packages/api/src/courses.get",
       "POST /courses": "packages/api/src/courses.post",
       "GET /materials": "packages/api/src/materials.get",
