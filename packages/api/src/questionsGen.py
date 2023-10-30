@@ -17,11 +17,13 @@ Ronaldo began his professional career with Sporting CP at age 17 in 2002, and si
 response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
 import re
 
+number = 2
+
 
 def create(prompt):
     # parameters needed,
     # type : the type of question MCQ
-    # text : course_id
+    # text : object key
     # number : number of questions
     # id : for fetching the material
 
@@ -46,11 +48,12 @@ def create(prompt):
     parse = re.search(r"{\n(.*?)}", result, re.DOTALL).group(0)
     print("--------------------------------------------")
     print(parse)
+    return parse
 
 
 def MCQ(event, context):
-    # number = event["number"]
-    number = 2
+    number = event["number"]
+    # topic = event["key"]
     prompt = """
     Human: i want you to generate 1 MCQ question about Albert Einestein
     The output should be a code snippet formatted in the following schema with only one correct answer:
@@ -78,6 +81,7 @@ def MCQ(event, context):
       "choices": ["print('string')", "print \"string\"", "printf('string')", "console.log('string')"],
       "correct_answer_index": 0  
     }
+    
     Human: i want you to generate 1 MCQ question about {{topic}}
     The output should be a code snippet formatted in the following schema with only one correct answer
     {
@@ -89,13 +93,12 @@ def MCQ(event, context):
 
     prompt = prompt.replace("{{topic}}", topic)
     for index in range(number):
-        create(prompt)
-        create(prompt)
+        ali = create(prompt)
+        # prompt= prompt + json.dumps(ali ,indent=2) + "\nAssistant:" #test
 
 
 def TF(event, context):
-    # number = event["number"]
-    number = 2
+    number = event["number"]
     prompt = """
     Human: i want you to generate 1 true or false question about Albert Einestein
     The output should be a code snippet formatted in the following schema with only one correct answer:
@@ -129,5 +132,44 @@ def TF(event, context):
     Assistant:"""
 
     prompt = prompt.replace("{{topic}}", topic)
-    create(prompt)
-    create(prompt)
+    for index in range(number):
+        create(prompt)
+
+
+def fill_in_blank(event, context):
+    number = event["number"]
+    prompt = """
+    Human: i want you to generate 1 true or false question about Albert Einestein
+    The output should be a code snippet formatted in the following schema with only one correct answer:
+    {
+      "question": string // the question
+      "correct_answer": string // the index of the correct choice assuming 0-indexing
+    }
+    Assistant:
+    {
+      "question": " is Albert Einstein's most famous equation E=mc^2 ?",
+      "correct_answer": "True"
+    }
+    Human: i want you to generate 1 true or false question about python
+    The output should be a code snippet formatted in the following schema with only one correct answer
+    {
+      "question": string // the question
+      "correct_answer": string // the index of the correct choice assuming 0-indexing
+    }
+    Assistant:
+    {
+      "question": " is the correct syntax to print a string in Python console.log('string')",
+      "correct_answer": False   
+    }
+    Human: i want you to generate 1 MCQ question about {{topic}}
+    The output should be a code snippet formatted in the following schema with only one correct answer
+    {
+      "question": string // the question
+      "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
+      "correct_answer_index": string // the index of the correct choice assuming 0-indexing
+    }
+    Assistant:"""
+
+    prompt = prompt.replace("{{topic}}", topic)
+    for index in range(number):
+        create(prompt)
