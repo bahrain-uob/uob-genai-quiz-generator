@@ -13,14 +13,21 @@ export function AuthStack({ stack }: StackContext) {
       actions: ["s3:*"],
       effect: iam.Effect.ALLOW,
       resources: [
-        // this doesn't work for some reason
-        // `${materialBucket.bucketArn}/\${cognito-identity.amazonaws.com:sub}/*`,
-        // currently we give user access to the whole bukcet which is a *HUGE* security flaw
-        `${materialBucket.bucketArn}`,
-        `${materialBucket.bucketArn}/`,
-        `${materialBucket.bucketArn}/*`,
+        `${materialBucket.bucketArn}/\${cognito-identity.amazonaws.com:sub}`,
+        `${materialBucket.bucketArn}/\${cognito-identity.amazonaws.com:sub}/`,
+        `${materialBucket.bucketArn}/\${cognito-identity.amazonaws.com:sub}/*`,
       ],
     }) as any,
+    new iam.PolicyStatement({
+      actions: ["s3:*"],
+      effect: iam.Effect.ALLOW,
+      resources: [`${materialBucket.bucketArn}`],
+      conditions: {
+        StringLike: {
+          "s3:prefix": ["${cognito-identity.amazonaws.com:sub}/*"],
+        },
+      },
+    }),
   ]);
 
   stack.addOutputs({
