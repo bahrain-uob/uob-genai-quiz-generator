@@ -5,6 +5,7 @@ import StepProgressBar from "../components/StepProgressBar";
 import MaterialsTable from "../components/MaterialsTable";
 import QuizSetupForm from "../components/QuizSetup";
 import QuestionsSetup from "../components/QuestionsSetup";
+import Review from "../components/Review";
 import { API } from "aws-amplify";
 
 function Quizzes() {
@@ -25,7 +26,7 @@ function Quizzes() {
         )}
         {stepNo == 2 && <QuizSetupForm />}
         {stepNo == 3 && <QuestionsSetup />}
-        {stepNo == 4 && <h1>review</h1>}
+        {stepNo == 4 && <Review />}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {stepNo > 0 && (
