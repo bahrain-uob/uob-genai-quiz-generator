@@ -11,6 +11,9 @@ import { API } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import { navAtom } from "../lib/navStore";
 import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
+
+const coursesAtom = atomWithStorage("coursesList", [] as Course[]);
 
 interface Course {
   id: string;
@@ -19,7 +22,7 @@ interface Course {
 }
 
 function Courses() {
-  const [courses, setCourses] = useState([] as Course[]);
+  const [courses, setCourses] = useAtom(coursesAtom);
   useEffect(() => {
     updateCourses();
   }, []);
