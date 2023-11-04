@@ -9,6 +9,11 @@ import { TextField } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { API } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
+import { navAtom } from "../lib/navStore";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
+
+const coursesAtom = atomWithStorage("coursesList", [] as Course[]);
 
 interface Course {
   id: string;
@@ -17,7 +22,7 @@ interface Course {
 }
 
 function Courses() {
-  const [courses, setCourses] = useState([] as Course[]);
+  const [courses, setCourses] = useAtom(coursesAtom);
   useEffect(() => {
     updateCourses();
   }, []);
@@ -27,16 +32,15 @@ function Courses() {
     setCourses(courses);
   };
 
-  const nav = useNavigate();
+  const navigation = useNavigate();
+  const [_, setNav] = useAtom(navAtom);
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
-    localStorage.setItem("courseId", course_id);
-    localStorage.setItem("courseCode", course_code);
-    localStorage.setItem("courseName", course_name);
-    nav("/materials");
+    setNav({ course_id, course_code, course_name });
+    navigation("/materials");
   }
 
   return (
