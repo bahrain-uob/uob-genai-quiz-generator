@@ -8,7 +8,7 @@ import Modal from "react-modal";
 import { useEffect, useState } from "react";
 import { faX, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { getUserId } from "../lib/helpers";
-import { navAtom } from "../lib/navStore";
+import { navAtom } from "../lib/store";
 import { useAtom } from "jotai";
 
 function Materials() {

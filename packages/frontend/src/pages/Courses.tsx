@@ -9,7 +9,7 @@ import { TextField } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { API } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
-import { navAtom } from "../lib/navStore";
+import { navAtom } from "../lib/store";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
