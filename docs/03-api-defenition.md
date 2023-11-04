@@ -2,48 +2,10 @@
 
 ------------------------------------------------------------------------------------------
 
-#### Creating a new pet
+#### Listing courses for instructor 
 
 <details>
- <summary> ▶️ <code>POST</code> <code><b>/pets</b></code> <code>(Creates a new pet in the clinic)</code></summary>
-
-##### Parameters
-
-> | name            |  type     | data type     | description                                                           |
-> |-----------      |-----------|-------------- |-----------------------------------------------------------------------|
-> | name            |  required | string        | the name of the pet                                                   |
-> | age             | required  | string        | the age of the pet                                                    |
-> | favorite_treats | optional  | string[]      | a list of treats the pet loves to eat                                 |
-
-##### Sample request body format:
-```json
-{
-    "name": "Grumpy",
-    "age": "5",
-    "favorite_treats": [
-        "biscuits",
-        "apples",
-        "chips"
-    ]
-}
-```
-
-##### Responses
-
-> | http code     | content-type                      | response                                                            |
-> |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `201`         | `text/plain;charset=UTF-8`        | `Configuration created successfully`                                |
-> | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
-> | `405`         | `text/html;charset=utf-8`         | None                                                                |
-
-</details>
-
-------------------------------------------------------------------------------------------
-
-#### Listing pets in the clinic
-
-<details>
- <summary> ▶️ <code>GET</code> <code><b>/</b></code> <code>(gets all pets in the clinic)</code></summary>
+ <summary> ▶️ <code>GET</code> <code><b>/courses</b></code> <code>(gets all courses for instructor)</code></summary>
 
 ##### Parameters
 
@@ -51,9 +13,68 @@
 
 ##### Responses
 
-> | http code     | content-type                      | response                                                            |
-> |---------------|-----------------------------------|---------------------------------------------------------------------|
-> | `200`         | `text/plain;charset=UTF-8`        | `{"code":"200","pets": [{"name":"Grumpy", "age":5 }]  `             |
+> | http code       | content-type                        | response                                                              |
+> | --------------- | ----------------------------------- | --------------------------------------------------------------------- |
+> | `200`           | `application/json`                  |`Sample below`                                                        |
+
+##### Sample response body format:
+
+```json
+[
+  {
+    "id": "53dfb5ef-9510-45d5-ac6a-589bb97a5984",
+    "code": "ITCC240",
+    "name": "Cloud Fundamentals"
+  },
+  {
+    "id": "c862faa2-367c-464e-82e4-bc10f794a130",
+    "code": "ITCC333",
+    "name": "Cloud Operations"
+  }
+]
+```
+
+</details>
+
+------------------------------------------------------------------------------------------
+
+#### Creating a new course for instructor
+
+<details>
+ <summary> ▶️ <code>POST</code> <code><b>/courses</b></code> <code>(Creates a new course for instructor)</code></summary>
+
+##### Parameters
+
+> | name        | type        | data type      | description                                                             |
+> | ----------- | ----------- | -------------- | ----------------------------------------------------------------------- |
+> | code        | required    | string         | the code of the course                                                  |
+> | name        | required    | string         | the name of the course                                                  |
+
+##### Sample request body format:
+
+```json
+{
+    "code": "ITCS240",
+    "name": "Cloud Fundamentals"
+}
+```
+
+##### Responses
+
+> | http code       | content-type                        | response                                                              |
+> | --------------- | ----------------------------------- | --------------------------------------------------------------------- |
+> | `201`           | `application/json`                  | `Sample below`                                                        |
+
+
+##### Sample request body format:
+
+```json
+{
+    "id": "53dfb5ef-9510-45d5-ac6a-589bb97a5984",
+    "code": "ITCS240",
+    "name": "Cloud Fundamentals"
+}
+```
 
 </details>
 

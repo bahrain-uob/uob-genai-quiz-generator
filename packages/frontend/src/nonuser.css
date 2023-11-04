@@ -15,7 +15,9 @@
   margin-top: 60px;
   margin-right: 40px;
   transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   cursor: pointer;
   &:hover {
     transform: translateY(5px);
@@ -27,7 +29,9 @@
   color: #4a4e69;
   padding: 0 10px 0 10px;
   transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   cursor: pointer;
   &:hover {
     transform: translateY(1px);
@@ -91,7 +95,9 @@
   margin-bottom: 20rem;
   box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.356);
   transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   cursor: pointer;
   &:hover {
     transform: scale(1);
@@ -136,7 +142,9 @@
   padding: 15px;
   box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.356);
   transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   overflow: hidden;
   &:hover {
     transform: scale(1);

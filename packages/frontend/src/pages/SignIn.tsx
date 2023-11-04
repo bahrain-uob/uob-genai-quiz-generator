@@ -29,22 +29,23 @@ export function Login() {
             <p style={{ color: "#4A4E69" }}>HOME</p>
           </a>
         </div>
-
       </div>
 
-      <Authenticator loginMechanisms={['email']} components={{
-        SignIn: {
-          Header() {
-            return <h3>Sign In</h3>
-          }
-        },
-        SignUp: {
-          Header() {
-            return <h3>Sign Up</h3>
-          }
-        }
-      }}></Authenticator>
+      <Authenticator
+        loginMechanisms={["email"]}
+        components={{
+          SignIn: {
+            Header() {
+              return <h3>Sign In</h3>;
+            },
+          },
+          SignUp: {
+            Header() {
+              return <h3>Sign Up</h3>;
+            },
+          },
+        }}
+      ></Authenticator>
     </div>
   );
 }
-
