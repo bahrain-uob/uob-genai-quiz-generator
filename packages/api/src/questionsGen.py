@@ -181,6 +181,19 @@ def fill_in_blank(event, context):
       "question": "Albert Einstein is famous for his theory of ___________.",
       "correct_answer": "relativity"
     }
+
+    Human: i want you to generate 1 fill-in-the-blank question about Albert Einestein
+    The output should be a code snippet formatted in the following schema with one or more blanks to be filled:
+    {
+      "question": string // the question with one or more blanks to be filled
+      "answer": string // the correct answers to fill the blank
+    }
+    Assistant:
+    {
+      "question": "Albert Einstein was born in the year _________.",
+      "correct_answer": "1879"
+    }
+
     Human: i want you to generate 1 fill-in-the-blank questions about: {{topic}}
     The output should be a code snippet formatted in the following schema with one or more blanks to be filled:
     {
