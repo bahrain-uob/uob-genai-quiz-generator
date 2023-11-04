@@ -8,17 +8,16 @@ import Modal from "react-modal";
 import { useEffect, useState } from "react";
 import { faX, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { getUserId } from "../lib/helpers";
+import { navAtom } from "../lib/navStore";
+import { useAtom } from "jotai";
 
 function Materials() {
+  const [{ course_id, course_code, course_name }, _] = useAtom(navAtom);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [userId, setUserId] = useState("");
   useEffect(() => {
     getUserId(setUserId);
   }, []);
-
-  const course_id = localStorage.getItem("courseId")!;
-  const course_code = localStorage.getItem("courseCode");
-  const course_name = localStorage.getItem("courseName");
 
   function openModal() {
     setIsOpen(true);

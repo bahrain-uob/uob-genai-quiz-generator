@@ -9,6 +9,8 @@ import { TextField } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { API } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
+import { navAtom } from "../lib/navStore";
+import { useAtom } from "jotai";
 
 interface Course {
   id: string;
@@ -27,16 +29,15 @@ function Courses() {
     setCourses(courses);
   };
 
-  const nav = useNavigate();
+  const navigation = useNavigate();
+  const [_, setNav] = useAtom(navAtom);
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
-    localStorage.setItem("courseId", course_id);
-    localStorage.setItem("courseCode", course_code);
-    localStorage.setItem("courseName", course_name);
-    nav("/materials");
+    setNav({ course_id, course_code, course_name });
+    navigation("/materials");
   }
 
   return (
