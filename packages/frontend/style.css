@@ -706,6 +706,10 @@ thead th {
   text-align: center;
   width: 60rem;
 }
+.course-quiz-container h2 {
+  cursor: pointer;
+}
+
 .generate-button {
   background-color: #4a4e69;
   color: white;
@@ -715,9 +719,32 @@ thead th {
   cursor: pointer;
   margin-left: auto;
   margin-right: 10rem;
-  margin-top: 10rem;
+  margin-top: 2.5rem;
+  font-size: small;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
 }
-.generate-button-2 {
+.generate-button:after {
+  content: "»";
+  position: absolute;
+  opacity: 0;
+  top: 14px;
+  right: -20px;
+  transition: 0.5s;
+  font-size: medium;
+}
+.generate-button:hover {
+  padding-right: 24px;
+  padding-left: 8px;
+}
+
+.generate-button:hover:after {
+  opacity: 1;
+  right: 10px;
+}
+
+/* .generate-button-2 {
   background-color: #4a4e69;
   color: white;
   padding: 15px;
@@ -725,7 +752,7 @@ thead th {
   border: none;
   cursor: pointer;
   margin: auto;
-}
+} */
 .quiz-item {
   text-align: center;
   font-weight: bold;
@@ -859,6 +886,32 @@ thead th {
     transform 0.8s;
   transform: scale(0.5);
   transform: translateY(-200%);
+}
+.underlined {
+  display: inline;
+  position: relative;
+  overflow: hidden;
+  color: #4a4e69;
+  margin: auto;
+  padding-bottom: 6px;
+}
+.underlined:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 0;
+  bottom: 8px;
+  background: #4a4e69;
+  height: 2px;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-out;
+}
+.underlined:hover:after,
+.underlined:focus:after,
+.underlined:active:after {
+  left: 0;
+  right: auto;
+  width: 100%;
 }
 /* end of quizzes page */
 
