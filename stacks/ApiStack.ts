@@ -22,7 +22,7 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       authorizer: "jwt",
       function: {
-        bind: [materialBucket, quiz_bucket, courses_table]
+        bind: [materialBucket, quiz_bucket, courses_table],
       },
     },
     routes: {

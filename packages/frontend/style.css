@@ -65,7 +65,9 @@ a {
   margin: 10px;
   cursor: pointer;
   transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   &:hover {
     transform: scale(1);
     box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.372);
@@ -253,7 +255,9 @@ label {
   margin: 10px;
   cursor: pointer;
   transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   &:hover {
     transform: scale(1);
     box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.372);
@@ -493,7 +497,9 @@ input[type="time"] {
   padding-top: 30px;
   margin-right: 40px;
   transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   cursor: pointer;
   &:hover {
     transform: translateY(5px);
@@ -732,7 +738,9 @@ thead th {
   margin-bottom: 20px;
   margin-left: 20px;
   transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   cursor: pointer;
   &:hover {
     transform: scale(1);
@@ -798,7 +806,10 @@ thead th {
   padding-top: 12px;
   border-top-right-radius: 50px;
   border-bottom-left-radius: 10px;
-  transition: all 0.5s, border-radius 2s, top 1s;
+  transition:
+    all 0.5s,
+    border-radius 2s,
+    top 1s;
   overflow: hidden;
   &:hover {
     cursor: pointer;
@@ -824,7 +835,9 @@ thead th {
     opacity: 0;
     transform: scale(0.5);
     transform: translateY(-200%);
-    transition: opacity 0.2s, transform 0.8s;
+    transition:
+      opacity 0.2s,
+      transform 0.8s;
     color: white;
   }
 }
@@ -838,7 +851,9 @@ thead th {
 }
 .contents span:hover {
   text-decoration: underline;
-  transition: opacity 0.2s, transform 0.8s;
+  transition:
+    opacity 0.2s,
+    transform 0.8s;
   transform: scale(0.5);
   transform: translateY(-200%);
 }

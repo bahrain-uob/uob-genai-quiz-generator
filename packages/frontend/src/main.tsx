@@ -24,7 +24,13 @@ Amplify.configure({
         name: "api",
         endpoint: import.meta.env.VITE_APP_API_URL,
         region: import.meta.env.VITE_APP_REGION,
-        custom_header: async () => { return { Authorization: `Bearer ${(await Auth.currentSession()).getAccessToken().getJwtToken()}` } }
+        custom_header: async () => {
+          return {
+            Authorization: `Bearer ${(await Auth.currentSession())
+              .getAccessToken()
+              .getJwtToken()}`,
+          };
+        },
       },
     ],
   },
@@ -36,11 +42,10 @@ Amplify.configure({
         public: "",
         protected: "",
         private: "",
-      }
-    }
-  }
+      },
+    },
+  },
 });
-
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
@@ -84,5 +89,5 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         </Routes>
       </BrowserRouter>
     </Authenticator.Provider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
