@@ -12,6 +12,7 @@ function MaterialsTable({
   isSelecting: boolean;
   courseId: string;
 }) {
+  console.log(courseId);
   const [materials, setMaterials] = useState([] as any);
   useEffect(() => {
     updateMaterial();
@@ -52,7 +53,7 @@ function MaterialsTable({
             <th>FILE NAME</th>
             <th>SIZE</th>
             <th>DATE</th>
-            <th></th>
+            {!isSelecting && <th></th>}
           </tr>
         </thead>
         <tbody>
@@ -68,8 +69,9 @@ function MaterialsTable({
               <td>{material.key}</td>
               <td>{material.size}</td>
               <td>{material.lastModified}</td>
-              <td>
-                {!isSelecting && (
+
+              {!isSelecting && (
+                <td>
                   <FontAwesomeIcon
                     style={{ cursor: "pointer" }}
                     icon={faTrash}
@@ -78,8 +80,8 @@ function MaterialsTable({
                       deleteMaterial(index);
                     }}
                   />
-                )}
-              </td>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
