@@ -2,18 +2,12 @@ import { TextField } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
-// import "../buttons.css";
+import { useAtom } from "jotai";
+import { quizAtom } from "../lib/store";
 
 function QuizSetupForm() {
-  const quizName = localStorage.getItem("QuizName");
-  const versions = localStorage.getItem("versions");
-  const mcq = localStorage.getItem("mcq");
-  const tf = localStorage.getItem("tf");
-  const fillBlank = localStorage.getItem("fillBlank");
-  if (tf === null) {
-    localStorage.setItem("tf", "0");
-  }
+  const [{ name, versions, mcq, tf, fillBlank }, setQuiz] = useAtom(quizAtom);
+
   return (
     <div className="setup-quiz" style={{ backgroundColor: "#F2E9E4" }}>
       <form
@@ -22,19 +16,18 @@ function QuizSetupForm() {
         }}
       >
         <h3>Set Up Your Quiz!</h3>
-
         <div className="input-container">
           <TextField
             label="Quiz Name"
             name="quizName"
             placeholder="Quiz 1"
-            defaultValue={`${quizName}`}
+            value={name}
             inputStyles={{
               backgroundColor: "white",
             }}
-            onChange={(e) => {
-              localStorage.setItem("QuizName", e.target.value);
-            }}
+            onChange={(e) =>
+              setQuiz({ name: e.target.value, versions, mcq, tf, fillBlank })
+            }
             contentEditable
           />
         </div>
@@ -42,44 +35,40 @@ function QuizSetupForm() {
         <div className="input-container">
           <StepperField
             label="Number of Versions"
-            min="1"
-            max="3"
+            min={1}
+            max={3}
+            value={versions}
             name="versions"
-            placeholder="1"
-            defaultValue={`${versions}`}
           />
         </div>
 
         <div className="input-container">
           <StepperField
-            min="0"
-            max="50"
+            min={0}
+            max={50}
+            value={mcq}
             label="Number of MCQ"
             name="mcq"
-            placeholder="1"
-            defaultValue={`${mcq}`}
           />
         </div>
 
         <div className="input-container">
           <StepperField
-            min="0"
-            max="10"
+            min={0}
+            max={10}
+            value={tf}
             label="Number of T/F"
             name="tf"
-            placeholder="1"
-            defaultValue={`${tf}`}
           />
         </div>
 
         <div className="input-container">
           <StepperField
-            min="0"
-            max="10"
+            min={0}
+            max={10}
+            value={fillBlank}
             label="Number of fill-in blank"
             name="fillBlank"
-            placeholder="1"
-            defaultValue={`${fillBlank}`}
           />
         </div>
       </form>
@@ -89,26 +78,24 @@ function QuizSetupForm() {
 function StepperField(props: {
   label: string;
   name: string;
-  placeholder: string;
-  min: string;
-  max: string;
-  defaultValue: string;
+  value: number;
+  min: number;
+  max: number;
 }) {
-  const [value, setValue] = useState(parseInt(props.defaultValue));
+  const [quiz, setQuiz] = useAtom(quizAtom);
+  // @ts-ignore
+  const value = quiz[props.name];
 
-  function handlePlus() {
-    if (value < parseInt(props.max, 10)) {
-      setValue(value + 1);
-      console.log(value + 1);
-      localStorage.setItem(props.name, (value + 1).toString());
-    }
-  }
-  function handleMinus() {
-    if (value > parseInt(props.min, 10)) {
-      setValue(value - 1);
-      console.log(value - 1);
-      localStorage.setItem(props.name, (value - 1).toString());
-    }
+  const clamp = (val: number) => {
+    if (val > props.max) return props.max;
+    if (val < props.min) return props.min;
+    return val;
+  };
+  function handleChange(n: number) {
+    const copy = JSON.parse(JSON.stringify(quiz));
+    const newVal = clamp(parseInt(copy[props.name]) + n);
+    copy[props.name] = newVal;
+    setQuiz(copy);
   }
 
   return (
@@ -118,21 +105,19 @@ function StepperField(props: {
         className="stepperfield"
         type="number"
         name={props.name}
-        placeholder={value.toString()}
         value={value}
-        required
         disabled
       />
       <button className="minus">
         <FontAwesomeIcon
           className="minus-icon"
           icon={faMinus}
-          onClick={handleMinus}
+          onClick={() => handleChange(-1)}
         />
       </button>
       <button className="plus">
         <FontAwesomeIcon
-          onClick={handlePlus}
+          onClick={() => handleChange(1)}
           className="plus-icon"
           icon={faPlus}
         />

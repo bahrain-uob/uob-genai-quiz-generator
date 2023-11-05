@@ -1,6 +1,8 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
+import { useAtom } from "jotai";
+import { quizAtom } from "../lib/store";
 
 function Review() {
   return (
@@ -15,11 +17,7 @@ function Review() {
 }
 
 function QuizSetup() {
-  const name = localStorage.getItem("QuizName");
-  const versions = localStorage.getItem("versions");
-  const mcq = localStorage.getItem("mcq");
-  const tf = localStorage.getItem("tf");
-  const fillBlank = localStorage.getItem("fillBlank");
+  const [{ name, versions, mcq, tf, fillBlank }, _] = useAtom(quizAtom);
   return (
     <div className="white-container">
       <div className="stage-name">
