@@ -4,16 +4,12 @@ import Title from "../components/Title";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { API } from "aws-amplify";
-import { useEffect, useState } from "react";
-
-interface Course {
-  id: string;
-  code: string;
-  name: string;
-}
+import { useEffect } from "react";
+import { useAtom } from "jotai";
+import { Course, coursesAtom, navAtom } from "../lib/store";
 
 function Quizzes() {
-  const [courses, setCourses] = useState([] as Course[]);
+  const [courses, setCourses] = useAtom(coursesAtom);
   useEffect(() => {
     updateCourses();
   }, []);
@@ -23,17 +19,17 @@ function Quizzes() {
     setCourses(courses);
   };
 
-  const nav = useNavigate();
+  const navigation = useNavigate();
+  const [_, setNav] = useAtom(navAtom);
   function navigate(
     course_id: string,
     course_code: string,
     course_name: string
   ) {
-    localStorage.setItem("courseId", course_id);
-    localStorage.setItem("courseCode", course_code);
-    localStorage.setItem("courseName", course_name);
-    nav("/materials");
+    setNav({ course_id, course_code, course_name });
+    navigation("/materials");
   }
+
   return (
     <>
       <Navrbar />
@@ -45,7 +41,7 @@ function Quizzes() {
       </div>
 
       <div className="container">
-        {courses.map((course) => (
+        {courses.map((course: Course) => (
           <div className="course-quiz-container">
             <h2
               className="underlined"
