@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Titles from "../components/Title";
 import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
@@ -8,7 +8,7 @@ import QuestionsSetup from "../components/QuestionsSetup";
 import Review from "../components/Review";
 import { API } from "aws-amplify";
 import { useAtom } from "jotai";
-import { stageAtom } from "../lib/store";
+import { coursesAtom, stageAtom } from "../lib/store";
 
 function Quizzes() {
   const [stepNo, setStepNo] = useAtom(stageAtom);
@@ -56,13 +56,9 @@ function Quizzes() {
   );
 }
 
-interface Course {
-  id: string;
-  code: string;
-  name: string;
-}
 function CoursesTable() {
-  const [courses, setCourses] = useState([] as Course[]);
+  const [courses, setCourses] = useAtom(coursesAtom);
+
   useEffect(() => {
     updateCourses();
   }, []);
