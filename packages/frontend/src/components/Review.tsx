@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
-import QuestionArea from "./QuestionArea";
+
 function Review() {
   return (
     <div className="review-container">
@@ -15,6 +15,11 @@ function Review() {
 }
 
 function QuizSetup() {
+  const name = localStorage.getItem("QuizName");
+  const versions = localStorage.getItem("versions");
+  const mcq = localStorage.getItem("mcq");
+  const tf = localStorage.getItem("tf");
+  const fillBlank = localStorage.getItem("fillBlank");
   return (
     <div className="white-container">
       <div className="stage-name">
@@ -26,25 +31,25 @@ function QuizSetup() {
         <div className="left">
           <div className="input-container">
             <label htmlFor="quiz-name">Quiz Name</label>
-            <input name="quiz-name" placeholder="Mockup Quiz" disabled />
+            <input name="quiz-name" placeholder={`${name}`} disabled />
           </div>
           <div className="input-container">
             <label htmlFor="versions">Number of Versions</label>
-            <input name="versions" placeholder="3" disabled />
+            <input name="versions" placeholder={`${versions}`} disabled />
           </div>
         </div>
         <div className="right">
           <div className="input-container">
             <label htmlFor="mcq">Number of MCQ</label>
-            <input name="mcq" placeholder="2" disabled />
+            <input name="mcq" placeholder={`${mcq}`} disabled />
           </div>
           <div className="input-container">
             <label htmlFor="tf">Number of T/F</label>
-            <input name="tf" placeholder="2" disabled />
+            <input name="tf" placeholder={`${tf}`} disabled />
           </div>
           <div className="input-container">
             <label htmlFor="fillBlank">Number of Fill-in Blank</label>
-            <input name="fillBlank" placeholder="2" disabled />
+            <input name="fillBlank" placeholder={`${fillBlank}`} disabled />
           </div>
         </div>
       </div>

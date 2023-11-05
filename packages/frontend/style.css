@@ -476,15 +476,74 @@ input[type="checkbox"] {
   margin-bottom: 50px;
 }
 .setup-quiz input[type="text"],
-input[type="number"],
-input[type="time"] {
+input[type="number"] {
   width: 20rem;
   border-radius: 3px;
   border: none;
   height: 40px;
   border-bottom: 1px solid #00000077;
 }
+.stepperfield {
+  background-color: white;
+  padding-left: 10rem;
+}
+.minus-icon::before,
+.plus-icon::after {
+  box-sizing: inherit;
+}
+.plus {
+  position: absolute;
+  top: 50%;
+  right: 0px;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+.plus-icon {
+  height: 1.3rem;
+  width: 1.5rem;
+  padding: 8px;
+  box-sizing: border-box;
+  cursor: pointer;
+  border-left: 1.5px solid #c6c6c6;
+  background-color: white;
+  color: #8e8e8e;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 3px 0 0 #4a4e69c9;
+  border-bottom-right-radius: 3px;
+  &:active {
+    top: 3px;
+    box-shadow: none;
+  }
+}
+.minus {
+  position: absolute;
+  top: 50%;
+  left: 0px;
+  border: none;
+  padding: 0px;
+  background-color: transparent;
+}
+.minus-icon {
+  height: 1.3rem;
+  width: 1.5rem;
+  padding: 8px;
+  position: absolute;
+  box-sizing: border-box;
 
+  border-right: 1.5px solid #c6c6c6;
+  cursor: pointer;
+  color: #8e8e8e;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 3px 0 0 #4a4e69c9;
+  border-bottom-left-radius: 3px;
+  &:active {
+    top: 3px;
+    box-shadow: none;
+  }
+}
 /* end of create quiz */
 
 /* instructor and students navbar */
