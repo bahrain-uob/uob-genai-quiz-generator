@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
 import { useAtom } from "jotai";
-import { quizAtom } from "../lib/store";
+import { quizAtom, stageAtom } from "../lib/store";
 
 function Review() {
   return (
@@ -17,12 +17,15 @@ function Review() {
 }
 
 function QuizSetup() {
-  const [{ name, versions, mcq, tf, fillBlank }, _] = useAtom(quizAtom);
+  const [{ name, versions, mcq, tf, fillBlank }, _setQuiz] = useAtom(quizAtom);
+  const [_stepNo, setStepNo] = useAtom(stageAtom);
   return (
     <div className="white-container">
       <div className="stage-name">
-        <h4 className="underline">Quiz Setup</h4>
-        <EditIcon />
+        <h4>Quiz Setup</h4>
+        <div className="underline" onClick={() => setStepNo(2)}>
+          <FontAwesomeIcon icon={faPenClip} className="edit-icon" />
+        </div>
       </div>
 
       <div className="form-container">
@@ -56,11 +59,14 @@ function QuizSetup() {
 }
 
 function Questions() {
+  const [_stepNo, setStepNo] = useAtom(stageAtom);
   return (
     <div className="white-container">
       <div className="stage-name">
-        <h4 className="underline">MCQ Setup</h4>
-        <EditIcon />
+        <h4>MCQ Setup</h4>
+        <div className="underline" onClick={() => setStepNo(3)}>
+          <FontAwesomeIcon icon={faPenClip} className="edit-icon" />
+        </div>
       </div>
       <div className="form-container">
         <div className="question-area">
@@ -91,11 +97,5 @@ function Questions() {
     </div>
   );
 }
-function EditIcon() {
-  return (
-    <div className="underline leftline">
-      <FontAwesomeIcon icon={faPenClip} className="edit-icon" />
-    </div>
-  );
-}
+
 export default Review;

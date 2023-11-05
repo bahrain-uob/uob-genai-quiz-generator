@@ -7,9 +7,11 @@ import QuizSetupForm from "../components/QuizSetup";
 import QuestionsSetup from "../components/QuestionsSetup";
 import Review from "../components/Review";
 import { API } from "aws-amplify";
+import { useAtom } from "jotai";
+import { stageAtom } from "../lib/store";
 
 function Quizzes() {
-  const [stepNo, setStepNo] = useState(0);
+  const [stepNo, setStepNo] = useAtom(stageAtom);
 
   const courseId = localStorage.getItem("courseId")!;
   return (
@@ -40,7 +42,12 @@ function Quizzes() {
           </button>
         )}
         {stepNo < 4 && (
-          <button className="next" onClick={() => setStepNo(stepNo + 1)}>
+          <button
+            className="next"
+            onClick={() => {
+              setStepNo(stepNo + 1);
+            }}
+          >
             Next
           </button>
         )}

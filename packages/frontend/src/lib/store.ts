@@ -21,3 +21,5 @@ export const quizAtom = atomWithStorage("quiz", {
   tf: 0,
   fillBlank: 0,
 });
+
+export const stageAtom = atomWithStorage("stage", 0);
