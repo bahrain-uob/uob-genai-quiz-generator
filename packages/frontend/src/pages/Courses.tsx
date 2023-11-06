@@ -68,12 +68,12 @@ function CreateCourse({ updateCourses }: any) {
 
   return (
     <>
-      <div className="course-container create" onClick={() => setModal(true)}>
+      <div className="create" onClick={() => setModal(true)}>
         <FontAwesomeIcon
           icon={faBook}
-          style={{ color: "white", width: "3rem", height: "3rem" }}
+          style={{ color: "#4a4e69", width: "3rem", height: "3rem" }}
         />
-        <h3>CREATE COURSE +</h3>
+        <h4>Create Course </h4>
       </div>
       <Modal
         isOpen={modal}
