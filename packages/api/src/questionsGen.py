@@ -86,7 +86,6 @@ def create(prompt):
 
 
 def MCQ(event, context):
-    number = event["number"]
     # topic = event["key"]
     prompt = """
     Human: i want you to generate 1 MCQ question about  this :
@@ -147,7 +146,6 @@ def MCQ(event, context):
 
 
 def TF(event, context):
-    number = event["number"]
     prompt = """
     Human: i want you to generate 1 TRUE or FALSE question about  this :
     Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
@@ -202,7 +200,6 @@ def TF(event, context):
 
 
 def fill_in_blank(event, context):
-    number = event["number"]
     number = 4
     prompt = """
     Human: i want you to generate 1 fill-in-the-blank question about Albert Einestein
