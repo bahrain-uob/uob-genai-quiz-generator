@@ -116,4 +116,11 @@ input:focus {
   margin-bottom: 10px;
   padding: 20px;
 }
+.mcq-review {
+  background-color: #e7e7e768;
+  line-height: 0.7em;
+  font-size: small;
+  width: 25em;
+  color: #6d6d6d;
+}
 /* end of review stage */

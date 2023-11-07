@@ -10,10 +10,22 @@ const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
 
 function QuestionsSetup() {
   const [generated, setGenerated] = useState([
-    { stem: "S3? Simple Storage Service" },
-    { stem: "EC2? Elastic Cloud Compute" },
-    { stem: "VPC? Virtual Private Cloud" },
-  ]);
+    {
+      question: "S3? Simple Storage Service",
+      choices: ["s3", "ec2", "vpc", "ebs"],
+      answer_index: 0,
+    },
+    {
+      question: "EC2? Elastic Cloud Compute",
+      choices: ["s3", "ec2", "vpc", "ebs"],
+      answer_index: 2,
+    },
+    {
+      question: "VPC? Virtual Private Cloud",
+      choices: ["s3", "ec2", "vpc", "ebs"],
+      answer_index: 2,
+    },
+  ] as Mcq[]);
   const [selected, setSelected] = useState([{ stem: "" }]);
 
   const [questions, setQuestions] = useAtom(McqsAtom);
@@ -44,11 +56,12 @@ function QuestionsSetup() {
 
           {generated.map((question, index) => (
             <QuestionArea
-              key={question.stem}
-              question={question}
+              key={question.question}
+              q={question}
               index={index}
               add={selectQuestion}
               remove={removeQuestion}
+              isSelected={false}
             />
           ))}
         </div>
@@ -65,7 +78,14 @@ function QuestionsSetup() {
                 onClick={() => removeQuestion(index)}
               />
 
-              <div>{qu.question}</div>
+              <QuestionArea
+                key={qu.question}
+                q={qu}
+                index={index}
+                add={selectQuestion}
+                remove={removeQuestion}
+                isSelected={true}
+              />
             </div>
           ))}
         </div>

@@ -74,8 +74,37 @@ function Questions() {
       </div>
       <div className="form-container">
         {questions.map((question: Mcq) => (
-          <div className="question-area">
-            <p> {question.question}</p>
+          <div className="question-area mcq-review">
+            <strong>
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: "medium",
+                }}
+              >
+                {" "}
+                {question.question}
+              </p>
+            </strong>
+            <p>
+              {" "}
+              <strong>1)</strong> {question.choices[0]}
+            </p>
+            <p>
+              {" "}
+              <strong>2)</strong> {question.choices[1]}
+            </p>
+            <p>
+              {" "}
+              <strong>3)</strong> {question.choices[2]}
+            </p>
+            <p>
+              {" "}
+              <strong>4)</strong> {question.choices[3]}
+            </p>
+            <p style={{ paddingTop: "0.7em", fontWeight: "bold" }}>
+              Answer Key: {question.answer_index + 1}
+            </p>
           </div>
         ))}
       </div>
