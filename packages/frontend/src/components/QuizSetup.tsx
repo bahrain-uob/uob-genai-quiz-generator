@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 import { quizAtom } from "../lib/store";
 
 function QuizSetupForm() {
-  const [{ name, versions, mcq, tf, fillBlank }, setQuiz] = useAtom(quizAtom);
+  const [quiz, setQuiz] = useAtom(quizAtom);
 
   return (
     <div className="setup-quiz" style={{ backgroundColor: "#F2E9E4" }}>
@@ -21,13 +21,11 @@ function QuizSetupForm() {
             label="Quiz Name"
             name="quizName"
             placeholder="Quiz 1"
-            value={name}
+            value={quiz.name}
             inputStyles={{
               backgroundColor: "white",
             }}
-            onChange={(e) =>
-              setQuiz({ name: e.target.value, versions, mcq, tf, fillBlank })
-            }
+            onChange={(e) => setQuiz({ ...quiz, name: e.target.value })}
             contentEditable
           />
         </div>
@@ -37,7 +35,7 @@ function QuizSetupForm() {
             label="Number of Versions"
             min={1}
             max={3}
-            value={versions}
+            value={quiz.versions}
             name="versions"
           />
         </div>
@@ -46,7 +44,7 @@ function QuizSetupForm() {
           <StepperField
             min={0}
             max={50}
-            value={mcq}
+            value={quiz.mcq}
             label="Number of MCQ"
             name="mcq"
           />
@@ -56,7 +54,7 @@ function QuizSetupForm() {
           <StepperField
             min={0}
             max={10}
-            value={tf}
+            value={quiz.tf}
             label="Number of T/F"
             name="tf"
           />
@@ -66,7 +64,7 @@ function QuizSetupForm() {
           <StepperField
             min={0}
             max={10}
-            value={fillBlank}
+            value={quiz.fillBlank}
             label="Number of fill-in blank"
             name="fillBlank"
           />
