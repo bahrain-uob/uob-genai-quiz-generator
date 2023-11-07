@@ -41,15 +41,15 @@ Ronaldo began his professional career with Sporting CP at age 17 in 2002, and si
 topic = """
 Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Services (AWS) that provides object storage through a web service interface.Amazon S3 uses the same scalable storage infrastructure that Amazon.com uses to run its e-commerce network. Amazon S3 can store any type of object, which allows uses like storage for Internet applications, backups, disaster recovery, data archives, data lakes for analytics, and hybrid cloud storage. AWS launched Amazon S3 in the United States on March 14, 2006, then in Europe in November 2007.
 """
-# topic = """
+topic = """
 
-# Amazon Web Services, Inc. (AWS) is a subsidiary of Amazon that provides on-demand cloud computing platforms and APIs to individuals, companies, and governments, on a metered, pay-as-you-go basis.
-# Clients will often use this in combination with autoscaling (a process that allows a client to use more computing in times of high application usage, and then scale down to reduce costs when there is less traffic).
-# These cloud computing web services provide various services related to networking, compute, storage, middleware, IoT and other processing capacity, as well as software tools via AWS server farms.
-# This frees clients from managing, scaling, and patching hardware and operating systems.
-# One of the foundational services is Amazon Elastic Compute Cloud (EC2), which allows users to have at their disposal a virtual cluster of computers, with extremely high availability, which can be interacted with over the internet via REST APIs, a CLI or the AWS console.
+Amazon Web Services, Inc. (AWS) is a subsidiary of Amazon that provides on-demand cloud computing platforms and APIs to individuals, companies, and governments, on a metered, pay-as-you-go basis.
+Clients will often use this in combination with autoscaling (a process that allows a client to use more computing in times of high application usage, and then scale down to reduce costs when there is less traffic).
+These cloud computing web services provide various services related to networking, compute, storage, middleware, IoT and other processing capacity, as well as software tools via AWS server farms.
+This frees clients from managing, scaling, and patching hardware and operating systems.
+One of the foundational services is Amazon Elastic Compute Cloud (EC2), which allows users to have at their disposal a virtual cluster of computers, with extremely high availability, which can be interacted with over the internet via REST APIs, a CLI or the AWS console.
 
-# """
+"""
 import re
 
 number = 2
@@ -71,7 +71,7 @@ def create(prompt):
                 "parameters": {
                     "max_new_tokens": 128,
                     "top_p": 0.9,
-                    "temperature": 0.7,
+                    "temperature": 1,
                     "return_full_text": False,
                 },
             }
@@ -125,7 +125,7 @@ def MCQ(event, context):
     Assistant:
     {
       "question": "When was Apple the world's biggest company by market capitilization?",
-      "choices": ["March 2023", "June 2023", "May 2023", "Marhc 2022"],
+      "choices": ["March 2023", "June 2023", "May 2023", "March 2022"],
       "correct_answer_index": 0
     }
    
@@ -150,33 +150,46 @@ def MCQ(event, context):
 def TF(event, context):
     number = event["number"]
     prompt = """
-    Human: i want you to generate 1 true or false question about Albert Einestein
+    Human: i want you to generate 1 TRUE or FALSE question about  this :
+    Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
+    He is considered to be one of the greatest footballers of all time, and, by some, as the greatest ever.
+    Ronaldo began his professional career with Sporting CP at age 17 in 2002, and signed for Manchester United a year later. He won three back-to-back Premier League titles: in 2006-07, 2007-08, and 2008-09. In 2007-08, Ronaldo, helped United win the UEFA Champions League. In 2008-09, he won his first FIFA Club World Cup in December 2008, and he also won his first Ballon d'Or. At one point Ronaldo was the most expensive professional footballer of all time, after moving from Manchester United to Real Madrid for approximately £80 m in July 2009
+
     The output should be a code snippet formatted in the following schema with only one correct answer:
     {
       "question": string // the true or false question
-      "correct_answer": string // the answer of the question (True or false)
+      "correct_answer": string // the answer of the question (either True or False)
     }
     Assistant:
     {
-      "question": "True or false: Albert Einstein's most famous equation is E=mc^2 ?",
+      "question": "Ronaldo is born in Spain",
+      "correct_answer_index": "False"
+    }
+
+    Human: i want you to generate 1 TRUE or FALSE question about  this :
+    Apple Inc. is an American multinational technology company headquartered in Cupertino, California.
+    As of March 2023, Apple is the world's biggest company by market capitalization, and with US$394.3 billion the largest technology company by 2022 revenue. 
+    As of June 2022, Apple is the fourth-largest personal computer vendor by unit sales; the largest manufacturing company by revenue; and the second-largest mobile phone manufacturer in the world. 
+    It is considered one of the Big Five American information technology companies, alongside Alphabet (parent company of Google), Amazon, Meta, and Microsoft.
+    Apple was founded as Apple Computer Company on April 1, 1976, by Steve Wozniak, Steve Jobs and Ronald Wayne to develop and sell Wozniak's Apple I personal computer. 
+    It was incorporated by Jobs and Wozniak as Apple Computer, Inc. in 1977. 
+
+    The output should be a code snippet formatted in the following schema with only one correct answer:
+    {
+      "question": string // the true or false question
+      "correct_answer": string // the answer of the question (either True or False)
+    }
+    Assistant:
+    {
+      "question": "Steve jobs is one of the founders of Apple?",
       "correct_answer": "True"
     }
-    Human: i want you to generate 1 true or false question about python
-    The output should be a code snippet formatted in the following schema with only one correct answer
-    {
-      "question": string // the true or flase question question
-      "correct_answer": string // the answer of the question (True or false)
-    }
-    Assistant:
-    {
-      "question": "True or false: the correct syntax to print a string in Python is console.log('string')",
-      "correct_answer": "False"   
-    }
-    Human: i want you to generate 1 true or false question about: {{topic}}
+   
+    Human: i want you to generate 1 TRUE or FAlSE question about this : {{topic}}
     The output should be a code snippet formatted in the following schema with only one correct answer
     {
       "question": string // the true or false question
-      "correct_answer": string // the answer of the question (True or false)
+      "correct_answer": string // the answer of the question (either True or False)
     }
     Assistant:"""
     questions = []
