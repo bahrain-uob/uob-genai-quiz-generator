@@ -61,10 +61,12 @@ function Quizzes() {
 
 function CoursesTable() {
   const [courses, setCourses] = useAtom(coursesAtom);
-  const [_courseId, setCourseId] = useAtom(courseIdAtom);
+  const [courseId, setCourseId] = useAtom(courseIdAtom);
 
   useEffect(() => {
     updateCourses();
+    const selected: any = document.getElementById(courseId);
+    if (selected) selected.checked = true;
   }, []);
 
   const updateCourses = async () => {
@@ -72,9 +74,9 @@ function CoursesTable() {
     setCourses(courses);
   };
 
-  function selectCourse(courseId: string) {
-    (document.getElementById(courseId) as any).checked = true;
-    setCourseId(courseId);
+  function selectCourse(selectedCourseId: string) {
+    (document.getElementById(selectedCourseId) as any).checked = true;
+    setCourseId(selectedCourseId);
   }
   return (
     <>
