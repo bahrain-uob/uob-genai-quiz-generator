@@ -59,9 +59,14 @@ function Quizzes() {
   );
 }
 
+const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
+  optic.prop("materials"),
+);
+
 function CoursesTable() {
   const [courses, setCourses] = useAtom(coursesAtom);
   const [courseId, setCourseId] = useAtom(courseIdAtom);
+  const [_quizMaterials, setQuizMaterials] = useAtom(quizMaterialsAtom);
 
   useEffect(() => {
     updateCourses();
@@ -76,6 +81,7 @@ function CoursesTable() {
 
   function selectCourse(selectedCourseId: string) {
     (document.getElementById(selectedCourseId) as any).checked = true;
+    if (selectedCourseId != courseId) setQuizMaterials([]);
     setCourseId(selectedCourseId);
   }
   return (
