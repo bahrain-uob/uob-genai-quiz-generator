@@ -20,7 +20,6 @@ function QuestionsSetup() {
 
   const selectQuestion = (q: Question, idx: number) => {
     setSelected([...selected, q as any]);
-    // console.log(selected);
     generated.splice(idx, 1);
     setGenerated(generated);
     setQuestions([...questions, q as any]);
@@ -30,34 +29,9 @@ function QuestionsSetup() {
   const removeQuestion = (index: number) => {
     selected.splice(index, 1);
     setSelected([...selected]);
-
-    // setQuestions([...selected]);
-    // console.log(questions);
-    //   console.log(selected);
     questions.splice(index, 1);
     setQuestions(questions);
-
-    //   // selected.splice(index, 1);
-    //   // setSelected(selected);
-    //   // selected.splice(index, 1);
-    //   // console.log(selected);
-    //   // setSelected(selected);
   };
-
-  //   function addQuestion(newQuestion) {
-  //     setQuestions((prevQuestions) => {
-  //       return [...prevQuestions, newQuestion];
-  //     });
-  //     setEditable(!editable);
-  //   }
-  //   function deleteQuestion(id) {
-  //     setQuestions((prevQuestions) => {
-  //       return prevQuestions.filter((item, index) => {
-  //         return index !== id;
-  //       });
-  //     });
-  //     setEditable(!editable);
-  //   }
 
   return (
     <div className="questions-setup" style={{ backgroundColor: "#F2E9E4" }}>
@@ -83,14 +57,13 @@ function QuestionsSetup() {
 
           {questions.map((question, index) => (
             <div key={question.stem} className="question-container">
-              {/* <div className="minus-hover"> */}
               <FontAwesomeIcon
                 icon={faMinusCircle}
                 size="2x"
-                // className="faMinusCircle"
+                className="faMinusCircle"
                 onClick={() => removeQuestion(index)}
               />
-              {/* </div> */}
+
               <div>{question.stem}</div>
             </div>
           ))}
