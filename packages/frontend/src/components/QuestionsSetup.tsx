@@ -3,10 +3,10 @@ import QuestionArea from "../components/QuestionArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { useAtom } from "jotai";
-import { questionsAtom } from "../lib/store";
-export interface Question {
-  stem: String;
-}
+import { Mcq, quizAtom } from "../lib/store";
+import { focusAtom } from "jotai-optics";
+
+const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
 
 function QuestionsSetup() {
   const [generated, setGenerated] = useState([
@@ -16,9 +16,10 @@ function QuestionsSetup() {
   ]);
   const [selected, setSelected] = useState([{ stem: "" }]);
 
-  const [questions, setQuestions] = useAtom(questionsAtom);
+  const [questions, setQuestions] = useAtom(McqsAtom);
+  console.log(questions);
 
-  const selectQuestion = (q: Question, idx: number) => {
+  const selectQuestion = (q: Mcq, idx: number) => {
     setSelected([...selected, q as any]);
     generated.splice(idx, 1);
     setGenerated(generated);
@@ -55,8 +56,8 @@ function QuestionsSetup() {
         <div className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {questions.map((question, index) => (
-            <div key={question.stem} className="question-container">
+          {questions.map((qu, index) => (
+            <div key={qu.question} className="question-container">
               <FontAwesomeIcon
                 icon={faMinusCircle}
                 size="2x"
@@ -64,7 +65,7 @@ function QuestionsSetup() {
                 onClick={() => removeQuestion(index)}
               />
 
-              <div>{question.stem}</div>
+              <div>{qu.question}</div>
             </div>
           ))}
         </div>

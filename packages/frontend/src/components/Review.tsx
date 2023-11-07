@@ -2,7 +2,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
 import { useAtom } from "jotai";
-import { quizAtom, stageAtom, questionsAtom } from "../lib/store";
+import { quizAtom, stageAtom, Mcq } from "../lib/store";
+import { focusAtom } from "jotai-optics";
+
+const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
 
 function Review() {
   return (
@@ -59,7 +62,7 @@ function QuizSetup() {
 }
 
 function Questions() {
-  const [questions, _setQuestions] = useAtom(questionsAtom);
+  const [questions, _setQuestions] = useAtom(McqsAtom);
   const [_stepNo, setStepNo] = useAtom(stageAtom);
   return (
     <div className="white-container">
@@ -70,9 +73,9 @@ function Questions() {
         </div>
       </div>
       <div className="form-container">
-        {questions.map((question) => (
+        {questions.map((question: Mcq) => (
           <div className="question-area">
-            <p> {question.stem}</p>
+            <p> {question.question}</p>
           </div>
         ))}
       </div>

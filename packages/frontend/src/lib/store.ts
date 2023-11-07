@@ -14,6 +14,12 @@ export interface Course {
 
 export const coursesAtom = atomWithStorage("coursesList", [] as Course[]);
 
+export interface Mcq {
+  question: string;
+  choices: string[];
+  answer_index: number;
+}
+
 export const quizAtom = atomWithStorage("quiz", {
   courseId: "",
   name: "",
@@ -21,12 +27,13 @@ export const quizAtom = atomWithStorage("quiz", {
   mcq: 0,
   tf: 0,
   fillBlank: 0,
+  mcqArr: [
+    // {
+    //   question: "S3?",
+    //   choices: ["s", "simple", "stotage", "service"],
+    //   answer_index: 0,
+    // },
+  ] as Mcq[],
 });
 
 export const stageAtom = atomWithStorage("stage", 0);
-
-export const questionsAtom = atomWithStorage("questions", [
-  {
-    stem: "",
-  },
-]);
