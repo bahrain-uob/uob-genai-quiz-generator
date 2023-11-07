@@ -8,6 +8,11 @@ import { useEffect, useState } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
 import { filesize } from "filesize";
+import { quizAtom } from "../lib/store";
+import { useAtom } from "jotai";
+import { focusAtom } from "jotai-optics";
+
+const materialsAtom = focusAtom(quizAtom, (optic) => optic.prop("materials"));
 
 function MaterialsTable({
   isSelecting,
@@ -17,9 +22,17 @@ function MaterialsTable({
   courseId: string;
 }) {
   const [materials, setMaterials] = useState([] as any);
+  const [quizMaterials, setQuizMaterials] = useAtom(materialsAtom);
   useEffect(() => {
-    updateMaterial();
+    updateMaterial().then(preCheck);
   }, []);
+
+  const preCheck = () => {
+    for (let material of quizMaterials) {
+      let target: any = document.getElementById(material);
+      if (target) target.checked = true;
+    }
+  };
 
   const updateMaterial = async () => {
     let userId = await getUserId();
@@ -71,6 +84,13 @@ function MaterialsTable({
     return a;
   };
 
+  const selectMaterial = (key: string) => {
+    const target: any = document.getElementById(key);
+    target.checked = !target.checked;
+    if (target.checked) setQuizMaterials(quizMaterials.concat(target.id));
+    else setQuizMaterials(quizMaterials.filter((m) => m != key));
+  };
+
   return (
     <div className="materials">
       <table>
@@ -85,10 +105,10 @@ function MaterialsTable({
         </thead>
         <tbody>
           {materials.map((material: any, index: number) => (
-            <tr>
+            <tr onClick={() => selectMaterial(material.key)}>
               <td>
                 {isSelecting ? (
-                  <input type="checkbox" />
+                  <input type="checkbox" id={material.key} />
                 ) : (
                   <FontAwesomeIcon icon={faFile} size="xl" />
                 )}

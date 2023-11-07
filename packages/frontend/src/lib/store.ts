@@ -22,6 +22,7 @@ export interface Mcq {
 
 export const quizAtom = atomWithStorage("quiz", {
   courseId: "",
+  materials: [] as string[],
   name: "",
   versions: 1,
   mcq: 0,
