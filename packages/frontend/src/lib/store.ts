@@ -15,6 +15,7 @@ export interface Course {
 export const coursesAtom = atomWithStorage("coursesList", [] as Course[]);
 
 export const quizAtom = atomWithStorage("quiz", {
+  courseId: "",
   name: "",
   versions: 1,
   mcq: 0,

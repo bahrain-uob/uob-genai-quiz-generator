@@ -8,12 +8,15 @@ import QuestionsSetup from "../components/QuestionsSetup";
 import Review from "../components/Review";
 import { API } from "aws-amplify";
 import { useAtom } from "jotai";
-import { coursesAtom, stageAtom } from "../lib/store";
+import { focusAtom } from "jotai-optics";
+import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
+
+const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
 function Quizzes() {
   const [stepNo, setStepNo] = useAtom(stageAtom);
+  const [courseId, _setCourseId] = useAtom(courseIdAtom);
 
-  const courseId = localStorage.getItem("courseId")!;
   return (
     <>
       <Navbar />
@@ -58,6 +61,7 @@ function Quizzes() {
 
 function CoursesTable() {
   const [courses, setCourses] = useAtom(coursesAtom);
+  const [_courseId, setCourseId] = useAtom(courseIdAtom);
 
   useEffect(() => {
     updateCourses();
@@ -69,7 +73,8 @@ function CoursesTable() {
   };
 
   function selectCourse(courseId: string) {
-    localStorage.setItem("courseId", courseId);
+    (document.getElementById(courseId) as any).checked = true;
+    setCourseId(courseId);
   }
   return (
     <>
@@ -85,13 +90,13 @@ function CoursesTable() {
 
           <tbody>
             {courses.map((course) => (
-              <tr>
+              <tr onClick={() => selectCourse(course.id)}>
                 <td style={{ textAlign: "center" }}>
                   <input
                     type="radio"
                     name="course"
                     style={{ width: "20px", height: "20px" }}
-                    onClick={() => selectCourse(course.id)}
+                    id={course.id}
                   />
                 </td>
                 <td>{course.code}</td>
