@@ -57,10 +57,9 @@ number = 2
 
 def create(prompt):
     # parameters needed,
-    # type : the type of question MCQ
-    # text : object key
-    # number : number of questions
-    # id : for fetching the material
+    # user id
+    # course id
+    # material id
 
     response = sm_client.invoke_endpoint(
         EndpointName=endpoint_name,
@@ -246,3 +245,13 @@ def fill_in_blank(event, context):
         # prompt= prompt + json.dumps(ali ,indent=2) + "\nAssistant:" #test
 
     return questions
+import random
+import math
+def filter(text):
+    words = text.split()
+    cut_size =math.ceil(len(words) / 1000)
+    cuts = []
+    for i in range(0,len(words),math.ceil(len(words)/cut_size)):
+      cuts.append(words[i:i+math.ceil((len(words)-1)/cut_size)])
+    num = random.randint(0,len(cuts)-1)
+    return (" ".join(cuts[num]))
