@@ -1,8 +1,9 @@
 import { useState } from "react";
 import QuestionArea from "../components/QuestionArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus } from "@fortawesome/free-solid-svg-icons";
-
+import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
+import { useAtom } from "jotai";
+import { questionsAtom } from "../lib/store";
 export interface Question {
   stem: String;
 }
@@ -11,24 +12,36 @@ function QuestionsSetup() {
   const [generated, setGenerated] = useState([
     { stem: "S3? Simple Storage Service" },
     { stem: "EC2? Elastic Cloud Compute" },
-    { stem: "QQQ" },
+    { stem: "VPC? Virtual Private Cloud" },
   ]);
-  const [selected, setSelected] = useState([{ stem: "DDD" }]);
+  const [selected, setSelected] = useState([{ stem: "" }]);
+
+  const [questions, setQuestions] = useAtom(questionsAtom);
 
   const selectQuestion = (q: Question, idx: number) => {
     setSelected([...selected, q as any]);
+    // console.log(selected);
     generated.splice(idx, 1);
     setGenerated(generated);
+    setQuestions([...questions, q as any]);
+    console.log(questions);
   };
 
   const removeQuestion = (index: number) => {
-    console.log(selected);
-    console.log(index);
     selected.splice(index, 1);
-    setSelected(selected);
-    // selected.splice(index, 1);
-    // console.log(selected);
-    // setSelected(selected);
+    setSelected([...selected]);
+
+    // setQuestions([...selected]);
+    // console.log(questions);
+    //   console.log(selected);
+    questions.splice(index, 1);
+    setQuestions(questions);
+
+    //   // selected.splice(index, 1);
+    //   // setSelected(selected);
+    //   // selected.splice(index, 1);
+    //   // console.log(selected);
+    //   // setSelected(selected);
   };
 
   //   function addQuestion(newQuestion) {
@@ -68,17 +81,16 @@ function QuestionsSetup() {
         <div className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {selected.map((question, index) => (
+          {questions.map((question, index) => (
             <div key={question.stem} className="question-container">
+              {/* <div className="minus-hover"> */}
               <FontAwesomeIcon
-                icon={faMinus}
-                style={{
-                  color: "#22223b",
-                  marginRight: "1px",
-                  cursor: "pointer",
-                }}
+                icon={faMinusCircle}
+                size="2x"
+                // className="faMinusCircle"
                 onClick={() => removeQuestion(index)}
               />
+              {/* </div> */}
               <div>{question.stem}</div>
             </div>
           ))}

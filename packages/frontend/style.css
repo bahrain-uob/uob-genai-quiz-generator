@@ -443,28 +443,26 @@ input[type="checkbox"] {
 }
 .questions {
   display: flex;
-  /* flex-direction: column; */
-  /* flex:1; */
+  flex-direction: row;
   justify-content: space-evenly;
   align-items: flex-start;
-}
-/* .generated, .selected{
-     flex:1; 
- } */
-.generated {
-  margin-right: 20px;
-}
-.slected {
-  margin-left: 20px;
-  overflow: auto;
-  width: 100%;
+  gap: 60px;
+  /* @media (max-width: 768px) {
+    overflow: hidden;
+  } */
 }
 
-/* .questions .generated{
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
- } */
+/* .slected {
+  overflow: hidden; 
+   @media (max-width: 768px) {
+    width: 20em;
+  }  */
+
+/* .questions .generated {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+} */
 /* .questions .selected{
     display: flex;
     flex-direction: column;
@@ -474,7 +472,7 @@ input[type="checkbox"] {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-top: 25px;
+  margin-top: 29px;
   position: relative;
   background-color: white;
   padding: 15px;
@@ -482,8 +480,61 @@ input[type="checkbox"] {
   box-shadow: 1px 1px 3px #00000077;
   font-size: 0.9rem;
   width: 20rem;
+  position: relative;
+  @media (max-width: 768px) {
+    width: 20em;
+  }
 }
-
+textarea {
+  width: 100%;
+}
+.faPlusCircle {
+  color: #4a4e69;
+  background-color: white;
+  border-radius: 50%;
+  margin-right: 1px;
+  cursor: pointer;
+  transition: transform 0.7s ease-in-out;
+  &:hover {
+    transform: translateY(5px);
+    transform: rotate(90deg);
+    transition: transform 0.5s;
+    color: #4dbb43;
+  }
+}
+.faMinusCircle {
+  color: #4a4e69;
+  background-color: white;
+  border-radius: 50%;
+  margin-right: 1px;
+  cursor: pointer;
+  transition: transform 0.7s ease-in-out;
+  &:hover {
+    transform: translateY(5px);
+    transform: rotate(180deg);
+    transition: transform 0.5s;
+    color: rgb(191, 7, 7);
+  }
+}
+.plus-hover,
+.minus-hover {
+  position: absolute;
+  height: 28px;
+  width: 28px;
+  bottom: -13px;
+  /* top: -9px; */
+  right: -9px;
+  /* right: 15px; */
+  border-radius: 50px;
+  background-color: transparent;
+  box-shadow: 1px 1px 4px #00000077;
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+  &:hover {
+    transform: translateY(5px);
+    transition: transform 0.5s;
+  }
+}
 .setup-quiz h3,
 .questions-setup h3 {
   font-size: 1.8rem;

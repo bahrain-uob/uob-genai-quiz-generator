@@ -2,7 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
 import { useAtom } from "jotai";
-import { quizAtom, stageAtom } from "../lib/store";
+import { quizAtom, stageAtom, questionsAtom } from "../lib/store";
 
 function Review() {
   return (
@@ -59,6 +59,7 @@ function QuizSetup() {
 }
 
 function Questions() {
+  const [questions, _setQuestions] = useAtom(questionsAtom);
   const [_stepNo, setStepNo] = useAtom(stageAtom);
   return (
     <div className="white-container">
@@ -69,30 +70,11 @@ function Questions() {
         </div>
       </div>
       <div className="form-container">
-        <div className="question-area">
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-        </div>
-        <div className="question-area">
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-        </div>
-        <div className="question-area">
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-        </div>
-        <div className="question-area">
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-          <p> What is AWS S3? </p>
-        </div>
+        {questions.map((question) => (
+          <div className="question-area">
+            <p> {question.stem}</p>
+          </div>
+        ))}
       </div>
     </div>
   );

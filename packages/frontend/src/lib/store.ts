@@ -23,3 +23,9 @@ export const quizAtom = atomWithStorage("quiz", {
 });
 
 export const stageAtom = atomWithStorage("stage", 0);
+
+export const questionsAtom = atomWithStorage("questions", [
+  {
+    stem: "",
+  },
+]);

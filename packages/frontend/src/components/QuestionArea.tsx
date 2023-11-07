@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { Question } from "./QuestionsSetup";
 
 function QuestionArea(props: {
@@ -23,13 +23,17 @@ function QuestionArea(props: {
     <>
       <div className="question-container">
         <form>
+          {/* <div className="plus-hover"> */}
           <FontAwesomeIcon
-            icon={faPlus}
-            style={{ color: "#22223b", marginRight: "1px", cursor: "pointer" }}
+            icon={faPlusCircle}
+            size="2x"
+            className="faPlusCircle"
             onClick={() => {
               props.add(question, idx);
             }}
           />
+          {/* </div> */}
+
           <textarea
             rows={6}
             cols={35}
