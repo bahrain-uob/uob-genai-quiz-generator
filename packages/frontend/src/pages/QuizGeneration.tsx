@@ -70,6 +70,7 @@ function CoursesTable() {
 
   function selectCourse(courseId: string) {
     localStorage.setItem("courseId", courseId);
+    (document.getElementById(courseId) as any).checked = true;
   }
   return (
     <>
@@ -85,13 +86,13 @@ function CoursesTable() {
 
           <tbody>
             {courses.map((course) => (
-              <tr>
+              <tr onClick={() => selectCourse(course.id)}>
                 <td style={{ textAlign: "center" }}>
                   <input
                     type="radio"
                     name="course"
                     style={{ width: "20px", height: "20px" }}
-                    onClick={() => selectCourse(course.id)}
+                    id={course.id}
                   />
                 </td>
                 <td>{course.code}</td>
