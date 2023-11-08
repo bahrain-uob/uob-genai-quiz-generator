@@ -23,6 +23,10 @@ export interface Tf {
   question: string;
   answer: boolean;
 }
+export interface FillBlank {
+  question: string;
+  answer: string;
+}
 export const quizAtom = atomWithStorage("quiz", {
   courseId: "",
   materials: [] as string[],
@@ -44,6 +48,7 @@ export const quizAtom = atomWithStorage("quiz", {
       answer: true,
     },
   ] as Tf[],
+  fillBlankArr: [] as FillBlank[],
 });
 
 export const stageAtom = atomWithStorage("stage", 0);

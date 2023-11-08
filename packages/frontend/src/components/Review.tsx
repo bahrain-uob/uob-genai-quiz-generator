@@ -2,11 +2,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
 import { useAtom } from "jotai";
-import { quizAtom, stageAtom, Mcq } from "../lib/store";
+import { quizAtom, stageAtom, Mcq, FillBlank, Tf } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 
 const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
-
+const FillBlanksAtom = focusAtom(quizAtom, (optic) =>
+  optic.prop("fillBlankArr")
+);
+const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 function Review() {
   return (
     <div className="review-container">
@@ -14,7 +17,9 @@ function Review() {
       <h3 style={{ marginBottom: "20px" }}>Review Your Quiz</h3>
 
       <QuizSetup />
-      <Questions />
+      <Questions type="MCQ Setup" stepNo={3} />
+      <Questions type="T/F Setup" stepNo={4} />
+      <Questions type="Fill-in Blank Setup" stepNo={5} />
     </div>
   );
 }
@@ -61,53 +66,105 @@ function QuizSetup() {
   );
 }
 
-function Questions() {
-  const [questions, _setQuestions] = useAtom(McqsAtom);
+function Questions(props: { type: string; stepNo: number }) {
+  const [mcqQuestions, _setQuestions] = useAtom(McqsAtom);
+  const [fillBlankQuestions, _setFillBLankQuestions] = useAtom(FillBlanksAtom);
+  const [tfQuestions, _setTfQuestions] = useAtom(TfsAtom);
   const [_stepNo, setStepNo] = useAtom(stageAtom);
   return (
     <div className="white-container">
       <div className="stage-name">
-        <h4>MCQ Setup</h4>
-        <div className="underline" onClick={() => setStepNo(3)}>
+        <h4>{props.type}</h4>
+        <div className="underline" onClick={() => setStepNo(props.stepNo)}>
           <FontAwesomeIcon icon={faPenClip} className="edit-icon" />
         </div>
       </div>
-      <div className="form-container">
-        {questions.map((question: Mcq) => (
-          <div className="question-area mcq-review">
-            <strong>
-              <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: "medium",
-                }}
-              >
+      {props.type == "MCQ Setup" && (
+        <div className="form-container">
+          {mcqQuestions.map((question: Mcq) => (
+            <div className="question-area mcq-review">
+              <strong>
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "medium",
+                  }}
+                >
+                  {" "}
+                  {question.question}
+                </p>
+              </strong>
+              <p>
                 {" "}
-                {question.question}
+                <strong>1)</strong> {question.choices[0]}
               </p>
-            </strong>
-            <p>
-              {" "}
-              <strong>1)</strong> {question.choices[0]}
-            </p>
-            <p>
-              {" "}
-              <strong>2)</strong> {question.choices[1]}
-            </p>
-            <p>
-              {" "}
-              <strong>3)</strong> {question.choices[2]}
-            </p>
-            <p>
-              {" "}
-              <strong>4)</strong> {question.choices[3]}
-            </p>
-            <p style={{ paddingTop: "0.7em", fontWeight: "bold" }}>
-              Answer Key: {question.answer_index + 1}
-            </p>
-          </div>
-        ))}
-      </div>
+              <p>
+                {" "}
+                <strong>2)</strong> {question.choices[1]}
+              </p>
+              <p>
+                {" "}
+                <strong>3)</strong> {question.choices[2]}
+              </p>
+              <p>
+                {" "}
+                <strong>4)</strong> {question.choices[3]}
+              </p>
+              <p style={{ paddingTop: "0.7em", fontWeight: "bold" }}>
+                Answer Key: {question.answer_index + 1}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {props.type == "Fill-in Blank Setup" && (
+        <div className="form-container">
+          {fillBlankQuestions.map((question: FillBlank) => (
+            <div className="question-area mcq-review">
+              <strong>
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "medium",
+                  }}
+                >
+                  {" "}
+                  {question.question}
+                </p>
+              </strong>
+
+              <p style={{ paddingTop: "0.7em", fontWeight: "bold" }}>
+                Answer Key: {question.answer}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {props.type == "T/F Setup" && (
+        <div className="form-container">
+          {tfQuestions.map((question: Tf) => (
+            <div className="question-area mcq-review">
+              <strong>
+                <p
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: "medium",
+                  }}
+                >
+                  {" "}
+                  {question.question}
+                </p>
+              </strong>
+
+              <p style={{ paddingTop: "0.7em", fontWeight: "bold" }}>
+                Answer Key: {question.answer.toString()}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

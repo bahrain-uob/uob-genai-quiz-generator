@@ -7,7 +7,10 @@
   line-height: 10%;
   padding: 50px;
 }
-
+.review-container h3 {
+  font-size: 1.9em;
+  line-height: 0em;
+}
 .stage-name {
   display: flex;
   justify-content: space-between;

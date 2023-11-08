@@ -11,6 +11,7 @@ import { useAtom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
 import TfQuestionsSetup from "../components/TfQuestionsSetup";
+import FillBlankQuestionsSetup from "../components/FillBlankQuestionsSetup";
 
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
@@ -33,7 +34,8 @@ function Quizzes() {
         {stepNo == 2 && <QuizSetupForm />}
         {stepNo == 3 && <McqQuestionsSetup />}
         {stepNo == 4 && <TfQuestionsSetup />}
-        {stepNo == 5 && <Review />}
+        {stepNo == 5 && <FillBlankQuestionsSetup />}
+        {stepNo == 6 && <Review />}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {stepNo > 0 && (
