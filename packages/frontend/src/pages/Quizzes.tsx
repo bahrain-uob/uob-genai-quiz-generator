@@ -2,9 +2,34 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Navrbar from "../components/Navbar";
 import Title from "../components/Title";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { API } from "aws-amplify";
+import { useEffect } from "react";
+import { useAtom } from "jotai";
+import { Course, coursesAtom, navAtom } from "../lib/store";
 
 function Quizzes() {
+  const [courses, setCourses] = useAtom(coursesAtom);
+  useEffect(() => {
+    updateCourses();
+  }, []);
+
+  const updateCourses = async () => {
+    let courses = await API.get("api", "/courses", {});
+    setCourses(courses);
+  };
+
+  const navigation = useNavigate();
+  const [_, setNav] = useAtom(navAtom);
+  function navigate(
+    course_id: string,
+    course_code: string,
+    course_name: string
+  ) {
+    setNav({ course_id, course_code, course_name });
+    navigation("/materials");
+  }
+
   return (
     <>
       <Navrbar />
@@ -16,22 +41,24 @@ function Quizzes() {
       </div>
 
       <div className="container">
-        <div className="course-quiz-container">
-          <h2>ITCS448 Cloud Computing</h2>
-          <div className="quizzes-container">
-            <Quiz name="Quiz 1" date="18th Oct 2023" />
-            <Quiz name="Quiz 2" date="18th Oct 2023" />
-            <Quiz name="Quiz 3" date="18th Oct 2023" />
+        {courses.map((course: Course) => (
+          <div className="course-quiz-container">
+            <h2
+              className="underlined"
+              onClick={() => {
+                navigate(course.id, course.code, course.name);
+              }}
+            >
+              {`${course.code}  - ${course.name}`}
+            </h2>
+
+            <div className="quizzes-container">
+              <Quiz name="Quiz 1" date="18th Oct 2023" />
+              <Quiz name="Quiz 2" date="18th Oct 2023" />
+              <Quiz name="Quiz 3" date="18th Oct 2023" />
+            </div>
           </div>
-        </div>
-        <div className="course-quiz-container">
-          <h2>ITCS444 Mobile Application</h2>
-          <div className="quizzes-container">
-            <Link to="/createquiz">
-              <button className="generate-button-2">Generate Quiz</button>
-            </Link>
-          </div>
-        </div>
+        ))}
       </div>
     </>
   );
