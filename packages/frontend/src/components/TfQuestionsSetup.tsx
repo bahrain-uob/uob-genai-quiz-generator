@@ -6,7 +6,7 @@ import { useAtom } from "jotai";
 import { Tf, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 
-const TfAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
+const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 
 function TfQuestionsSetup() {
   const [generated, setGenerated] = useState([
@@ -25,22 +25,22 @@ function TfQuestionsSetup() {
   ] as Tf[]);
   const [selected, setSelected] = useState([{ stem: "" }]);
 
-  const [Tfquestions, setTfQuestions] = useAtom(TfAtom);
-  console.log(Tfquestions);
+  const [tfQuestions, setTfQuestions] = useAtom(TfsAtom);
+  console.log(tfQuestions);
 
   const selectQuestion = (q: Tf, idx: number) => {
     setSelected([...selected, q as any]);
     generated.splice(idx, 1);
     setGenerated(generated);
-    setTfQuestions([...Tfquestions, q as any]);
-    console.log(Tfquestions);
+    setTfQuestions([...tfQuestions, q as any]);
+    console.log(tfQuestions);
   };
 
   const removeQuestion = (index: number) => {
     selected.splice(index, 1);
     setSelected([...selected]);
-    Tfquestions.splice(index, 1);
-    setTfQuestions(Tfquestions);
+    tfQuestions.splice(index, 1);
+    setTfQuestions(tfQuestions);
   };
 
   return (
@@ -66,7 +66,7 @@ function TfQuestionsSetup() {
         <div className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {/* {Tfquestions.map((qu, index) => (
+          {tfQuestions.map((qu, index) => (
             <div key={qu.question} className="question-container">
               <FontAwesomeIcon
                 icon={faMinusCircle}
@@ -84,7 +84,7 @@ function TfQuestionsSetup() {
                 isSelected={true}
               />
             </div>
-          ))} */}
+          ))}
         </div>
       </div>
     </div>
