@@ -4,12 +4,13 @@ import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
 import MaterialsTable from "../components/MaterialsTable";
 import QuizSetupForm from "../components/QuizSetup";
-import QuestionsSetup from "../components/QuestionsSetup";
+import McqQuestionsSetup from "../components/McqQuestionsSetup";
 import Review from "../components/Review";
 import { API } from "aws-amplify";
 import { useAtom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
+import TfQuestionsSetup from "../components/TfQuestionsSetup";
 
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
@@ -30,8 +31,9 @@ function Quizzes() {
           <MaterialsTable courseId={courseId} isSelecting={true} />
         )}
         {stepNo == 2 && <QuizSetupForm />}
-        {stepNo == 3 && <QuestionsSetup />}
-        {stepNo == 4 && <Review />}
+        {stepNo == 3 && <McqQuestionsSetup />}
+        {stepNo == 4 && <TfQuestionsSetup />}
+        {stepNo == 5 && <Review />}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {stepNo > 0 && (
@@ -44,7 +46,7 @@ function Quizzes() {
             Back
           </button>
         )}
-        {stepNo < 4 && (
+        {stepNo < 6 && (
           <button
             className="next"
             onClick={() => {
@@ -60,7 +62,7 @@ function Quizzes() {
 }
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials"),
+  optic.prop("materials")
 );
 
 function CoursesTable() {

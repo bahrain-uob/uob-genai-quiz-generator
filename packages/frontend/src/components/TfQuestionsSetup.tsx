@@ -1,61 +1,58 @@
 import { useState } from "react";
-import QuestionArea from "../components/QuestionArea";
+import TfQuestionArea from "./TfQuestionArea";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { useAtom } from "jotai";
-import { Mcq, quizAtom } from "../lib/store";
+import { Tf, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 
-const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
+const TfAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 
-function QuestionsSetup() {
+function TfQuestionsSetup() {
   const [generated, setGenerated] = useState([
     {
       question: "S3? Simple Storage Service",
-      choices: ["s3", "ec2", "vpc", "ebs"],
-      answer_index: 0,
+      answer: true,
     },
     {
       question: "EC2? Elastic Cloud Compute",
-      choices: ["s3", "ec2", "vpc", "ebs"],
-      answer_index: 2,
+      answer: false,
     },
     {
       question: "VPC? Virtual Private Cloud",
-      choices: ["s3", "ec2", "vpc", "ebs"],
-      answer_index: 2,
+      answer: true,
     },
-  ] as Mcq[]);
+  ] as Tf[]);
   const [selected, setSelected] = useState([{ stem: "" }]);
 
-  const [questions, setQuestions] = useAtom(McqsAtom);
-  console.log(questions);
+  const [Tfquestions, setTfQuestions] = useAtom(TfAtom);
+  console.log(Tfquestions);
 
-  const selectQuestion = (q: Mcq, idx: number) => {
+  const selectQuestion = (q: Tf, idx: number) => {
     setSelected([...selected, q as any]);
     generated.splice(idx, 1);
     setGenerated(generated);
-    setQuestions([...questions, q as any]);
-    console.log(questions);
+    setTfQuestions([...Tfquestions, q as any]);
+    console.log(Tfquestions);
   };
 
   const removeQuestion = (index: number) => {
     selected.splice(index, 1);
     setSelected([...selected]);
-    questions.splice(index, 1);
-    setQuestions(questions);
+    Tfquestions.splice(index, 1);
+    setTfQuestions(Tfquestions);
   };
 
   return (
     <div className="questions-setup" style={{ backgroundColor: "#F2E9E4" }}>
-      <h3>Customize the MCQ Questions</h3>
+      <h3>Customize the True/False Questions</h3>
 
       <div className="questions">
         <div className="generated">
           <h4 style={{ textAlign: "center" }}>Generated Questions</h4>
 
           {generated.map((question, index) => (
-            <QuestionArea
+            <TfQuestionArea
               key={question.question}
               q={question}
               index={index}
@@ -69,7 +66,7 @@ function QuestionsSetup() {
         <div className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {questions.map((qu, index) => (
+          {/* {Tfquestions.map((qu, index) => (
             <div key={qu.question} className="question-container">
               <FontAwesomeIcon
                 icon={faMinusCircle}
@@ -78,7 +75,7 @@ function QuestionsSetup() {
                 onClick={() => removeQuestion(index)}
               />
 
-              <QuestionArea
+              <TfQuestionArea
                 key={qu.question}
                 q={qu}
                 index={index}
@@ -87,10 +84,10 @@ function QuestionsSetup() {
                 isSelected={true}
               />
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
     </div>
   );
 }
-export default QuestionsSetup;
+export default TfQuestionsSetup;

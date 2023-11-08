@@ -19,7 +19,10 @@ export interface Mcq {
   choices: string[];
   answer_index: number;
 }
-
+export interface Tf {
+  question: string;
+  answer: boolean;
+}
 export const quizAtom = atomWithStorage("quiz", {
   courseId: "",
   materials: [] as string[],
@@ -35,6 +38,12 @@ export const quizAtom = atomWithStorage("quiz", {
     //   answer_index: 0,
     // },
   ] as Mcq[],
+  TfArr: [
+    {
+      question: "pixels stands for picture elements",
+      answer: true,
+    },
+  ] as Tf[],
 });
 
 export const stageAtom = atomWithStorage("stage", 0);
