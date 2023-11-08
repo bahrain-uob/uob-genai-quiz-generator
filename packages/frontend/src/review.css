@@ -1,0 +1,119 @@
+/* review stage */
+.review-container {
+  background-color: #f2e9e4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  line-height: 10%;
+  padding: 50px;
+}
+
+.stage-name {
+  display: flex;
+  justify-content: space-between;
+}
+.edit-icon {
+  margin-top: 20px;
+  color: #22223b;
+  cursor: pointer;
+}
+.edit-icon:hover {
+  color: #4a4e69;
+}
+.underline,
+.leftline {
+  display: inline-block;
+  position: relative;
+  color: #4a4e69;
+}
+
+.underline::after {
+  content: "";
+  position: absolute;
+  width: 150%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 15px;
+  left: -4px;
+  background-color: #4a4e69;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+.underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+h4 {
+  color: #4a4e69;
+  font-size: large;
+  font-weight: bolder;
+  padding: 10px 10px 0px 10px;
+}
+.white-container {
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px 30px 20px 30px;
+  margin: 20px 40px 0px 40px;
+  box-shadow: 2px 2px 2px #c5c5c5;
+}
+.form-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding-bottom: 20px;
+}
+.left,
+.right {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+.left {
+  float: left;
+}
+.right {
+  float: right;
+}
+label {
+  font-size: 14px;
+  color: #22223b;
+  padding-top: 5px;
+  margin-bottom: 5px;
+}
+
+.input-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 25px;
+  position: relative;
+}
+input {
+  border-radius: 3px;
+  border: none;
+  width: 18rem;
+  background-color: #9b999922;
+  box-sizing: border-box;
+  padding-left: 3.6rem;
+  background-color: #f2f2f2;
+  padding: 5px;
+  border-radius: 9px;
+  border: none;
+}
+input::placeholder {
+  font-size: small;
+}
+input:focus {
+  outline: none;
+  border-bottom: 2px solid #22223b;
+}
+.question-area {
+  /* flex: 33.3333%; */
+  border-radius: 5px;
+  box-shadow: 2px 2px 2px #c5c5c5;
+  border: 1px solid #c5c5c5;
+  width: 26rem;
+  margin-bottom: 10px;
+  padding: 20px;
+}
+/* end of review stage */

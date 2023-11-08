@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFile,
+  faFileArrowDown,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
@@ -43,6 +47,30 @@ function MaterialsTable({
     await Storage.remove(key);
   };
 
+  const downloadMaterial = async (index: number) => {
+    const name = materials[index].key;
+    const userId = await getUserId();
+    const key = `${userId}/${courseId}/materials/${name}`;
+    const result = await Storage.get(key, { download: true });
+    downloadBlob(result.Body, name);
+  };
+
+  const downloadBlob = (blob: any, filename: string) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename || "download";
+    const clickHandler = () => {
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        a.removeEventListener("click", clickHandler);
+      }, 150);
+    };
+    a.addEventListener("click", clickHandler, false);
+    a.click();
+    return a;
+  };
+
   return (
     <div className="materials">
       <table>
@@ -52,7 +80,7 @@ function MaterialsTable({
             <th>FILE NAME</th>
             <th>SIZE</th>
             <th>DATE</th>
-            <th></th>
+            {!isSelecting && <th></th>}
           </tr>
         </thead>
         <tbody>
@@ -69,7 +97,15 @@ function MaterialsTable({
               <td>{material.size}</td>
               <td>{material.lastModified}</td>
               <td>
-                {!isSelecting && (
+                <FontAwesomeIcon
+                  style={{ cursor: "pointer" }}
+                  icon={faFileArrowDown}
+                  size="xl"
+                  onClick={() => downloadMaterial(index)}
+                />
+              </td>
+              {!isSelecting && (
+                <td>
                   <FontAwesomeIcon
                     style={{ cursor: "pointer" }}
                     icon={faTrash}
@@ -78,8 +114,8 @@ function MaterialsTable({
                       deleteMaterial(index);
                     }}
                   />
-                )}
-              </td>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
