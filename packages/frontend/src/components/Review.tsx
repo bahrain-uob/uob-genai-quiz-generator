@@ -82,37 +82,73 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "MCQ Setup" && (
         <div className="form-container">
           {mcqQuestions.map((question: Mcq) => (
-            <div className="question-area mcq-review">
-              <strong>
-                <p
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "medium",
-                  }}
-                >
-                  {" "}
-                  {question.question}
-                </p>
-              </strong>
-              <p>
-                {" "}
-                <strong>1)</strong> {question.choices[0]}
-              </p>
-              <p>
-                {" "}
-                <strong>2)</strong> {question.choices[1]}
-              </p>
-              <p>
-                {" "}
-                <strong>3)</strong> {question.choices[2]}
-              </p>
-              <p>
-                {" "}
-                <strong>4)</strong> {question.choices[3]}
-              </p>
-              <p style={{ paddingTop: "0.7em", fontWeight: "bold" }}>
-                Answer Key: {question.answer_index + 1}
-              </p>
+            <div className="question-container">
+              <textarea
+                rows={9}
+                cols={35}
+                value={question.question}
+                disabled
+              ></textarea>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "5px" }}
+              >
+                <label style={{ fontSize: "medium" }}>1)</label>
+                {question.answer_index == 0 ? (
+                  <input
+                    style={{ backgroundColor: "rgba(77, 187, 67, 0.46)" }}
+                    type="text"
+                    value={question.choices[0]}
+                    disabled
+                  />
+                ) : (
+                  <input type="text" value={question.choices[0]} disabled />
+                )}
+              </div>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "5px" }}
+              >
+                <label style={{ fontSize: "medium" }}>2)</label>
+                {question.answer_index == 1 ? (
+                  <input
+                    style={{ backgroundColor: "rgba(77, 187, 67, 0.46)" }}
+                    type="text"
+                    value={question.choices[1]}
+                    disabled
+                  />
+                ) : (
+                  <input type="text" value={question.choices[0]} disabled />
+                )}
+              </div>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "5px" }}
+              >
+                <label style={{ fontSize: "medium" }}>3)</label>
+                {question.answer_index == 2 ? (
+                  <input
+                    style={{ backgroundColor: "rgba(77, 187, 67, 0.46)" }}
+                    type="text"
+                    value={question.choices[2]}
+                    disabled
+                  />
+                ) : (
+                  <input type="text" value={question.choices[0]} disabled />
+                )}
+              </div>
+              <div
+                style={{ display: "flex", flexDirection: "row", gap: "5px" }}
+              >
+                <label style={{ fontSize: "medium" }}>4)</label>
+                {question.answer_index == 3 ? (
+                  <input
+                    style={{ backgroundColor: "rgba(77, 187, 67, 0.46)" }}
+                    type="text"
+                    value={question.choices[3]}
+                    disabled
+                  />
+                ) : (
+                  <input type="text" value={question.choices[0]} disabled />
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -121,22 +157,24 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "Fill-in Blank Setup" && (
         <div className="form-container">
           {fillBlankQuestions.map((question: FillBlank) => (
-            <div className="question-area mcq-review">
-              <strong>
-                <p
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "medium",
-                  }}
-                >
-                  {" "}
-                  {question.question}
-                </p>
-              </strong>
+            <div className="question-container">
+              <textarea
+                rows={9}
+                cols={35}
+                defaultValue={question.question}
+                disabled
+              ></textarea>
 
-              <p style={{ paddingTop: "0.7em", fontWeight: "bold" }}>
-                Answer Key: {question.answer}
-              </p>
+              <label>Answer Key:</label>
+              <input
+                style={{
+                  marginTop: "0.5em",
+                  backgroundColor: "rgba(77, 187, 67, 0.46)",
+                }}
+                type="text"
+                value={question.answer}
+                disabled
+              />
             </div>
           ))}
         </div>
@@ -145,22 +183,23 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "T/F Setup" && (
         <div className="form-container">
           {tfQuestions.map((question: Tf) => (
-            <div className="question-area mcq-review">
-              <strong>
-                <p
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: "medium",
-                  }}
-                >
-                  {" "}
-                  {question.question}
-                </p>
-              </strong>
-
-              <p style={{ paddingTop: "0.7em", fontWeight: "bold" }}>
-                Answer Key: {question.answer.toString()}
-              </p>
+            <div className="question-container">
+              <textarea
+                rows={9}
+                cols={35}
+                defaultValue={question.question}
+                disabled
+              ></textarea>
+              <label>Answer Key:</label>
+              <input
+                style={{
+                  marginTop: "0.5em",
+                  backgroundColor: "rgba(77, 187, 67, 0.46)",
+                }}
+                type="text"
+                value={question.answer.toString()}
+                disabled
+              />
             </div>
           ))}
         </div>
