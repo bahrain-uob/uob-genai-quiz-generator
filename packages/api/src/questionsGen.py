@@ -1,6 +1,7 @@
 import json
 import os
 import boto3
+import requests
 
 # endpoint_name = os.environ["LLAMA_2_13B_ENDPOINT"]
 endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-7b"  # need to make environ
@@ -39,7 +40,9 @@ Ronaldo began his professional career with Sporting CP at age 17 in 2002, and si
 # Linguistic Intelligence
 # """
 topic = """
-Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Services (AWS) that provides object storage through a web service interface.Amazon S3 uses the same scalable storage infrastructure that Amazon.com uses to run its e-commerce network. Amazon S3 can store any type of object, which allows uses like storage for Internet applications, backups, disaster recovery, data archives, data lakes for analytics, and hybrid cloud storage. AWS launched Amazon S3 in the United States on March 14, 2006, then in Europe in November 2007.
+Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Services (AWS) that provides object storage through a web service interface.Amazon S3 uses the same scalable storage infrastructure that Amazon.com uses to run its e-commerce network.
+Amazon S3 can store any type of object, which allows uses like storage for Internet applications, backups, disaster recovery, data archives, data lakes for analytics, and hybrid cloud storage.
+AWS launched Amazon S3 in the United States on March 14, 2006, then in Europe in November 2007.
 """
 topic = """
 
@@ -211,39 +214,69 @@ def TF(event, context):
 
 
 def fill_in_blank(event, context):
+    number = event["number"]
     number = 4
     prompt = """
-    Human: i want you to generate 1 fill-in-the-blank question about Albert Einestein
-    The output should be a code snippet formatted in the following schema with one or more blanks to be filled:
+    Human: i want you to generate 1 fill-in-the-blank question about this :
+    Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
+    He is considered to be one of the greatest footballers of all time, and, by some, as the greatest ever.
+    Ronaldo began his professional career with Sporting CP at age 17 in 2002, and signed for Manchester United a year later. He won three back-to-back Premier League titles: in 2006-07, 2007-08, and 2008-09. In 2007-08, Ronaldo, helped United win the UEFA Champions League. In 2008-09, he won his first FIFA Club World Cup in December 2008, and he also won his first Ballon d'Or. At one point Ronaldo was the most expensive professional footballer of all time, after moving from Manchester United to Real Madrid for approximately £80 m in July 2009
+
+    The output should be a code snippet formatted in the following schema with one blank to be filled:
     {
-      "question": string // the question with one or more blanks to be filled
-      "answer": string // the correct answers to fill the blank
+      "question": string // the question with 1 blank to be filled
+      "answer": string // the correct answer to fill the blank
     }
     Assistant:
     {
-      "question": "Albert Einstein is famous for his theory of ___________.",
-      "correct_answer": "relativity"
-    }
+      "question": "Ronaldo won his first Ballon d'Or in ________ .",
+      "correct_answer": "2008"
+    } 
 
-    Human: i want you to generate 1 fill-in-the-blank question about Albert Einestein
-    The output should be a code snippet formatted in the following schema with one or more blanks to be filled:
+    Human: i want you to generate 1 fill-in-the-blank question about this :
+    Apple Inc. is an American multinational technology company headquartered in Cupertino, California.
+    As of March 2023, Apple is the world's biggest company by market capitalization, and with US$394.3 billion the largest technology company by 2022 revenue. 
+    As of June 2022, Apple is the fourth-largest personal computer vendor by unit sales; the largest manufacturing company by revenue; and the second-largest mobile phone manufacturer in the world. 
+    It is considered one of the Big Five American information technology companies, alongside Alphabet (parent company of Google), Amazon, Meta, and Microsoft.
+    Apple was founded as Apple Computer Company on April 1, 1976, by Steve Wozniak, Steve Jobs and Ronald Wayne to develop and sell Wozniak's Apple I personal computer. 
+    It was incorporated by Jobs and Wozniak as Apple Computer, Inc. in 1977
+
+    The output should be a code snippet formatted in the following schema with one blank to be filled:
     {
-      "question": string // the question with one or more blanks to be filled
-      "answer": string // the correct answers to fill the blank
+      "question": string // the question with 1 blank to be filled
+      "answer": string // the correct answer to fill the blank
     }
     Assistant:
     {
-      "question": "Albert Einstein was born in the year _________.",
-      "correct_answer": "1879"
-    }
+      "question": "Apple Inc. is an ________ multinational technology company headquartered in Cupertino, California.",
+      "correct_answer": "American"
+    } 
 
-    Human: i want you to generate 1 fill-in-the-blank questions about: {{topic}}
-    The output should be a code snippet formatted in the following schema with one or more blanks to be filled:
+    Human: i want you to generate 1 fill-in-the-blank question about this :
+    Cloud computing is the on-demand availability of computing resources (such as storage and infrastructure), as services over the internet. 
+    It eliminates the need for individuals and businesses to self-manage physical resources themselves, and only pay for what they use.
+    Cloud computing service models are based on the concept of sharing on-demand computing resources, software, and information over the internet.
+    Companies or individuals pay to access a virtual pool of shared resources, including compute, storage, and networking services, which are located on remote servers that are owned and managed by service providers. 
+
+    The output should be a code snippet formatted in the following schema with one blank to be filled:
     {
-      "question": string // the question with one or more blanks to be filled
-      "answer": string // the correct answers to fill the blank
+      "question": string // the question with 1 blank to be filled
+      "answer": string // the correct answer to fill the blank
     }
-    Assistant: """
+    Assistant:
+    {
+      "question": "Cloud computing is the _______ availability of computing resources (such as storage and infrastructure), as services over the internet.",
+      "correct_answer": "on-demand"
+    } 
+
+    Human: i want you to generate 1 fill-in-the-blank question about this : {{topic}}
+
+    The output should be a code snippet formatted in the following schema with one blank to be filled:
+    {
+      "question": string // the question with 1 blank to be filled
+      "answer": string // the correct answer to fill the blank
+    } 
+    Assistant: """ 
 
     questions = []
     prompt = prompt.replace("{{topic}}", topic)
