@@ -664,6 +664,8 @@ input[type="number"] {
   border-radius: 0px 5px 5px 0px;
   padding: 9px;
   transition: 0.5s ease-in;
+  animation-duration: 0.7s;
+  animation-name: slideout;
 }
 .right-toggle.checked {
   background-color: #4a4e69;
@@ -671,6 +673,30 @@ input[type="number"] {
   border-radius: 5px 0px 0px 5px;
   padding: 9px;
   transition: 0.5s ease-out;
+  animation-duration: 0.7s;
+  animation-name: slidein;
+}
+@keyframes slideout {
+  from {
+    margin-right: 30%;
+    width: 50%;
+  }
+
+  to {
+    margin-left: 0%;
+    width: 50%;
+  }
+}
+@keyframes slidein {
+  from {
+    margin-left: 30%;
+    width: 50%;
+  }
+
+  to {
+    margin-left: 0%;
+    width: 50%;
+  }
 }
 /* end of create quiz */
 

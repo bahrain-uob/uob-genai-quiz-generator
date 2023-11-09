@@ -71,23 +71,14 @@ function TfQuestionsSetup() {
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
           {tfQuestions.map((qu, index) => (
-            <div key={qu.question} className="question-container">
-              {/* <FontAwesomeIcon
-                icon={faMinusCircle}
-                size="2x"
-                className="faMinusCircle"
-                onClick={() => removeQuestion(index)}
-              /> */}
-
-              <TfQuestionArea
-                key={qu.question}
-                q={qu}
-                index={index}
-                add={selectQuestion}
-                remove={removeQuestion}
-                isSelected={true}
-              />
-            </div>
+            <TfQuestionArea
+              key={qu.question}
+              q={qu}
+              index={index}
+              add={selectQuestion}
+              remove={removeQuestion}
+              isSelected={true}
+            />
           ))}
         </div>
       </div>

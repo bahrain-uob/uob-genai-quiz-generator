@@ -32,13 +32,12 @@ function QuestionArea(props: {
 
   return (
     <>
-      <div className={props.isSelected ? "" : "question-container"}>
+      <div className="question-container">
         <form
           onSubmit={(e) => {
             e.preventDefault();
           }}
         >
-          {/* <div className="plus-hover"> */}
           {props.isSelected ? (
             <FontAwesomeIcon
               icon={faMinusCircle}
@@ -56,7 +55,7 @@ function QuestionArea(props: {
               }}
             />
           )}
-          {/* </div> */}
+
           <textarea
             rows={2}
             cols={35}
