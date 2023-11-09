@@ -1,0 +1,212 @@
+/* body {
+  background-color: #100e17;
+  font-family: "Open Sans", sans-serif;
+} */
+
+.container-carousel {
+  position: absolute;
+  height: 300px;
+  width: 600px;
+  top: 60px;
+  left: calc(50% - 300px);
+  display: flex;
+}
+
+.card-carousel {
+  display: flex;
+  height: 280px;
+  width: 200px;
+  background-color: rgb(105, 110, 142);
+  border-radius: 10px;
+  box-shadow: -1px 0 1rem #000000a8;
+  margin-left: -50px;
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+
+  transform-style: preserve-3d;
+  transition: 3s;
+  cursor: pointer;
+  transform: perspective(1000px) rotateY(var(--rotate-y, 0))
+    translateY(var(--translate-y, 0));
+  /* perspective: 1000px; */
+}
+.card-carousel:hover {
+  --translate-y: -2px;
+  opacity: 1;
+}
+.card-carousel.flip {
+  --rotate-y: 180deg;
+}
+
+.card-carousel .front {
+  left: 0;
+}
+.card-carousel .front,
+.card-carousel .back {
+  position: absolute;
+  left: 0px;
+  display: flex;
+  height: 280px;
+  width: 200px;
+  left: 0px;
+  backface-visibility: hidden;
+}
+.card-carousel .back {
+  transform: rotateY(180deg);
+}
+
+/* .back,
+.front {
+  backface-visibility: hidden;
+  transition: transform 5s;
+  position: absolute;
+}
+.front {
+  left: 50px;
+  display: flex;
+  height: 280px;
+  width: 200px;
+  background-color: rgb(105, 110, 142);
+  border-radius: 10px;
+  box-shadow: -1px 0 1rem #000000a8;
+  margin-left: -50px;
+  transform: rotateY(0deg);
+}
+.back {
+  left: 50px;
+  transform: rotateY(180deg);
+  background-color: rgb(105, 110, 142);
+  border-radius: 10px;
+  box-shadow: -1px 0 1rem #000000a8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.card-carousel:hover .front {
+  transform: rotateY(180deg);
+}
+.card:hover .back {
+  transform: rotateY(0deg);
+} */
+*/ .card-carousel:not(:first-child) {
+  margin-left: -50px;
+}
+
+.card-carousel:hover {
+  transform: translate(-70px);
+  transition: 0.4s ease-out;
+}
+
+.card-carousel:last-child:hover {
+  transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
+
+.card-carousel:hover ~ .card {
+  position: relative;
+  left: 50px;
+  transition: 0.4s ease-out;
+}
+
+.title-carousel {
+  color: white;
+  font-weight: 300;
+  position: absolute;
+  left: 20px;
+  top: 15px;
+}
+
+.bar {
+  position: absolute;
+  top: 100px;
+  left: 20px;
+  height: 5px;
+  width: 150px;
+}
+
+.emptybar {
+  background-color: #2e3033c3;
+  width: 100%;
+  height: 100%;
+}
+
+.filledbar {
+  position: absolute;
+  top: 0px;
+  z-index: 3;
+  width: 0px;
+  height: 100%;
+  background: rgb(0, 154, 217);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 154, 217, 1) 0%,
+    rgba(217, 147, 0, 1) 65%,
+    rgba(255, 186, 0, 1) 100%
+  );
+  transition: 0.6s ease-out;
+}
+
+.card-carousel:hover .filledbar {
+  width: 120px;
+  transition: 0.4s ease-out;
+}
+
+.circle-carousel {
+  position: absolute;
+  top: 150px;
+  left: calc(50% - 60px);
+}
+
+.stroke {
+  stroke: white;
+  stroke-dasharray: 360;
+  stroke-dashoffset: 360;
+  transition: 0.6s ease-out;
+}
+
+svg {
+  fill: rgb(105, 110, 142);
+  stroke-width: 2px;
+}
+
+.card-carousel:hover .stroke {
+  stroke-dashoffset: 100;
+  transition: 0.6s ease-out;
+}
+.circle-text {
+  fill: rgb(255, 255, 255);
+  font-size: 3em;
+  font-weight: lighter;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  bottom: -2.8em;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.background-carousel {
+  background-image: url("frontend/src/assets/background.svg");
+}

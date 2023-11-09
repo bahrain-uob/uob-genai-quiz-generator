@@ -28,16 +28,36 @@ a {
 
 /* user homepage */
 .homepage-container {
-  background-color: #f2e9e4;
+  /* background-color: #4a4e699c; */
   display: flex;
   justify-content: center;
   flex-direction: column;
+  position: relative;
 }
 .homepage-container h2 {
   text-align: center;
   margin-top: 10rem;
-  color: #4a4e69;
-  font-weight: 400;
+  color: #ca867a;
+  font-weight: 600;
+  background-color: white;
+  width: 20em;
+  align-self: center;
+  border-radius: 8px;
+  /* border: 2px solid #4a4e69; */
+  font-size: large;
+  /* box-shadow: 2px 2px 9px #8e8e8e; */
+  padding: 10px;
+  font-size: x-large;
+}
+.homepage-container h2 {
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+  &:hover {
+    transform: scale(1);
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.372);
+    transform: translateY(5px);
+    transition: transform 0.5s;
+  }
 }
 .homepage-container .stepper-wrapper {
   margin-top: 5rem;
@@ -55,14 +75,15 @@ a {
 }
 .access-item {
   flex-basis: 33.3333%;
-  background-color: white;
-  box-shadow: 1px 1px 4px #00000077;
+  background-color: rgb(105, 110, 142);
+  box-shadow: 2px 2px 9px #000000b8;
   border-radius: 6px;
   text-align: center;
   padding: 40px;
   width: 12rem;
   height: 12rem;
   margin: 10px;
+  color: white;
   cursor: pointer;
   transform: scale(0.95);
   transition: box-shadow 0.5s, transform 0.5s;
@@ -98,7 +119,11 @@ a {
 .select-container select:focus {
   border: 2px solid #4a4e69a4;
 }
-
+.background-carousel {
+  margin-top: 2em;
+  margin-bottom: 26em;
+  position: relative;
+}
 /* end of user homepage */
 
 /* sinin & signup page */
