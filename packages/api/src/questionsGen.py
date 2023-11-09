@@ -51,10 +51,9 @@ One of the foundational services is Amazon Elastic Compute Cloud (EC2), which al
 
 """
 import re
-
-number = 2
-
-
+user_id=  "47b81c1f-887b-4702-aebc-a2e04760e80c"
+course_id ="33e64777-7a00-45af-bbde-957fd6e07319"
+materials = "dynamodb"
 def create(prompt):
     # parameters needed,
     # user id
@@ -70,6 +69,7 @@ def create(prompt):
                 "parameters": {
                     "max_new_tokens": 128,
                     "top_p": 0.9,
+                    # "temperature": random.randfloat(0.7,1),
                     "temperature": 1,
                     "return_full_text": False,
                 },
@@ -86,7 +86,20 @@ def create(prompt):
 
 
 def MCQ(event, context):
-    # topic = event["key"]
+    # user_id = event["id"]
+    # materials = event["materials"]
+    # course_id =event["course"]
+    r3 = []
+    object_key = user_id+"/"+course_id+"/materials/"+materials+".txt"
+#object_key = 'UOB-CERN-Success.mp4.txt'
+
+# Retrieve the object
+    # for object_key in object_keys:
+    response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
+    topic = response['Body'].read().decode('utf-8')
+    r3.extend(filter(topic))
+    topic = r3[random.randint(0,len(r3)-1)]
+    print()
     prompt = """
     Human: i want you to generate 1 MCQ question about  this :
     Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
@@ -135,14 +148,12 @@ def MCQ(event, context):
       "correct_answer_index": string // the index of the correct choice assuming 0-indexing
     }  
     Assistant:"""
-    questions = []
+    filter(topic)
     prompt = prompt.replace("{{topic}}", topic)
-    for index in range(int(number)):
-        ali = create(prompt)
-        questions.append(json.loads(ali))
+    json.loads(create(prompt))
         # prompt= prompt + json.dumps(ali ,indent=2) + "\nAssistant:" #test
 
-    return questions
+    return  json.loads(create(prompt))
 
 
 def TF(event, context):
@@ -155,12 +166,12 @@ def TF(event, context):
     The output should be a code snippet formatted in the following schema with only one correct answer:
     {
       "question": string // the true or false question
-      "correct_answer": string // the answer of the question (either True or False)
+      "correct_answer": boolean // the answer of the question (either True or False)
     }
     Assistant:
     {
       "question": "Ronaldo is born in Spain",
-      "correct_answer_index": "False"
+      "correct_answer_index": false
     }
 
     Human: i want you to generate 1 TRUE or FALSE question about  this :
@@ -174,19 +185,19 @@ def TF(event, context):
     The output should be a code snippet formatted in the following schema with only one correct answer:
     {
       "question": string // the true or false question
-      "correct_answer": string // the answer of the question (either True or False)
+      "correct_answer": boolean // the answer of the question (either True or False)
     }
     Assistant:
     {
       "question": "Steve jobs is one of the founders of Apple?",
-      "correct_answer": "True"
+      "correct_answer": true
     }
    
     Human: i want you to generate 1 TRUE or FAlSE question about this : {{topic}}
     The output should be a code snippet formatted in the following schema with only one correct answer
     {
       "question": string // the true or false question
-      "correct_answer": string // the answer of the question (either True or False)
+      "correct_answer": boolean // the answer of the question (either True or False)
     }
     Assistant:"""
     questions = []
@@ -248,7 +259,9 @@ def filter(text):
     words = text.split()
     cut_size =math.ceil(len(words) / 1000)
     cuts = []
+    mergedcuts = []
     for i in range(0,len(words),math.ceil(len(words)/cut_size)):
       cuts.append(words[i:i+math.ceil((len(words)-1)/cut_size)])
-    num = random.randint(0,len(cuts)-1)
-    return (" ".join(cuts[num]))
+    for item in cuts:
+      mergedcuts.append(" ".join(item))
+    return (mergedcuts)
