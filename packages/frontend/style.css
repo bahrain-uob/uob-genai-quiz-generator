@@ -361,6 +361,9 @@ label {
   }
 }
 
+input[type="text"] {
+  width: 100%;
+}
 .stepper-item::before {
   position: absolute;
   content: "";
@@ -513,6 +516,7 @@ textarea {
   padding: 5px;
   border-radius: 9px;
   border: none;
+  width: 100%;
 }
 
 .question-container input {
@@ -622,6 +626,51 @@ input[type="number"] {
     top: 3px;
     box-shadow: none;
   }
+}
+.toggle-container {
+  background-color: #efefef;
+  display: flex;
+  flex-direction: row;
+  padding: 10px;
+  width: 100%;
+  height: 40px;
+  border-radius: 5px;
+  margin: 5px 0px 5px 0px;
+  position: relative;
+}
+.right-toggle {
+  text-align: center;
+  padding: 0px 5px 0px 5px;
+  width: 50%;
+  cursor: pointer;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  padding: 9px;
+}
+.left-toggle {
+  padding: 0px 5px 0px 5px;
+  width: 50%;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding: 9px;
+}
+.left-toggle.checked {
+  background-color: #4a4e69;
+  color: white;
+  border-radius: 0px 5px 5px 0px;
+  padding: 9px;
+  transition: 0.5s ease-in;
+}
+.right-toggle.checked {
+  background-color: #4a4e69;
+  color: white;
+  border-radius: 5px 0px 0px 5px;
+  padding: 9px;
+  transition: 0.5s ease-out;
 }
 /* end of create quiz */
 

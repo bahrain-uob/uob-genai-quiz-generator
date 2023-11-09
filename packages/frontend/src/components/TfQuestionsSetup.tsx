@@ -1,7 +1,5 @@
 import { useState } from "react";
 import TfQuestionArea from "./TfQuestionArea";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { useAtom } from "jotai";
 import { Tf, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
@@ -43,6 +41,11 @@ function TfQuestionsSetup() {
     setTfQuestions(tfQuestions);
   };
 
+  // const updateQuestion = (val: any) => {
+  //   const updatedQuestion = { ...tfQuestions, question: val };
+  //   setTfQuestions(updatedQuestion);
+  // };
+
   return (
     <div className="questions-setup" style={{ backgroundColor: "#F2E9E4" }}>
       <h3>Customize the True/False Questions</h3>
@@ -58,6 +61,7 @@ function TfQuestionsSetup() {
               index={index}
               add={selectQuestion}
               remove={removeQuestion}
+              // update={updateQuestion}
               isSelected={false}
             />
           ))}
@@ -68,12 +72,12 @@ function TfQuestionsSetup() {
 
           {tfQuestions.map((qu, index) => (
             <div key={qu.question} className="question-container">
-              <FontAwesomeIcon
+              {/* <FontAwesomeIcon
                 icon={faMinusCircle}
                 size="2x"
                 className="faMinusCircle"
                 onClick={() => removeQuestion(index)}
-              />
+              /> */}
 
               <TfQuestionArea
                 key={qu.question}
