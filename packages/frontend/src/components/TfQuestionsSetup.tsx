@@ -41,10 +41,27 @@ function TfQuestionsSetup() {
     setTfQuestions(tfQuestions);
   };
 
-  // const updateQuestion = (val: any) => {
-  //   const updatedQuestion = { ...tfQuestions, question: val };
-  //   setTfQuestions(updatedQuestion);
-  // };
+  const updateGeneratedQuestion = (event: any, index: number) => {
+    const updatedGenerated = [...generated];
+    updatedGenerated[index] = {
+      ...updatedGenerated[index],
+      question: event.target.value,
+    };
+    setTfQuestions(updatedGenerated);
+    // const updatedQuestion = { ...tfQuestions, question: event.target.value };
+    // setTfQuestions(updatedQuestion);
+  };
+
+  const updateQuestion = (event: any, index: number) => {
+    const updatedQuestions = [...tfQuestions];
+    updatedQuestions[index] = {
+      ...updatedQuestions[index],
+      question: event.target.value,
+    };
+    setTfQuestions(updatedQuestions);
+    // const updatedQuestion = { ...tfQuestions, question: event.target.value };
+    // setTfQuestions(updatedQuestion);
+  };
 
   return (
     <div className="questions-setup" style={{ backgroundColor: "#F2E9E4" }}>
@@ -61,7 +78,9 @@ function TfQuestionsSetup() {
               index={index}
               add={selectQuestion}
               remove={removeQuestion}
-              // update={updateQuestion}
+              update={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                updateGeneratedQuestion(e, index)
+              }
               isSelected={false}
             />
           ))}
@@ -77,6 +96,9 @@ function TfQuestionsSetup() {
               index={index}
               add={selectQuestion}
               remove={removeQuestion}
+              update={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                updateQuestion(e, index)
+              }
               isSelected={true}
             />
           ))}

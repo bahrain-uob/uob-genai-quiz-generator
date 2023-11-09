@@ -197,7 +197,7 @@ function Questions(props: { type: string; stepNo: number }) {
                   backgroundColor: "rgba(77, 187, 67, 0.46)",
                 }}
                 type="text"
-                value={question.answer.toString()}
+                value={String(question.answer)}
                 disabled
               />
             </div>
