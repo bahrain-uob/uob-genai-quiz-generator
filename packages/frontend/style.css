@@ -344,10 +344,10 @@ label {
   align-items: center;
 }
 .stepper-wrapper {
-  margin-top: 10rem;
+  margin-top: 5rem;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin-bottom: -5em;
 }
 .stepper-item {
   position: relative;
