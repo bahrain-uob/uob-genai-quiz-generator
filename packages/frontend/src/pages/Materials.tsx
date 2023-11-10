@@ -9,10 +9,10 @@ import { useEffect, useState } from "react";
 import { faX, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 import { getUserId } from "../lib/helpers";
 import { navAtom } from "../lib/store";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 
 function Materials() {
-  const [{ course_id, course_code, course_name }, _] = useAtom(navAtom);
+  const { course_id, course_code, course_name } = useAtomValue(navAtom);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [userId, setUserId] = useState("");
   useEffect(() => {

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
-import { useAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { quizAtom, stageAtom } from "../lib/store";
 
 function Review() {
@@ -17,8 +17,8 @@ function Review() {
 }
 
 function QuizSetup() {
-  const [{ name, versions, mcq, tf, fillBlank }, _setQuiz] = useAtom(quizAtom);
-  const [_stepNo, setStepNo] = useAtom(stageAtom);
+  const { name, versions, mcq, tf, fillBlank } = useAtomValue(quizAtom);
+  const setStepNo = useSetAtom(stageAtom);
   return (
     <div className="white-container">
       <div className="stage-name">
@@ -59,7 +59,7 @@ function QuizSetup() {
 }
 
 function Questions() {
-  const [_stepNo, setStepNo] = useAtom(stageAtom);
+  const setStepNo = useSetAtom(stageAtom);
   return (
     <div className="white-container">
       <div className="stage-name">
