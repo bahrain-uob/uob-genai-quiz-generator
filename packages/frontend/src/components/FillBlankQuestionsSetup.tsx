@@ -64,7 +64,7 @@ function McqQuestionsSetup() {
 
   return (
     <div className="questions-setup" style={{ backgroundColor: "#F2E9E4" }}>
-      <h3>Customize the MCQ Questions</h3>
+      <h3>Customize the Fill-in Blank Questions</h3>
 
       <div className="questions">
         <div className="generated">

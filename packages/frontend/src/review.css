@@ -115,18 +115,26 @@ input:focus {
   border-bottom: 2px solid #22223b;
 }
 .question-area {
-  /* flex: 33.3333%; */
-  border-radius: 5px;
-  box-shadow: 2px 2px 2px #c5c5c5;
-  border: 1px solid #c5c5c5;
-  width: 26rem;
-  margin-bottom: 10px;
-  padding: 20px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #c3c3c3;
+  border: none;
+  margin-bottom: 1em;
+  background-color: #bdbdbd22;
+  height: 4em;
+  padding: 5px;
+  padding-left: 7px;
+  overflow-y: scroll;
+  color: #606060;
+  font-size: small;
 }
 .mcq-review {
   background-color: #e7e7e768;
   font-size: small;
   width: 25em;
   color: #6d6d6d;
+}
+.question-container.review {
+  background-color: #e2e2e225;
 }
 /* end of review stage */

@@ -82,73 +82,35 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "MCQ Setup" && (
         <div className="form-container">
           {mcqQuestions.map((question: Mcq) => (
-            <div className="question-container">
-              <textarea
-                rows={9}
-                cols={35}
-                value={question.question}
-                disabled
-              ></textarea>
-              <div
-                style={{ display: "flex", flexDirection: "row", gap: "5px" }}
-              >
-                <label style={{ fontSize: "medium" }}>1)</label>
-                {question.answer_index == 0 ? (
+            <div className="question-container review">
+              <div className="question-area">
+                <p>{question.question}</p>
+              </div>
+
+              {question.choices.map((choice: string, index: number) => (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    gap: "5px",
+                  }}
+                >
+                  <label style={{ fontSize: "medium", paddingTop: "12px" }}>
+                    {index + 1})
+                  </label>
                   <input
-                    style={{ backgroundColor: "rgba(77, 187, 67, 0.46)" }}
+                    style={{
+                      backgroundColor:
+                        question.answer_index === index
+                          ? "rgba(77, 187, 67, 0.46)"
+                          : "",
+                    }}
                     type="text"
-                    value={question.choices[0]}
+                    value={choice}
                     disabled
                   />
-                ) : (
-                  <input type="text" value={question.choices[0]} disabled />
-                )}
-              </div>
-              <div
-                style={{ display: "flex", flexDirection: "row", gap: "5px" }}
-              >
-                <label style={{ fontSize: "medium" }}>2)</label>
-                {question.answer_index == 1 ? (
-                  <input
-                    style={{ backgroundColor: "rgba(77, 187, 67, 0.46)" }}
-                    type="text"
-                    value={question.choices[1]}
-                    disabled
-                  />
-                ) : (
-                  <input type="text" value={question.choices[1]} disabled />
-                )}
-              </div>
-              <div
-                style={{ display: "flex", flexDirection: "row", gap: "5px" }}
-              >
-                <label style={{ fontSize: "medium" }}>3)</label>
-                {question.answer_index == 2 ? (
-                  <input
-                    style={{ backgroundColor: "rgba(77, 187, 67, 0.46)" }}
-                    type="text"
-                    value={question.choices[2]}
-                    disabled
-                  />
-                ) : (
-                  <input type="text" value={question.choices[2]} disabled />
-                )}
-              </div>
-              <div
-                style={{ display: "flex", flexDirection: "row", gap: "5px" }}
-              >
-                <label style={{ fontSize: "medium" }}>4)</label>
-                {question.answer_index == 3 ? (
-                  <input
-                    style={{ backgroundColor: "rgba(77, 187, 67, 0.46)" }}
-                    type="text"
-                    value={question.choices[3]}
-                    disabled
-                  />
-                ) : (
-                  <input type="text" value={question.choices[3]} disabled />
-                )}
-              </div>
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -157,13 +119,10 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "Fill-in Blank Setup" && (
         <div className="form-container">
           {fillBlankQuestions.map((question: FillBlank) => (
-            <div className="question-container">
-              <textarea
-                rows={9}
-                cols={35}
-                defaultValue={question.question}
-                disabled
-              ></textarea>
+            <div className="question-container review">
+              <div className="question-area">
+                <p>{question.question}</p>
+              </div>
 
               <label>Answer Key:</label>
               <input
@@ -183,13 +142,10 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "T/F Setup" && (
         <div className="form-container">
           {tfQuestions.map((question: Tf) => (
-            <div className="question-container">
-              <textarea
-                rows={9}
-                cols={35}
-                defaultValue={question.question}
-                disabled
-              ></textarea>
+            <div className="question-container review">
+              <div className="question-area">
+                <p>{question.question}</p>
+              </div>
               <label>Answer Key:</label>
               <input
                 style={{
