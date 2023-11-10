@@ -20,6 +20,7 @@ function QuestionArea(props: {
   const [tfQuestions, setTfQuestions] = useAtom(TfsAtom);
   const idx = props.index;
 
+  const [ans, setAns] = useState(question.answer);
   function handleQuestionChange(event: any) {
     const updatedQuestion = { ...question, question: event.target.value };
     setQuestion(updatedQuestion);
@@ -40,6 +41,7 @@ function QuestionArea(props: {
       const updatedQuestion = { ...question, answer: ans };
       setQuestion(updatedQuestion);
     } else {
+      setAns(ans);
       const updatedQuestions = [...tfQuestions];
       updatedQuestions[idx] = {
         ...updatedQuestions[idx],
@@ -116,7 +118,7 @@ function QuestionArea(props: {
           </div>
 
           <label>Answer Key:</label>
-          <input type="text" value={String(question.answer)} disabled />
+          <input type="text" value={String(ans)} disabled />
         </form>
       </div>
     </>
