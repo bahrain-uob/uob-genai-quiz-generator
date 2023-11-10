@@ -13,6 +13,7 @@ export interface Course {
 }
 
 export const coursesAtom = atomWithStorage("coursesList", [] as Course[]);
+export const materialsAtom = atomWithStorage("materialsList", {});
 export const quizzesAtom = atomWithStorage("quizzesList", {});
 
 export const quizAtom = atomWithStorage("quiz", {
