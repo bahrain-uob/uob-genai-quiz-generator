@@ -116,7 +116,7 @@ function Questions(props: { type: string; stepNo: number }) {
                     disabled
                   />
                 ) : (
-                  <input type="text" value={question.choices[0]} disabled />
+                  <input type="text" value={question.choices[1]} disabled />
                 )}
               </div>
               <div
@@ -131,7 +131,7 @@ function Questions(props: { type: string; stepNo: number }) {
                     disabled
                   />
                 ) : (
-                  <input type="text" value={question.choices[0]} disabled />
+                  <input type="text" value={question.choices[2]} disabled />
                 )}
               </div>
               <div
@@ -146,7 +146,7 @@ function Questions(props: { type: string; stepNo: number }) {
                     disabled
                   />
                 ) : (
-                  <input type="text" value={question.choices[0]} disabled />
+                  <input type="text" value={question.choices[3]} disabled />
                 )}
               </div>
             </div>
