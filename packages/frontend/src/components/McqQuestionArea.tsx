@@ -51,6 +51,7 @@ function QuestionArea(props: {
     }
   }
   function handleAnswerChange(indx: number) {
+    setAnsIdx(indx);
     if (!props.isSelected) {
       const updatedAnswer = {
         ...question,
@@ -58,7 +59,6 @@ function QuestionArea(props: {
       };
       setQuestion(updatedAnswer);
     } else {
-      setAnsIdx(indx);
       const updatedAnswer = {
         ...question,
         answer_index: indx,
