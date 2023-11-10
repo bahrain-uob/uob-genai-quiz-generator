@@ -21,11 +21,10 @@ function TfQuestionsSetup() {
       answer: true,
     },
   ] as Tf[]);
-  const [selected, setSelected] = useState([{ stem: "" }]);
 
   const [tfQuestions, setTfQuestions] = useAtom(TfsAtom);
   console.log(tfQuestions);
-
+  const [selected, setSelected] = useState(tfQuestions);
   const selectQuestion = (q: Tf, idx: number) => {
     setSelected([...selected, q as any]);
     generated.splice(idx, 1);
@@ -47,18 +46,20 @@ function TfQuestionsSetup() {
       ...updatedGenerated[index],
       question: event.target.value,
     };
-    setTfQuestions(updatedGenerated);
+    setGenerated(updatedGenerated);
     // const updatedQuestion = { ...tfQuestions, question: event.target.value };
     // setTfQuestions(updatedQuestion);
   };
 
   const updateQuestion = (event: any, index: number) => {
     const updatedQuestions = [...tfQuestions];
+    const updatedSelectedQuestions = [...selected];
     updatedQuestions[index] = {
       ...updatedQuestions[index],
       question: event.target.value,
     };
     setTfQuestions(updatedQuestions);
+    setSelected(updatedSelectedQuestions);
     // const updatedQuestion = { ...tfQuestions, question: event.target.value };
     // setTfQuestions(updatedQuestion);
   };
@@ -89,7 +90,7 @@ function TfQuestionsSetup() {
         <div className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {tfQuestions.map((qu, index) => (
+          {selected.map((qu, index) => (
             <TfQuestionArea
               key={qu.question}
               q={qu}
