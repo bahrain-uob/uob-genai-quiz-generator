@@ -6,7 +6,6 @@ import {
   faPlus,
   faMinusCircle,
 } from "@fortawesome/free-solid-svg-icons";
-// import { Question } from "./QuestionsSetup";
 import { Mcq, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import { useAtom } from "jotai";
@@ -25,6 +24,7 @@ function QuestionArea(props: {
   const [mcqQuestions, setMcqQuestions] = useAtom(McqsAtom);
   const idx = props.index;
 
+  const [ansIdx, setAnsIdx] = useState(question.answer_index);
   function handleQuestionChange(event: any) {
     const updatedQuestion = { ...question, question: event.target.value };
     setQuestion(updatedQuestion);
@@ -58,6 +58,7 @@ function QuestionArea(props: {
       };
       setQuestion(updatedAnswer);
     } else {
+      setAnsIdx(indx);
       const updatedAnswer = {
         ...question,
         answer_index: indx,
@@ -116,9 +117,19 @@ function QuestionArea(props: {
           )}
 
           {props.q.choices.map((choice: string, index: number) => (
-            <div style={{ display: "flex", flexDirection: "row", gap: "5px" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                gap: "5px",
+              }}
+            >
               <label style={{ fontSize: "medium" }}>{index + 1})</label>
               <input
+                style={{
+                  backgroundColor:
+                    ansIdx === index ? "rgba(77, 187, 67, 0.46)" : "",
+                }}
                 type="text"
                 defaultValue={choice}
                 onChange={(e) => {
@@ -151,11 +162,8 @@ function StepperField(props: {
   value: number;
   min: number;
   max: number;
-  // idx: number;
-  // isSelected: boolean;
   onChange: any;
 }) {
-  // const [mcqQuestions, setMcqQuestions] = useAtom(McqsAtom);
   const [question, setQuestion] = useState(props.q);
   // @ts-ignore
   const value = question.answer_index;
@@ -166,9 +174,7 @@ function StepperField(props: {
     return val;
   };
   function handleChange(n: number) {
-    // const copy = JSON.parse(JSON.stringify(question));
     const newVal = clamp(value + n);
-    // console.log(newVal);
 
     props.onChange(newVal);
     const updatedAnswer = { ...question, answer_index: newVal };
