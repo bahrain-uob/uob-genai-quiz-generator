@@ -59,6 +59,7 @@ function QuestionArea(props: {
 
           {props.isSelected ? (
             <textarea
+              style={{ padding: "5px" }}
               rows={2}
               cols={35}
               defaultValue={props.q.question as any}
@@ -66,6 +67,7 @@ function QuestionArea(props: {
             ></textarea>
           ) : (
             <textarea
+              style={{ padding: "5px" }}
               rows={2}
               cols={35}
               defaultValue={props.q.question as any}

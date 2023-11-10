@@ -60,6 +60,7 @@ function QuestionArea(props: {
             />
             {/* </div> */}
             <textarea
+              style={{ padding: "5px" }}
               rows={2}
               cols={35}
               defaultValue={props.q.question as any}
