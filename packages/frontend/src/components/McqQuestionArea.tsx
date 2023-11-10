@@ -50,17 +50,17 @@ function QuestionArea(props: {
       });
     }
   }
-  function handleAnswerChange(event: any) {
+  function handleAnswerChange(indx: number) {
     if (!props.isSelected) {
       const updatedAnswer = {
         ...question,
-        answer_index: event.target.value + 1,
+        answer_index: indx,
       };
       setQuestion(updatedAnswer);
     } else {
       const updatedAnswer = {
         ...question,
-        answer_index: event.target.value + 1,
+        answer_index: indx,
       };
       setMcqQuestions((prevMcqQuestions) => {
         const updatedMcqQuestions = [...prevMcqQuestions];
@@ -170,13 +170,9 @@ function StepperField(props: {
     const newVal = clamp(value + n);
     // console.log(newVal);
 
+    props.onChange(newVal);
     const updatedAnswer = { ...question, answer_index: newVal };
     setQuestion(updatedAnswer);
-
-    // console.log(updatedAnswer);
-    // copy.answer_index = newVal - 1;
-
-    // setQuestion(copy);
   }
 
   return (
