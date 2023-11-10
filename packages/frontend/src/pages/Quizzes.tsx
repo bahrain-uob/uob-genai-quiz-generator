@@ -5,26 +5,62 @@ import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { API } from "aws-amplify";
 import { useEffect } from "react";
-import { useAtom } from "jotai";
-import { Course, coursesAtom, navAtom } from "../lib/store";
+import { useAtom, useSetAtom } from "jotai";
+import { Course, coursesAtom, navAtom, quizzesAtom } from "../lib/store";
+import { getUserId, isEqual } from "../lib/helpers";
+import { Storage } from "aws-amplify";
+import { useImmerAtom } from "jotai-immer";
 
 function Quizzes() {
   const [courses, setCourses] = useAtom(coursesAtom);
+  const [quizzes, setQuizzes] = useImmerAtom(quizzesAtom);
+
   useEffect(() => {
     updateCourses();
   }, []);
+  useEffect(() => {
+    updateQuizzes();
+  }, [courses]);
 
   const updateCourses = async () => {
-    let courses = await API.get("api", "/courses", {});
-    setCourses(courses);
+    let updatedCourses = await API.get("api", "/courses", {});
+    if (!isEqual(courses, updatedCourses)) setCourses(updatedCourses);
+  };
+
+  const updateQuizzes = async () => {
+    if (courses.length == 0) return;
+
+    let userId = await getUserId();
+    for (let course of courses) {
+      let { results } = await Storage.list(`${userId}/${course.id}/quizzes/`, {
+        pageSize: 1000,
+      });
+      const prefix_len =
+        userId.length + course.id.length + "quizzes".length + "///".length;
+      let quizList = results
+        .filter((r) => r.key!.length != prefix_len)
+        .map((r) => {
+          return {
+            name: r.key!.slice(prefix_len, r.key!.length - ".json".length),
+            date: r.lastModified!.toLocaleDateString("en-GB"),
+          };
+        });
+      // @ts-ignore
+      if (!isEqual(quizzes[course.id], quizList)) {
+        setQuizzes((draft) => {
+          // @ts-ignore
+          draft[course.id] = quizList;
+        });
+      }
+    }
   };
 
   const navigation = useNavigate();
-  const [_, setNav] = useAtom(navAtom);
+  const setNav = useSetAtom(navAtom);
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -42,7 +78,7 @@ function Quizzes() {
 
       <div className="container">
         {courses.map((course: Course) => (
-          <div className="course-quiz-container">
+          <div key={course.id} className="course-quiz-container">
             <h2
               className="underlined"
               onClick={() => {
@@ -51,11 +87,15 @@ function Quizzes() {
             >
               {`${course.code}  - ${course.name}`}
             </h2>
-
             <div className="quizzes-container">
-              <Quiz name="Quiz 1" date="18th Oct 2023" />
-              <Quiz name="Quiz 2" date="18th Oct 2023" />
-              <Quiz name="Quiz 3" date="18th Oct 2023" />
+              {/* @ts-ignore */}
+              {(quizzes[course.id] ?? []).map((quiz: any) => (
+                <Quiz
+                  key={`${course.id}${quiz.name}`}
+                  name={quiz.name}
+                  date={quiz.date}
+                />
+              ))}
             </div>
           </div>
         ))}
@@ -63,6 +103,7 @@ function Quizzes() {
     </>
   );
 }
+
 function Spirals() {
   return (
     <>
@@ -72,7 +113,8 @@ function Spirals() {
     </>
   );
 }
-function Quiz(props: { name: String; date: String }) {
+
+function Quiz(props: { name: string; date: string }) {
   return (
     <div className="quiz-item">
       <Spirals />
@@ -93,5 +135,6 @@ function Quiz(props: { name: String; date: String }) {
     </div>
   );
 }
+
 export { Spirals };
 export default Quizzes;
