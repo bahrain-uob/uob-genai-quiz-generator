@@ -2,13 +2,11 @@ import "../carousel.css";
 import { useState } from "react";
 function Carousel() {
   const [flip, setFlip] = useState(0);
-  const [isFlipped, setIsFlipped] = useState(false);
+  // const [isFlipped, setIsFlipped] = useState(false);
   return (
     <>
       <div className="container-carousel">
-        <div
-          className={`card-carousel ${flip == 1 && isFlipped ? "flip" : ""}`}
-        >
+        <div className={`card-carousel ${flip == 1 ? "flip flip-imm" : ""}`}>
           <div className="tooltip">
             <span className="tooltiptext">Click Me!</span>
           </div>
@@ -17,10 +15,10 @@ function Carousel() {
             className="front"
             onClick={() => {
               setFlip(1);
-              setIsFlipped(!isFlipped);
+              // setIsFlipped(!isFlipped);
             }}
           >
-            <h3 className="title-carousel">Select a Course</h3>
+            <h4 className="title-carousel">Select a Course</h4>
             <div className="bar">
               <div className="emptybar"></div>
               <div className="filledbar"></div>
@@ -58,17 +56,15 @@ function Carousel() {
           </div>
         </div>
 
-        <div
-          className={`card-carousel ${flip == 2 && isFlipped ? "flip" : ""}`}
-        >
+        <div className={`card-carousel ${flip == 2 ? "flip flip-imm" : ""}`}>
           <div
             className="front"
             onClick={() => {
               setFlip(2);
-              setIsFlipped(!isFlipped);
+              // setIsFlipped(!isFlipped);
             }}
           >
-            <h3 className="title-carousel">Select Materials</h3>
+            <h4 className="title-carousel">Select Materials</h4>
             <div className="bar">
               <div className="emptybar"></div>
               <div className="filledbar"></div>
@@ -111,17 +107,15 @@ function Carousel() {
           </div>
         </div>
 
-        <div
-          className={`card-carousel ${flip == 3 && isFlipped ? "flip" : ""}`}
-        >
+        <div className={`card-carousel ${flip == 3 ? "flip flip-imm" : ""}`}>
           <div
             className="front"
             onClick={() => {
               setFlip(3);
-              setIsFlipped(!isFlipped);
+              // setIsFlipped(!isFlipped);
             }}
           >
-            <h3 className="title-carousel">Quiz Setup</h3>
+            <h4 className="title-carousel">Quiz Setup</h4>
             <div className="bar">
               <div className="emptybar"></div>
               <div className="filledbar"></div>
@@ -165,17 +159,15 @@ function Carousel() {
           </div>
         </div>
 
-        <div
-          className={`card-carousel ${flip == 4 && isFlipped ? "flip" : ""}`}
-        >
+        <div className={`card-carousel ${flip == 4 ? "flip flip-imm" : ""}`}>
           <div
             className="front"
             onClick={() => {
               setFlip(4);
-              setIsFlipped(!isFlipped);
+              // setIsFlipped(!isFlipped);
             }}
           >
-            <h3 className="title-carousel">Questions Setup</h3>
+            <h4 className="title-carousel">Questions Setup</h4>
             <div className="bar">
               <div className="emptybar"></div>
               <div className="filledbar"></div>

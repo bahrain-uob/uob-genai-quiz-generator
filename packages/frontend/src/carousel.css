@@ -103,7 +103,7 @@
   transition: 0.4s ease-out;
 }
 
-.card-carousel:hover ~ .card {
+.card-carousel:hover ~ .card-carousel {
   position: relative;
   left: 50px;
   transition: 0.4s ease-out;
@@ -207,6 +207,7 @@ svg {
   visibility: visible;
 }
 
-.background-carousel {
-  background-image: url("frontend/src/assets/background.svg");
+.card-carousel.flip-imm:hover {
+  transform: perspective(1000px) rotateY(var(--rotate-y, 180))
+    translateY(var(--translate-y, 180));
 }
