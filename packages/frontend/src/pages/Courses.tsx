@@ -10,7 +10,7 @@ import "@aws-amplify/ui-react/styles.css";
 import { API } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import { coursesAtom, navAtom } from "../lib/store";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 function Courses() {
   const [courses, setCourses] = useAtom(coursesAtom);
@@ -24,7 +24,7 @@ function Courses() {
   };
 
   const navigation = useNavigate();
-  const [_, setNav] = useAtom(navAtom);
+  const setNav = useSetAtom(navAtom);
   function navigate(
     course_id: string,
     course_code: string,

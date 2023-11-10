@@ -7,7 +7,7 @@ import QuizSetupForm from "../components/QuizSetup";
 import QuestionsSetup from "../components/QuestionsSetup";
 import Review from "../components/Review";
 import { API } from "aws-amplify";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
 
@@ -15,7 +15,7 @@ const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
 function Quizzes() {
   const [stepNo, setStepNo] = useAtom(stageAtom);
-  const [courseId, _setCourseId] = useAtom(courseIdAtom);
+  const courseId = useAtomValue(courseIdAtom);
 
   return (
     <>
@@ -61,7 +61,7 @@ function Quizzes() {
 
 function CoursesTable() {
   const [courses, setCourses] = useAtom(coursesAtom);
-  const [_courseId, setCourseId] = useAtom(courseIdAtom);
+  const setCourseId = useSetAtom(courseIdAtom);
 
   useEffect(() => {
     updateCourses();
