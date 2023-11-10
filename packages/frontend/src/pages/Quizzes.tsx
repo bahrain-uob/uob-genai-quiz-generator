@@ -10,6 +10,7 @@ import { Course, coursesAtom, navAtom, quizzesAtom } from "../lib/store";
 import { getUserId, isEqual } from "../lib/helpers";
 import { Storage } from "aws-amplify";
 import { useImmerAtom } from "jotai-immer";
+import { exportKahoot } from "../lib/export";
 
 function Quizzes() {
   const [courses, setCourses] = useAtom(coursesAtom);
@@ -55,6 +56,17 @@ function Quizzes() {
     }
   };
 
+  const exportQuiz = async (courseId: string, name: string) => {
+    const userId = await getUserId();
+    const key = `${userId}/${courseId}/quizzes/${name}.json`;
+    const result = await Storage.get(key, {
+      download: true,
+      cacheControl: "no-cache",
+    });
+    const quizFile = JSON.parse(await result.Body!.text());
+    exportKahoot(quizFile);
+  };
+
   const navigation = useNavigate();
   const setNav = useSetAtom(navAtom);
   function navigate(
@@ -91,6 +103,7 @@ function Quizzes() {
               {/* @ts-ignore */}
               {(quizzes[course.id] ?? []).map((quiz: any) => (
                 <Quiz
+                  onClick={() => exportQuiz(course.id, quiz.name)}
                   key={`${course.id}${quiz.name}`}
                   name={quiz.name}
                   date={quiz.date}
@@ -114,9 +127,9 @@ function Spirals() {
   );
 }
 
-function Quiz(props: { name: string; date: string }) {
+function Quiz(props: { name: string; date: string; onClick: any }) {
   return (
-    <div className="quiz-item">
+    <div onClick={props.onClick} className="quiz-item">
       <Spirals />
       <div className="lines"></div>
       <p className="quiz-name">{props.name}</p>
