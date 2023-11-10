@@ -2,8 +2,11 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 // import { Question } from "./QuestionsSetup";
-import { Tf } from "../lib/store";
+import { Tf, quizAtom } from "../lib/store";
+import { focusAtom } from "jotai-optics";
+import { useAtom } from "jotai";
 
+const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 function QuestionArea(props: {
   q: Tf;
   index: number;
@@ -14,12 +17,19 @@ function QuestionArea(props: {
 }) {
   const [question, setQuestion] = useState(props.q);
   const [checked, setChecked] = useState(props.q.answer);
-
+  const [tfQuestions, setTfQuestions] = useAtom(TfsAtom);
   const idx = props.index;
 
   function handleQuestionChange(event: any) {
     const updatedQuestion = { ...question, question: event.target.value };
     setQuestion(updatedQuestion);
+
+    const updatedQuestions = [...tfQuestions];
+    updatedQuestions[idx] = {
+      ...updatedQuestions[idx],
+      question: event.target.value,
+    };
+    setTfQuestions(updatedQuestions);
     //   const updated = event.target.value;
     //   setQuestion({
     //     q.question: updated
@@ -28,6 +38,13 @@ function QuestionArea(props: {
   function handleChange(ans: boolean) {
     const updatedQuestion = { ...question, answer: ans };
     setQuestion(updatedQuestion);
+
+    const updatedQuestions = [...tfQuestions];
+    updatedQuestions[idx] = {
+      ...updatedQuestions[idx],
+      answer: ans,
+    };
+    setTfQuestions(updatedQuestions);
     console.log(updatedQuestion);
   }
 
