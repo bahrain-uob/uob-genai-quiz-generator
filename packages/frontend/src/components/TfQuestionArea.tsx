@@ -24,28 +24,29 @@ function QuestionArea(props: {
     const updatedQuestion = { ...question, question: event.target.value };
     setQuestion(updatedQuestion);
 
-    const updatedQuestions = [...tfQuestions];
-    updatedQuestions[idx] = {
-      ...updatedQuestions[idx],
-      question: event.target.value,
-    };
-    setTfQuestions(updatedQuestions);
+    // const updatedQuestions = [...tfQuestions];
+    // updatedQuestions[idx] = {
+    //   ...updatedQuestions[idx],
+    //   question: event.target.value,
+    // };
+    // setTfQuestions(updatedQuestions);
     //   const updated = event.target.value;
     //   setQuestion({
     //     q.question: updated
     // });
   }
   function handleChange(ans: boolean) {
-    const updatedQuestion = { ...question, answer: ans };
-    setQuestion(updatedQuestion);
-
-    const updatedQuestions = [...tfQuestions];
-    updatedQuestions[idx] = {
-      ...updatedQuestions[idx],
-      answer: ans,
-    };
-    setTfQuestions(updatedQuestions);
-    console.log(updatedQuestion);
+    if (!props.isSelected) {
+      const updatedQuestion = { ...question, answer: ans };
+      setQuestion(updatedQuestion);
+    } else {
+      const updatedQuestions = [...tfQuestions];
+      updatedQuestions[idx] = {
+        ...updatedQuestions[idx],
+        answer: ans,
+      };
+      setTfQuestions(updatedQuestions);
+    }
   }
 
   return (
