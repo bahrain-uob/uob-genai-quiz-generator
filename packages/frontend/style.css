@@ -21,7 +21,7 @@ a {
   width: 400px;
   height: 60px;
   border: 3px solid white;
-  font-weight: 10px;
+  /* font-weight: 10px; */
   border-bottom-right-radius: 50px;
   border-top-right-radius: 50px;
 }
@@ -767,12 +767,12 @@ input[type="number"] {
 .course-content {
   background-color: #4a4e69;
   color: white;
-  letter-spacing: 3px;
+  letter-spacing: 0.5px;
   text-align: center;
   width: 400px;
   height: 60px;
   border: 3px solid white;
-  font-weight: 10px;
+  font-weight: normal;
   font-size: small;
   padding: 5px;
   /* box-shadow:0px 0px 9px #00000077; */
@@ -798,22 +798,25 @@ input[type="number"] {
   margin-left: auto;
   margin-right: 10px;
 }
-.upload-button-1,
-.upload-button-2 {
+.upload-button {
   background-color: #4a4e69;
   color: white;
-  padding: 10px;
+  padding: 5px 7px 5px 7px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
+  display: flex;
+  gap: 7px;
+  font-size: small;
 }
-.upload-button-2 {
-  margin-top: 20px;
+
+.cloud-icon {
+  padding-top: 0.6em;
 }
-.upload-button-1 {
+/* .upload-button {
   margin-left: auto;
   margin-right: 10rem;
-}
+} */
 .materials table {
   margin-top: 100px;
   align-self: center;

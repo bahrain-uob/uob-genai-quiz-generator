@@ -31,14 +31,14 @@ function Materials() {
       <Navbar />
       <div className="top-materials">
         <Titles title={[`${course_code} ${course_name}`, "Course Content"]} />
-        <button className="upload-button-1" onClick={openModal}>
+        <button className="upload-button" onClick={openModal}>
           <FontAwesomeIcon
             icon={faCloudArrowUp}
-            onClick={closeModal}
-            className="x-icon"
+            className="cloud-icon"
             size="xl"
             style={{ color: "white" }}
           />
+          <p>Upload</p>
         </button>
         <Modal
           isOpen={modalIsOpen}
