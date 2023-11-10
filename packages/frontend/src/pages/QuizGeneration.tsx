@@ -90,7 +90,7 @@ function CoursesTable() {
 
           <tbody>
             {courses.map((course) => (
-              <tr onClick={() => selectCourse(course.id)}>
+              <tr key={course.id} onClick={() => selectCourse(course.id)}>
                 <td style={{ textAlign: "center" }}>
                   <input
                     type="radio"

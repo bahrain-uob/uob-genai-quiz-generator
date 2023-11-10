@@ -28,7 +28,7 @@ function Courses() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -41,6 +41,7 @@ function Courses() {
       <div className="courses-container">
         {courses.map((course) => (
           <div
+            key={course.id}
             onClick={() => {
               navigate(course.id, course.code, course.name);
             }}

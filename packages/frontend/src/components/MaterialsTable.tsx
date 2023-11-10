@@ -99,7 +99,7 @@ function MaterialsTable({
         <tbody>
           {/* @ts-ignore*/}
           {(materials[courseId] ?? []).map((material: any, index: number) => (
-            <tr>
+            <tr key={`${courseId}${material.key}`}>
               <td>
                 {isSelecting ? (
                   <input type="checkbox" />
