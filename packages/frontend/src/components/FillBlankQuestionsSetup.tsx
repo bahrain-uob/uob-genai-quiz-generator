@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { useAtom } from "jotai";
 import { FillBlank, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
@@ -25,24 +23,43 @@ function McqQuestionsSetup() {
       answer: "Virtual Private Cloud",
     },
   ] as FillBlank[]);
-  const [selected, setSelected] = useState([{ stem: "" }]);
 
-  const [fillBlankQuestions, setQuestions] = useAtom(FillBlanksAtom);
-  console.log(fillBlankQuestions);
+  const [fillBlankQuestions, setFillBlankQuestions] = useAtom(FillBlanksAtom);
+
+  const [selected, setSelected] = useState(fillBlankQuestions);
 
   const selectQuestion = (q: FillBlank, idx: number) => {
     setSelected([...selected, q as any]);
     generated.splice(idx, 1);
     setGenerated(generated);
-    setQuestions([...fillBlankQuestions, q as any]);
-    console.log(fillBlankQuestions);
+    setFillBlankQuestions([...fillBlankQuestions, q as any]);
   };
 
   const removeQuestion = (index: number) => {
     selected.splice(index, 1);
     setSelected([...selected]);
     fillBlankQuestions.splice(index, 1);
-    setQuestions(fillBlankQuestions);
+    setFillBlankQuestions(fillBlankQuestions);
+  };
+
+  const updateGeneratedQuestion = (event: any, index: number) => {
+    const updatedGenerated = [...generated];
+    updatedGenerated[index] = {
+      ...updatedGenerated[index],
+      question: event.target.value,
+    };
+    setGenerated(updatedGenerated);
+  };
+
+  const updateSelectedQuestion = (event: any, index: number) => {
+    const updatedQuestions = [...fillBlankQuestions];
+    const updatedSelectedQuestions = [...selected];
+    updatedQuestions[index] = {
+      ...updatedQuestions[index],
+      question: event.target.value,
+    };
+    setFillBlankQuestions(updatedQuestions);
+    setSelected(updatedSelectedQuestions);
   };
 
   return (
@@ -60,6 +77,9 @@ function McqQuestionsSetup() {
               index={index}
               add={selectQuestion}
               remove={removeQuestion}
+              update={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                updateGeneratedQuestion(e, index)
+              }
               isSelected={false}
             />
           ))}
@@ -68,24 +88,18 @@ function McqQuestionsSetup() {
         <div className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {fillBlankQuestions.map((qu, index) => (
-            <div key={qu.question} className="question-container">
-              <FontAwesomeIcon
-                icon={faMinusCircle}
-                size="2x"
-                className="faMinusCircle"
-                onClick={() => removeQuestion(index)}
-              />
-
-              <FillBlankQuestionArea
-                key={qu.question}
-                q={qu}
-                index={index}
-                add={selectQuestion}
-                remove={removeQuestion}
-                isSelected={true}
-              />
-            </div>
+          {selected.map((qu, index) => (
+            <FillBlankQuestionArea
+              key={qu.question}
+              q={qu}
+              index={index}
+              add={selectQuestion}
+              remove={removeQuestion}
+              update={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                updateSelectedQuestion(e, index)
+              }
+              isSelected={true}
+            />
           ))}
         </div>
       </div>
