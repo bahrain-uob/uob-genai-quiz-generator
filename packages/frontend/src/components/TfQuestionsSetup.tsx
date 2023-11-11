@@ -1,9 +1,9 @@
-import { useState } from "react";
 import TfQuestionArea from "./TfQuestionArea";
 import { PrimitiveAtom, atom, useAtom, useAtomValue } from "jotai";
 import { Tf, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import { splitAtom } from "jotai/utils";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 const TfsAtomsAtom = splitAtom(TfsAtom);
@@ -29,6 +29,8 @@ function TfQuestionsSetup() {
   const gArr = useAtomValue(generatedAtom);
   const qArr = useAtomValue(TfsAtom);
 
+  const [parent] = useAutoAnimate();
+
   const selectQuestion = (question: PrimitiveAtom<Tf>) => {
     return (q: Tf) => {
       generatedDispatch({ type: "remove", atom: question });
@@ -45,7 +47,7 @@ function TfQuestionsSetup() {
       <h3>Customize the True/False Questions</h3>
 
       <div className="questions">
-        <div className="generated">
+        <div ref={parent} className="generated">
           <h4 style={{ textAlign: "center" }}>Generated Questions</h4>
 
           {generated.map((question, index) => (
@@ -58,7 +60,7 @@ function TfQuestionsSetup() {
           ))}
         </div>
 
-        <div className="selected">
+        <div ref={parent} className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
           {selected.map((question, index) => (
