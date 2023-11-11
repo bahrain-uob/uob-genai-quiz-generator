@@ -3,6 +3,7 @@ import { PrimitiveAtom, atom, useAtom, useAtomValue } from "jotai";
 import { Mcq, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import { splitAtom } from "jotai/utils";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
 const McqsAtomsAtom = splitAtom(McqsAtom);
@@ -32,6 +33,8 @@ function McqQuestionsSetup() {
   const gArr = useAtomValue(generatedAtom);
   const sArr = useAtomValue(McqsAtom);
 
+  const [parent] = useAutoAnimate();
+
   const selectQuestion = (question: PrimitiveAtom<Mcq>) => {
     return (q: Mcq) => {
       generatedDispatch({ type: "remove", atom: question });
@@ -48,7 +51,7 @@ function McqQuestionsSetup() {
       <h3>Customize the MCQ Questions</h3>
 
       <div className="questions">
-        <div className="generated">
+        <div ref={parent} className="generated">
           <h4 style={{ textAlign: "center" }}>Generated Questions</h4>
 
           {generated.map((question, index) => (
@@ -61,7 +64,7 @@ function McqQuestionsSetup() {
           ))}
         </div>
 
-        <div className="selected">
+        <div ref={parent} className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
           {selected.map((question, index) => (
