@@ -61,12 +61,13 @@ function Quizzes() {
 }
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials")
+  optic.prop("materials"),
 );
 
 function CoursesTable() {
   const [courses, setCourses] = useAtom(coursesAtom);
-  const setCourseId = useSetAtom(courseIdAtom);
+  const [courseId, setCourseId] = useAtom(courseIdAtom);
+  const setQuizMaterials = useSetAtom(quizMaterialsAtom);
 
   useEffect(() => {
     updateCourses();
