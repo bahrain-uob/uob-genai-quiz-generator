@@ -9,14 +9,17 @@ const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 const TfsAtomsAtom = splitAtom(TfsAtom);
 const generatedAtom = atom([
   {
+    id: crypto.randomUUID(),
     question: "S3? Simple Storage Service",
     answer: true,
   },
   {
+    id: crypto.randomUUID(),
     question: "EC2? Elastic Cloud Compute",
     answer: false,
   },
   {
+    id: crypto.randomUUID(),
     question: "VPC? Virtual Private Cloud",
     answer: true,
   },
@@ -52,7 +55,7 @@ function TfQuestionsSetup() {
 
           {generated.map((question, index) => (
             <TfQuestionArea
-              key={gArr[index].question}
+              key={gArr[index].id}
               question={question}
               isSelected={false}
               move={selectQuestion(question)}
@@ -65,7 +68,7 @@ function TfQuestionsSetup() {
 
           {selected.map((question, index) => (
             <TfQuestionArea
-              key={qArr[index].question}
+              key={qArr[index].id}
               question={question}
               isSelected={true}
               move={removeQuestion(question)}

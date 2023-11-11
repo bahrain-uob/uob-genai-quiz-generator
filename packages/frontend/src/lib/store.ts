@@ -20,14 +20,19 @@ export interface Mcq {
   choices: string[];
   answer_index: number;
 }
+
 export interface Tf {
+  id: string;
   question: string;
   answer: boolean;
 }
+
 export interface FillBlank {
+  id: string;
   question: string;
   answer: string;
 }
+
 export const quizAtom = atomWithStorage("quiz", {
   courseId: "",
   materials: [] as string[],
