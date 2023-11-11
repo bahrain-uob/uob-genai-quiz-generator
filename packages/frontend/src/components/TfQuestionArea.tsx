@@ -1,116 +1,59 @@
-import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinusCircle, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-// import { Question } from "./QuestionsSetup";
-import { Tf, quizAtom } from "../lib/store";
-import { focusAtom } from "jotai-optics";
-import { useAtom } from "jotai";
+import { Tf } from "../lib/store";
+import { PrimitiveAtom, useAtom } from "jotai";
 
-const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 function QuestionArea(props: {
-  q: Tf;
-  index: number;
-  add: any;
-  remove: any;
-  update: any;
+  question: PrimitiveAtom<Tf>;
   isSelected: boolean;
+  move: any;
 }) {
-  const [question, setQuestion] = useState(props.q);
-  const [checked, setChecked] = useState(props.q.answer);
-  const [tfQuestions, setTfQuestions] = useAtom(TfsAtom);
-  const idx = props.index;
+  const [question, setQuestion] = useAtom(props.question);
 
-  const [ans, setAns] = useState(question.answer);
   function handleQuestionChange(event: any) {
     const updatedQuestion = { ...question, question: event.target.value };
     setQuestion(updatedQuestion);
-
-    // const updatedQuestions = [...tfQuestions];
-    // updatedQuestions[idx] = {
-    //   ...updatedQuestions[idx],
-    //   question: event.target.value,
-    // };
-    // setTfQuestions(updatedQuestions);
-    //   const updated = event.target.value;
-    //   setQuestion({
-    //     q.question: updated
-    // });
   }
-  function handleChange(ans: boolean) {
-    if (!props.isSelected) {
-      const updatedQuestion = { ...question, answer: ans };
-      setQuestion(updatedQuestion);
-    } else {
-      setAns(ans);
-      const updatedQuestions = [...tfQuestions];
-      updatedQuestions[idx] = {
-        ...updatedQuestions[idx],
-        answer: ans,
-      };
-      setTfQuestions(updatedQuestions);
-    }
+
+  function handleAnswerChange(answer: boolean) {
+    const updatedQuestion = { ...question, answer };
+    setQuestion(updatedQuestion);
   }
 
   return (
     <>
       <div className="question-container">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-        >
-          {props.isSelected ? (
-            <FontAwesomeIcon
-              icon={faMinusCircle}
-              size="2x"
-              className="faMinusCircle"
-              onClick={() => props.remove(idx)}
-            />
-          ) : (
-            <FontAwesomeIcon
-              icon={faPlusCircle}
-              size="2x"
-              className="faPlusCircle"
-              onClick={() => {
-                props.add(question, idx);
-              }}
-            />
-          )}
+        <form onSubmit={(e) => e.preventDefault()}>
+          <FontAwesomeIcon
+            icon={props.isSelected ? faMinusCircle : faPlusCircle}
+            size="2x"
+            className="faMinusCircle"
+            onClick={() => props.move(question)}
+          />
 
-          {props.isSelected ? (
-            <textarea
-              style={{ padding: "5px" }}
-              rows={2}
-              cols={35}
-              defaultValue={props.q.question as any}
-              onChange={(e) => props.update(e, idx)}
-            ></textarea>
-          ) : (
-            <textarea
-              style={{ padding: "5px" }}
-              rows={2}
-              cols={35}
-              defaultValue={props.q.question as any}
-              onChange={(e) => handleQuestionChange(e)}
-            ></textarea>
-          )}
+          <textarea
+            style={{ padding: "5px" }}
+            rows={2}
+            cols={35}
+            defaultValue={question.question}
+            onChange={(e) => handleQuestionChange(e)}
+          ></textarea>
+
           <div style={{ display: "flex", flexDirection: "row", gap: "2px" }}>
             <div className="toggle-container">
               <div
-                className={`right-toggle ${checked == true ? "checked" : ""}`}
-                onClick={() => {
-                  setChecked(true);
-                  handleChange(true);
-                }}
+                className={`right-toggle ${
+                  question.answer == true ? "checked" : ""
+                }`}
+                onClick={() => handleAnswerChange(true)}
               >
                 True
               </div>
               <div
-                className={`left-toggle ${checked == false ? "checked" : ""}`}
-                onClick={() => {
-                  setChecked(false);
-                  handleChange(false);
-                }}
+                className={`left-toggle ${
+                  question.answer == false ? "checked" : ""
+                }`}
+                onClick={() => handleAnswerChange(false)}
               >
                 False
               </div>
@@ -118,7 +61,7 @@ function QuestionArea(props: {
           </div>
 
           <label>Answer Key:</label>
-          <input type="text" value={String(ans)} disabled />
+          <input type="text" value={`${question.answer}`} disabled />
         </form>
       </div>
     </>

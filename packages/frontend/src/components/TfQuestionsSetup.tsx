@@ -1,67 +1,43 @@
 import { useState } from "react";
 import TfQuestionArea from "./TfQuestionArea";
-import { useAtom } from "jotai";
+import { PrimitiveAtom, atom, useAtom, useAtomValue } from "jotai";
 import { Tf, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
+import { splitAtom } from "jotai/utils";
 
 const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
+const TfsAtomsAtom = splitAtom(TfsAtom);
+const generatedAtom = atom([
+  {
+    question: "S3? Simple Storage Service",
+    answer: true,
+  },
+  {
+    question: "EC2? Elastic Cloud Compute",
+    answer: false,
+  },
+  {
+    question: "VPC? Virtual Private Cloud",
+    answer: true,
+  },
+] as Tf[]);
+const generatedAtomsAtom = splitAtom(generatedAtom);
 
 function TfQuestionsSetup() {
-  const [generated, setGenerated] = useState([
-    {
-      question: "S3? Simple Storage Service",
-      answer: true,
-    },
-    {
-      question: "EC2? Elastic Cloud Compute",
-      answer: false,
-    },
-    {
-      question: "VPC? Virtual Private Cloud",
-      answer: true,
-    },
-  ] as Tf[]);
+  const [generated, generatedDispatch] = useAtom(generatedAtomsAtom);
+  const [selected, selectedDispatch] = useAtom(TfsAtomsAtom);
+  const gArr = useAtomValue(generatedAtom);
+  const qArr = useAtomValue(TfsAtom);
 
-  const [tfQuestions, setTfQuestions] = useAtom(TfsAtom);
-  console.log(tfQuestions);
-  const [selected, setSelected] = useState(tfQuestions);
-  const selectQuestion = (q: Tf, idx: number) => {
-    setSelected([...selected, q as any]);
-    generated.splice(idx, 1);
-    setGenerated(generated);
-    setTfQuestions([...tfQuestions, q as any]);
-    console.log(tfQuestions);
-  };
-
-  const removeQuestion = (index: number) => {
-    selected.splice(index, 1);
-    setSelected([...selected]);
-    tfQuestions.splice(index, 1);
-    setTfQuestions(tfQuestions);
-  };
-
-  const updateGeneratedQuestion = (event: any, index: number) => {
-    const updatedGenerated = [...generated];
-    updatedGenerated[index] = {
-      ...updatedGenerated[index],
-      question: event.target.value,
+  const selectQuestion = (question: PrimitiveAtom<Tf>) => {
+    return (q: Tf) => {
+      generatedDispatch({ type: "remove", atom: question });
+      selectedDispatch({ type: "insert", value: q });
     };
-    setGenerated(updatedGenerated);
-    // const updatedQuestion = { ...tfQuestions, question: event.target.value };
-    // setTfQuestions(updatedQuestion);
   };
 
-  const updateQuestion = (event: any, index: number) => {
-    const updatedQuestions = [...tfQuestions];
-    const updatedSelectedQuestions = [...selected];
-    updatedQuestions[index] = {
-      ...updatedQuestions[index],
-      question: event.target.value,
-    };
-    setTfQuestions(updatedQuestions);
-    setSelected(updatedSelectedQuestions);
-    // const updatedQuestion = { ...tfQuestions, question: event.target.value };
-    // setTfQuestions(updatedQuestion);
+  const removeQuestion = (question: PrimitiveAtom<Tf>) => {
+    return () => selectedDispatch({ type: "remove", atom: question });
   };
 
   return (
@@ -74,15 +50,10 @@ function TfQuestionsSetup() {
 
           {generated.map((question, index) => (
             <TfQuestionArea
-              key={question.question}
-              q={question}
-              index={index}
-              add={selectQuestion}
-              remove={removeQuestion}
-              update={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                updateGeneratedQuestion(e, index)
-              }
+              key={gArr[index].question}
+              question={question}
               isSelected={false}
+              move={selectQuestion(question)}
             />
           ))}
         </div>
@@ -90,17 +61,12 @@ function TfQuestionsSetup() {
         <div className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {selected.map((qu, index) => (
+          {selected.map((question, index) => (
             <TfQuestionArea
-              key={qu.question}
-              q={qu}
-              index={index}
-              add={selectQuestion}
-              remove={removeQuestion}
-              update={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                updateQuestion(e, index)
-              }
+              key={qArr[index].question}
+              question={question}
               isSelected={true}
+              move={removeQuestion(question)}
             />
           ))}
         </div>
