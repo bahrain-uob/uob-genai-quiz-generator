@@ -2,13 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
 import { useAtomValue, useSetAtom } from "jotai";
-import { quizAtom, stageAtom } from "../lib/store";
+import { FillBlank, Mcq, Tf, quizAtom, stageAtom } from "../lib/store";
+import { focusAtom } from "jotai-optics";
 
-const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
-const FillBlanksAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("fillBlankArr")
-);
-const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 function Review() {
   return (
     <div className="review-container">
@@ -26,6 +22,7 @@ function Review() {
 function QuizSetup() {
   const { name, versions, mcq, tf, fillBlank } = useAtomValue(quizAtom);
   const setStepNo = useSetAtom(stageAtom);
+
   return (
     <div className="white-container">
       <div className="stage-name">
@@ -65,8 +62,18 @@ function QuizSetup() {
   );
 }
 
-function Questions() {
+const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
+const FillBlanksAtom = focusAtom(quizAtom, (optic) =>
+  optic.prop("fillBlankArr"),
+);
+const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
+
+function Questions(props: { type: string; stepNo: number }) {
+  const mcqQuestions = useAtomValue(McqsAtom);
+  const fillBlankQuestions = useAtomValue(FillBlanksAtom);
+  const tfQuestions = useAtomValue(TfsAtom);
   const setStepNo = useSetAtom(stageAtom);
+
   return (
     <div className="white-container">
       <div className="stage-name">
