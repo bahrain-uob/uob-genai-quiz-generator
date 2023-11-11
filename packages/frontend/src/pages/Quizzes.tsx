@@ -1,6 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Navrbar from "../components/Navbar";
-import Title from "../components/Title";
 import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { API } from "aws-amplify";
@@ -32,9 +31,8 @@ function Quizzes() {
 
   return (
     <>
-      <Navrbar />
+      <Navrbar active="quizzes" />
       <div className="top-quizzes">
-        <Title title={["My Quizzes"]} />
         <Link style={{ marginLeft: "auto" }} to="/createquiz">
           <button className="generate-button">Generate Quiz</button>
         </Link>

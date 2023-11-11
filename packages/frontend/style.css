@@ -8,9 +8,14 @@ a {
   color: white;
 }
 .logo img {
-  width: 250px;
+  width: 150px;
   margin-left: 40px;
   margin-top: 20px;
+}
+.logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .title {
   margin-top: 1rem;
@@ -709,10 +714,11 @@ input[type="number"] {
 /* instructor and students navbar */
 .top-navbar {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
 }
 .top-navbar p {
-  letter-spacing: 3px;
+  /* letter-spacing: 3px; */
   color: #4a4e69;
   padding-top: 30px;
   margin-right: 40px;
@@ -724,18 +730,77 @@ input[type="number"] {
     transition: transform 0.5s;
   }
 }
+.sign-out {
+  font-size: 0.9em;
+  margin-left: auto;
+}
+
 .links p {
   margin-left: 10px;
   margin-right: 10px;
-  font-size: 15px;
-  padding: 0 10px 0 10px;
+  font-size: small;
+  /* padding: 0 10px 0 10px; */
 }
 .links a {
   text-decoration: none;
+  color: #4a4e69;
+  height: 100%;
+}
+.links .active {
+  background-color: #c9ada7;
+  border-radius: 20px 20px 0px 0px;
   color: white;
+  transition: background-color 0.5s ease-out;
+  animation-duration: 1s;
+  animation-name: popup;
+}
+@keyframes popup {
+  from {
+    padding-top: 10%;
+    width: 10%;
+  }
+
+  to {
+    padding-bottom: 0%;
+    width: 6%;
+  }
+}
+.links .active.courses {
+  animation-name: quiz;
+}
+
+.links .active.quiz {
+  animation-name: quiz;
+}
+@keyframes quiz {
+  from {
+    padding-top: 10%;
+    width: 10%;
+  }
+
+  to {
+    padding-bottom: 0%;
+    width: 8%;
+  }
+}
+.links .active.createquiz {
+  animation-name: popupQuiz;
+}
+@keyframes popupQuiz {
+  from {
+    padding-top: 10%;
+    width: 15%;
+  }
+
+  to {
+    padding-bottom: 0%;
+    width: 11%;
+  }
 }
 .links a:hover {
-  color: white;
+  border-radius: 20px 20px 0px 0px;
+  background-color: #c9ada76b;
+  transition: background-color 0.3s ease-in;
 }
 .links {
   background-color: #c9ada7;
@@ -743,23 +808,17 @@ input[type="number"] {
   letter-spacing: 3px;
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
-  height: 55px;
-  margin-top: 20px;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.237);
+  gap: 5px;
+  height: 40px;
+  margin-top: 10px;
   text-align: center;
   align-items: center;
 }
-.links.homepage {
-  background-color: white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.237);
-  border-top: 1px solid rgba(0, 0, 0, 0.112);
-}
-.links.homepage a:hover {
-  font-weight: 800;
-}
-.links.homepage a {
-  color: #4a4e69;
-}
+
 /* end of instructor and student navbar */
 
 /* materials page */

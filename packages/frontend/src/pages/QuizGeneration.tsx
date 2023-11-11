@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import Titles from "../components/Title";
 import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
 import MaterialsTable from "../components/MaterialsTable";
@@ -21,10 +20,8 @@ function Quizzes() {
 
   return (
     <>
-      <Navbar />
-      <div className="context">
-        <Titles title={["Create Quiz"]} />
-      </div>
+      <Navbar active="createquiz" />
+      <div className="context"></div>
       <StepProgressBar stepNo={stepNo} />
       <div className="step-container">
         {stepNo == 0 && <CoursesTable />}

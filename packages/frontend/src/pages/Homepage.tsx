@@ -288,13 +288,13 @@ function Navbar() {
             </div>
           </a>
 
-          <a onClick={signOut}>
+          <a onClick={signOut} className="sign-out">
             <p>SIGN OUT</p>
           </a>
         </div>
 
         <div className="links homepage">
-          <a href="/">
+          <a href="/" className="active">
             <p>HOME</p>
           </a>
           <a href="/courses">

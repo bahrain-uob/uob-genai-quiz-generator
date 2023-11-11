@@ -28,7 +28,7 @@ function Materials() {
 
   return (
     <div>
-      <Navbar />
+      <Navbar active="none" />
       <div className="top-materials">
         <Titles title={[`${course_code} ${course_name}`, "Course Content"]} />
         <button className="upload-button" onClick={openModal}>
