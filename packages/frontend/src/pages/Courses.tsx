@@ -9,7 +9,7 @@ import "@aws-amplify/ui-react/styles.css";
 import { API } from "aws-amplify";
 import { useNavigate } from "react-router-dom";
 import { coursesAtom, navAtom } from "../lib/store";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 function Courses() {
   const [courses, setCourses] = useAtom(coursesAtom);
@@ -23,11 +23,11 @@ function Courses() {
   };
 
   const navigation = useNavigate();
-  const [_, setNav] = useAtom(navAtom);
+  const setNav = useSetAtom(navAtom);
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -40,6 +40,7 @@ function Courses() {
       <div className="courses-container">
         {courses.map((course) => (
           <div
+            key={course.id}
             onClick={() => {
               navigate(course.id, course.code, course.name);
             }}

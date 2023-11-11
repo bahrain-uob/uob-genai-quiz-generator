@@ -6,7 +6,7 @@ import QuizSetupForm from "../components/QuizSetup";
 import McqQuestionsSetup from "../components/McqQuestionsSetup";
 import Review from "../components/Review";
 import { API } from "aws-amplify";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
 import TfQuestionsSetup from "../components/TfQuestionsSetup";
@@ -16,7 +16,7 @@ const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
 function Quizzes() {
   const [stepNo, setStepNo] = useAtom(stageAtom);
-  const [courseId, _setCourseId] = useAtom(courseIdAtom);
+  const courseId = useAtomValue(courseIdAtom);
 
   return (
     <>
@@ -66,8 +66,7 @@ const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
 
 function CoursesTable() {
   const [courses, setCourses] = useAtom(coursesAtom);
-  const [courseId, setCourseId] = useAtom(courseIdAtom);
-  const [_quizMaterials, setQuizMaterials] = useAtom(quizMaterialsAtom);
+  const setCourseId = useSetAtom(courseIdAtom);
 
   useEffect(() => {
     updateCourses();
@@ -99,7 +98,7 @@ function CoursesTable() {
 
           <tbody>
             {courses.map((course) => (
-              <tr onClick={() => selectCourse(course.id)}>
+              <tr key={course.id} onClick={() => selectCourse(course.id)}>
                 <td style={{ textAlign: "center" }}>
                   <input
                     type="radio"

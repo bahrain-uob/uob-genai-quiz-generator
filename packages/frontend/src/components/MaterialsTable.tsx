@@ -4,15 +4,12 @@ import {
   faFileArrowDown,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
 import { filesize } from "filesize";
-import { quizAtom } from "../lib/store";
-import { useAtom } from "jotai";
-import { focusAtom } from "jotai-optics";
-
-const materialsAtom = focusAtom(quizAtom, (optic) => optic.prop("materials"));
+import { useImmerAtom } from "jotai-immer";
+import { materialsAtom } from "../lib/store";
 
 function MaterialsTable({
   isSelecting,
@@ -21,8 +18,7 @@ function MaterialsTable({
   isSelecting: boolean;
   courseId: string;
 }) {
-  const [materials, setMaterials] = useState([] as any);
-  const [quizMaterials, setQuizMaterials] = useAtom(materialsAtom);
+  const [materials, setMaterials] = useImmerAtom(materialsAtom);
   useEffect(() => {
     updateMaterial().then(preCheck);
   }, []);
@@ -35,33 +31,44 @@ function MaterialsTable({
   };
 
   const updateMaterial = async () => {
-    let userId = await getUserId();
-    let { results } = await Storage.list(`${userId}/${courseId}/materials/`, {
-      pageSize: 1000,
-    });
+    const userId = await getUserId();
+    let { results: response } = await Storage.list(
+      `${userId}/${courseId}/materials/`,
+      {
+        pageSize: 1000,
+      },
+    );
     const prefix_len = userId.length + courseId.length + 9 + 3;
-    results.forEach((obj) => {
-      obj.key = obj.key!.slice(prefix_len);
-      obj.lastModified = obj.lastModified!.toLocaleDateString("en-GB") as any;
-      obj.size = filesize(obj.size!, { round: 0 }) as any;
+    const results = response.map((obj) => {
+      return {
+        key: obj.key!.slice(prefix_len),
+        lastModified: obj.lastModified!.toLocaleDateString("en-GB") as any,
+        size: filesize(obj.size!, { round: 0 }) as any,
+      };
     });
 
-    setMaterials(results);
+    setMaterials((draft) => {
+      // @ts-ignore
+      draft[courseId] = results;
+    });
   };
 
   const deleteMaterial = async (index: number) => {
-    const name = materials[index].key;
-    const copy = [...materials];
-    copy.splice(index, 1);
-    setMaterials(copy);
+    // @ts-ignore
+    const fileName = materials[courseId][index].key;
+    setMaterials((draft) => {
+      // @ts-ignore
+      draft[courseId].splice(index, 1);
+    });
 
     const userId = await getUserId();
-    const key = `${userId}/${courseId}/materials/${name}`;
+    const key = `${userId}/${courseId}/materials/${fileName}`;
     await Storage.remove(key);
   };
 
   const downloadMaterial = async (index: number) => {
-    const name = materials[index].key;
+    // @ts-ignore
+    const name = materials[courseId][index].key;
     const userId = await getUserId();
     const key = `${userId}/${courseId}/materials/${name}`;
     const result = await Storage.get(key, { download: true });
@@ -104,8 +111,9 @@ function MaterialsTable({
           </tr>
         </thead>
         <tbody>
-          {materials.map((material: any, index: number) => (
-            <tr onClick={() => selectMaterial(material.key)}>
+          {/* @ts-ignore*/}
+          {(materials[courseId] ?? []).map((material: any, index: number) => (
+            <tr key={`${courseId}${material.key}`}>
               <td>
                 {isSelecting ? (
                   <input type="checkbox" id={material.key} />
