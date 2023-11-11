@@ -1,10 +1,9 @@
 import json
 import os
 import boto3
-import requests
-
+number =1
 # endpoint_name = os.environ["LLAMA_2_13B_ENDPOINT"]
-endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-7b"  # need to make environ
+endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-13b"  # need to make environ
 sm_client = boto3.client("sagemaker-runtime")
 topic = "javascript"
 s3 = boto3.client("s3")
@@ -56,7 +55,7 @@ One of the foundational services is Amazon Elastic Compute Cloud (EC2), which al
 import re
 user_id=  "47b81c1f-887b-4702-aebc-a2e04760e80c"
 course_id ="33e64777-7a00-45af-bbde-957fd6e07319"
-materials = "dynamodb"
+materials = "s3"
 def create(prompt):
     # parameters needed,
     # user id
@@ -92,20 +91,16 @@ def MCQ(event, context):
     # user_id = event["id"]
     # materials = event["materials"]
     # course_id =event["course"]
-    r3 = []
+    cutted_text = []
     object_key = user_id+"/"+course_id+"/materials/"+materials+".txt"
-#object_key = 'UOB-CERN-Success.mp4.txt'
 
-# Retrieve the object
-    # for object_key in object_keys:
     response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
     topic = response['Body'].read().decode('utf-8')
-    r3.extend(filter(topic))
-    topic = r3[random.randint(0,len(r3)-1)]
-    print()
+    cutted_text.extend(filter(topic))
+    topic = cutted_text[random.randint(0,len(cutted_text)-1)]
     prompt = """
     Human: i want you to generate 1 MCQ question about  this :
-    Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
+    Cristiano Ronaldo dos Santos Aveiro:  (born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
     He is considered to be one of the greatest footballers of all time, and, by some, as the greatest ever.
     Ronaldo began his professional career with Sporting CP at age 17 in 2002, and signed for Manchester United a year later. He won three back-to-back Premier League titles: in 2006-07, 2007-08, and 2008-09. In 2007-08, Ronaldo, helped United win the UEFA Champions League. In 2008-09, he won his first FIFA Club World Cup in December 2008, and he also won his first Ballon d'Or. At one point Ronaldo was the most expensive professional footballer of all time, after moving from Manchester United to Real Madrid for approximately £80 m in July 2009
 
@@ -153,13 +148,17 @@ def MCQ(event, context):
     Assistant:"""
     filter(topic)
     prompt = prompt.replace("{{topic}}", topic)
-    json.loads(create(prompt))
-        # prompt= prompt + json.dumps(ali ,indent=2) + "\nAssistant:" #test
-
     return  json.loads(create(prompt))
 
 
 def TF(event, context):
+    cutted_text = []
+    object_key = user_id+"/"+course_id+"/materials/"+materials+".txt"
+
+    response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
+    topic = response['Body'].read().decode('utf-8')
+    cutted_text.extend(filter(topic))
+    topic = cutted_text[random.randint(0,len(cutted_text)-1)]
     prompt = """
     Human: i want you to generate 1 TRUE or FALSE question about  this :
     Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
@@ -174,7 +173,7 @@ def TF(event, context):
     Assistant:
     {
       "question": "Ronaldo is born in Spain",
-      "correct_answer_index": false
+      "correct_answer": false
     }
 
     Human: i want you to generate 1 TRUE or FALSE question about  this :
@@ -203,19 +202,19 @@ def TF(event, context):
       "correct_answer": boolean // the answer of the question (either True or False)
     }
     Assistant:"""
-    questions = []
+    filter(topic)
     prompt = prompt.replace("{{topic}}", topic)
-    for index in range(int(number)):
-        ali = create(prompt)
-        questions.append(json.loads(ali))
-        # prompt= prompt + json.dumps(ali ,indent=2) + "\nAssistant:" #test
-
-    return questions
+    return  json.loads(create(prompt))
 
 
 def fill_in_blank(event, context):
-    number = event["number"]
-    number = 4
+    cutted_text = []
+    object_key = user_id+"/"+course_id+"/materials/"+materials+".txt"
+
+    response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
+    topic = response['Body'].read().decode('utf-8')
+    cutted_text.extend(filter(topic))
+    topic = cutted_text[random.randint(0,len(cutted_text)-1)]
     prompt = """
     Human: i want you to generate 1 fill-in-the-blank question about this :
     Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
@@ -278,14 +277,10 @@ def fill_in_blank(event, context):
     } 
     Assistant: """ 
 
-    questions = []
+    filter(topic)
     prompt = prompt.replace("{{topic}}", topic)
-    for index in range(int(number)):
-        ali = create(prompt)
-        questions.append(json.loads(ali))
-        # prompt= prompt + json.dumps(ali ,indent=2) + "\nAssistant:" #test
+    return  json.loads(create(prompt))
 
-    return questions
 import random
 import math
 def filter(text):
