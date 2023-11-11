@@ -20,8 +20,15 @@ function MaterialsTable({
 }) {
   const [materials, setMaterials] = useImmerAtom(materialsAtom);
   useEffect(() => {
-    updateMaterial();
+    updateMaterial().then(preCheck);
   }, []);
+
+  const preCheck = () => {
+    for (let material of quizMaterials) {
+      let target: any = document.getElementById(material);
+      if (target) target.checked = true;
+    }
+  };
 
   const updateMaterial = async () => {
     const userId = await getUserId();
@@ -84,6 +91,13 @@ function MaterialsTable({
     return a;
   };
 
+  const selectMaterial = (key: string) => {
+    const target: any = document.getElementById(key);
+    target.checked = !target.checked;
+    if (target.checked) setQuizMaterials(quizMaterials.concat(target.id));
+    else setQuizMaterials(quizMaterials.filter((m) => m != key));
+  };
+
   return (
     <div className="materials">
       <table>
@@ -102,7 +116,7 @@ function MaterialsTable({
             <tr key={`${courseId}${material.key}`}>
               <td>
                 {isSelecting ? (
-                  <input type="checkbox" />
+                  <input type="checkbox" id={material.key} />
                 ) : (
                   <FontAwesomeIcon icon={faFile} size="xl" />
                 )}

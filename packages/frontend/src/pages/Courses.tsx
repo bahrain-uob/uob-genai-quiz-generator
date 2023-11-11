@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Navbar from "../components/Navbar";
 import Course from "../components/Course";
-import Title from "../components/Title";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBook, faX } from "@fortawesome/free-solid-svg-icons";
 import { TextField } from "@aws-amplify/ui-react";
@@ -36,8 +35,8 @@ function Courses() {
 
   return (
     <>
-      <Navbar />
-      <Title title={["My Courses"]} />
+      <Navbar active="courses" />
+
       <div className="courses-container">
         {courses.map((course) => (
           <div
@@ -69,12 +68,12 @@ function CreateCourse({ updateCourses }: any) {
 
   return (
     <>
-      <div className="course-container create" onClick={() => setModal(true)}>
+      <div className="create" onClick={() => setModal(true)}>
         <FontAwesomeIcon
           icon={faBook}
-          style={{ color: "white", width: "3rem", height: "3rem" }}
+          style={{ color: "#4a4e69", width: "3rem", height: "3rem" }}
         />
-        <h3>CREATE COURSE +</h3>
+        <h4>Create Course </h4>
       </div>
       <Modal
         isOpen={modal}

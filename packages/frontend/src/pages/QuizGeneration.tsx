@@ -1,15 +1,16 @@
 import { useEffect } from "react";
-import Titles from "../components/Title";
 import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
 import MaterialsTable from "../components/MaterialsTable";
 import QuizSetupForm from "../components/QuizSetup";
-import QuestionsSetup from "../components/QuestionsSetup";
+import McqQuestionsSetup from "../components/McqQuestionsSetup";
 import Review from "../components/Review";
 import { API } from "aws-amplify";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { focusAtom } from "jotai-optics";
 import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
+import TfQuestionsSetup from "../components/TfQuestionsSetup";
+import FillBlankQuestionsSetup from "../components/FillBlankQuestionsSetup";
 
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
@@ -19,10 +20,8 @@ function Quizzes() {
 
   return (
     <>
-      <Navbar />
-      <div className="context">
-        <Titles title={["Create Quiz"]} />
-      </div>
+      <Navbar active="createquiz" />
+      <div className="context"></div>
       <StepProgressBar stepNo={stepNo} />
       <div className="step-container">
         {stepNo == 0 && <CoursesTable />}
@@ -30,8 +29,10 @@ function Quizzes() {
           <MaterialsTable courseId={courseId} isSelecting={true} />
         )}
         {stepNo == 2 && <QuizSetupForm />}
-        {stepNo == 3 && <QuestionsSetup />}
-        {stepNo == 4 && <Review />}
+        {stepNo == 3 && <McqQuestionsSetup />}
+        {stepNo == 4 && <TfQuestionsSetup />}
+        {stepNo == 5 && <FillBlankQuestionsSetup />}
+        {stepNo == 6 && <Review />}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {stepNo > 0 && (
@@ -44,7 +45,7 @@ function Quizzes() {
             Back
           </button>
         )}
-        {stepNo < 4 && (
+        {stepNo < 6 && (
           <button
             className="next"
             onClick={() => {
@@ -59,12 +60,18 @@ function Quizzes() {
   );
 }
 
+const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
+  optic.prop("materials")
+);
+
 function CoursesTable() {
   const [courses, setCourses] = useAtom(coursesAtom);
   const setCourseId = useSetAtom(courseIdAtom);
 
   useEffect(() => {
     updateCourses();
+    const selected: any = document.getElementById(courseId);
+    if (selected) selected.checked = true;
   }, []);
 
   const updateCourses = async () => {
@@ -72,9 +79,10 @@ function CoursesTable() {
     setCourses(courses);
   };
 
-  function selectCourse(courseId: string) {
-    (document.getElementById(courseId) as any).checked = true;
-    setCourseId(courseId);
+  function selectCourse(selectedCourseId: string) {
+    (document.getElementById(selectedCourseId) as any).checked = true;
+    if (selectedCourseId != courseId) setQuizMaterials([]);
+    setCourseId(selectedCourseId);
   }
   return (
     <>

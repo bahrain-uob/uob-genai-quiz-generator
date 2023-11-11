@@ -45,10 +45,14 @@ function StepProgressBar(props: { stepNo: number }) {
       </div>
 
       <div
-        className={props.stepNo == 3 ? "stepper-item active" : "stepper-item"}
+        className={
+          props.stepNo >= 3 && props.stepNo <= 5
+            ? "stepper-item active"
+            : "stepper-item"
+        }
       >
         <div className="step-counter">
-          {props.stepNo > 3 && (
+          {props.stepNo > 5 && (
             <FontAwesomeIcon
               icon={faCircleCheck}
               style={{ color: "#3eb526", width: "20px", height: "20px" }}
@@ -59,10 +63,10 @@ function StepProgressBar(props: { stepNo: number }) {
       </div>
 
       <div
-        className={props.stepNo == 4 ? "stepper-item active" : "stepper-item"}
+        className={props.stepNo == 6 ? "stepper-item active" : "stepper-item"}
       >
         <div className="step-counter">
-          {props.stepNo > 4 && (
+          {props.stepNo > 6 && (
             <FontAwesomeIcon
               icon={faCircleCheck}
               style={{ color: "#3eb526", width: "20px", height: "20px" }}
