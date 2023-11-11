@@ -9,17 +9,20 @@ const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
 const McqsAtomsAtom = splitAtom(McqsAtom);
 const generatedAtom = atom([
   {
+    id: crypto.randomUUID(),
     question: "S3? Simple Storage Service",
     choices: ["s3", "ec2", "vpc", "ebs"],
     answer_index: 0,
   },
   {
+    id: crypto.randomUUID(),
     question: "EC2? Elastic Cloud Compute",
     choices: ["s3", "ec2", "vpc", "ebs"],
     answer_index: 2,
   },
 
   {
+    id: crypto.randomUUID(),
     question: "VPC? Virtual Private Cloud",
     choices: ["s3", "ec2", "vpc", "ebs"],
     answer_index: 2,
@@ -56,7 +59,7 @@ function McqQuestionsSetup() {
 
           {generated.map((question, index) => (
             <QuestionArea
-              key={gArr[index].question}
+              key={gArr[index].id}
               question={question}
               isSelected={false}
               move={selectQuestion(question)}
@@ -69,7 +72,7 @@ function McqQuestionsSetup() {
 
           {selected.map((question, index) => (
             <QuestionArea
-              key={sArr[index].question}
+              key={sArr[index].id}
               question={question}
               isSelected={true}
               move={removeQuestion(question)}

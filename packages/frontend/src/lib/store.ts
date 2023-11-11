@@ -15,6 +15,7 @@ export interface Course {
 export const coursesAtom = atomWithStorage("coursesList", [] as Course[]);
 
 export interface Mcq {
+  id: string;
   question: string;
   choices: string[];
   answer_index: number;
