@@ -9,7 +9,13 @@ import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
 import { filesize } from "filesize";
 import { useImmerAtom } from "jotai-immer";
-import { materialsAtom } from "../lib/store";
+import { materialsAtom, quizAtom } from "../lib/store";
+import { focusAtom } from "jotai-optics";
+import { useAtom } from "jotai";
+
+const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
+  optic.prop("materials"),
+);
 
 function MaterialsTable({
   isSelecting,
@@ -19,6 +25,7 @@ function MaterialsTable({
   courseId: string;
 }) {
   const [materials, setMaterials] = useImmerAtom(materialsAtom);
+  const [quizMaterials, setQuizMaterials] = useAtom(quizMaterialsAtom);
   useEffect(() => {
     updateMaterial().then(preCheck);
   }, []);
@@ -113,7 +120,10 @@ function MaterialsTable({
         <tbody>
           {/* @ts-ignore*/}
           {(materials[courseId] ?? []).map((material: any, index: number) => (
-            <tr key={`${courseId}${material.key}`}>
+            <tr
+              key={`${courseId}${material.key}`}
+              onClick={() => selectMaterial(material.key)}
+            >
               <td>
                 {isSelecting ? (
                   <input type="checkbox" id={material.key} />
