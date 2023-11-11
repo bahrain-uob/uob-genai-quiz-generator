@@ -108,13 +108,13 @@ def MCQ(event, context):
     {
       "question": string // the question
       "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
-      "correct_answer_index": string // the index of the correct choice assuming 0-indexing
+      "correct_answer": string // the correct answer from the choices
     }
     Assistant:
     {
       "question": "what is Ronaldo's birthplace?",
       "choices": ["germany", "Portugal", "Spain", "England"],
-      "correct_answer_index": 1
+      "correct_answer": "Portugal"
     }
 
     Human: i want you to generate 1 MCQ question about  this :
@@ -129,13 +129,13 @@ def MCQ(event, context):
     {
       "question": string // the question
       "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
-      "correct_answer_index": string // the index of the correct choice assuming 0-indexing
+      "correct_answer": string // the correct answer from the choices
     }
     Assistant:
     {
       "question": "When was Apple the world's biggest company by market capitilization?",
       "choices": ["March 2023", "June 2023", "May 2023", "March 2022"],
-      "correct_answer_index": 0
+      "correct_answer": "March 2023"
     }
    
     Human: i want you to generate 1 MCQ question about this : {{topic}}
@@ -143,7 +143,7 @@ def MCQ(event, context):
     {
       "question": string // the question
       "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
-      "correct_answer_index": string // the index of the correct choice assuming 0-indexing
+      "correct_answer": string // the correct answer from the choices
     }  
     Assistant:"""
     filter(topic)
