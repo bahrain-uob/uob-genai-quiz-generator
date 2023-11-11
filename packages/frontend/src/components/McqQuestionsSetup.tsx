@@ -1,5 +1,5 @@
 import QuestionArea from "./McqQuestionArea";
-import { PrimitiveAtom, atom, useAtom } from "jotai";
+import { PrimitiveAtom, atom, useAtom, useAtomValue } from "jotai";
 import { Mcq, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import { splitAtom } from "jotai/utils";
@@ -29,6 +29,8 @@ const generatedAtomsAtom = splitAtom(generatedAtom);
 function McqQuestionsSetup() {
   const [generated, generatedDispatch] = useAtom(generatedAtomsAtom);
   const [selected, selectedDispatch] = useAtom(McqsAtomsAtom);
+  const gArr = useAtomValue(generatedAtom);
+  const sArr = useAtomValue(McqsAtom);
 
   const selectQuestion = (question: PrimitiveAtom<Mcq>) => {
     return (q: Mcq) => {
@@ -49,9 +51,9 @@ function McqQuestionsSetup() {
         <div className="generated">
           <h4 style={{ textAlign: "center" }}>Generated Questions</h4>
 
-          {generated.map((question) => (
+          {generated.map((question, index) => (
             <QuestionArea
-              key={crypto.randomUUID()}
+              key={gArr[index].question}
               question={question}
               isSelected={false}
               move={selectQuestion(question)}
@@ -62,9 +64,9 @@ function McqQuestionsSetup() {
         <div className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {selected.map((question) => (
+          {selected.map((question, index) => (
             <QuestionArea
-              key={crypto.randomUUID()}
+              key={sArr[index].question}
               question={question}
               isSelected={true}
               move={removeQuestion(question)}
