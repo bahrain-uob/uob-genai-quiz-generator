@@ -14,6 +14,7 @@ import { focusAtom } from "jotai-optics";
 import { useAtom } from "jotai";
 import emptymaterials from "../assets/empty_comp.svg";
 import arrow from "../assets/arrow_comp.svg";
+import koala from "../assets/Sweet Koala-comp.svg";
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
   optic.prop("materials")
@@ -115,23 +116,31 @@ function MaterialsTable({
           style={{
             display: "flex",
             flexDirection: "row",
-            marginLeft: "auto",
+            margin: isSelecting ? "0px auto auto auto" : "0 auto",
           }}
         >
           <div style={{ display: "flex", flexDirection: "column" }}>
-            <img src={emptymaterials} alt="nothing to see here" />
+            <img
+              src={isSelecting ? koala : emptymaterials}
+              alt="nothing to see here"
+              // width={isSelecting ? "250px" : undefined}
+            />
             <p style={{ color: "#4a4e69", fontSize: "medium" }}>
-              Add content to this course
+              {isSelecting
+                ? "This course does not have any content!"
+                : "Add content to this course"}
             </p>
           </div>
 
-          <img
-            src={arrow}
-            alt="arrow"
-            width="500px"
-            height="300px"
-            style={{ paddingRight: "50px" }}
-          />
+          {!isSelecting && (
+            <img
+              src={arrow}
+              alt="arrow"
+              width="500px"
+              height="300px"
+              style={{ paddingRight: "50px" }}
+            />
+          )}
         </div>
       )}
 
