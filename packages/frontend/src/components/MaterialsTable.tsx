@@ -4,10 +4,18 @@ import {
   faFileArrowDown,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
 import { filesize } from "filesize";
+import { useImmerAtom } from "jotai-immer";
+import { materialsAtom, quizAtom } from "../lib/store";
+import { focusAtom } from "jotai-optics";
+import { useAtom } from "jotai";
+
+const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
+  optic.prop("materials"),
+);
 
 function MaterialsTable({
   isSelecting,
@@ -16,39 +24,58 @@ function MaterialsTable({
   isSelecting: boolean;
   courseId: string;
 }) {
-  const [materials, setMaterials] = useState([] as any);
+  const [materials, setMaterials] = useImmerAtom(materialsAtom);
+  const [quizMaterials, setQuizMaterials] = useAtom(quizMaterialsAtom);
   useEffect(() => {
-    updateMaterial();
+    updateMaterial().then(preCheck);
   }, []);
 
+  const preCheck = () => {
+    for (let material of quizMaterials) {
+      let target: any = document.getElementById(material);
+      if (target) target.checked = true;
+    }
+  };
+
   const updateMaterial = async () => {
-    let userId = await getUserId();
-    let { results } = await Storage.list(`${userId}/${courseId}/materials/`, {
-      pageSize: 1000,
-    });
+    const userId = await getUserId();
+    let { results: response } = await Storage.list(
+      `${userId}/${courseId}/materials/`,
+      {
+        pageSize: 1000,
+      },
+    );
     const prefix_len = userId.length + courseId.length + 9 + 3;
-    results.forEach((obj) => {
-      obj.key = obj.key!.slice(prefix_len);
-      obj.lastModified = obj.lastModified!.toLocaleDateString("en-GB") as any;
-      obj.size = filesize(obj.size!, { round: 0 }) as any;
+    const results = response.map((obj) => {
+      return {
+        key: obj.key!.slice(prefix_len),
+        lastModified: obj.lastModified!.toLocaleDateString("en-GB") as any,
+        size: filesize(obj.size!, { round: 0 }) as any,
+      };
     });
 
-    setMaterials(results);
+    setMaterials((draft) => {
+      // @ts-ignore
+      draft[courseId] = results;
+    });
   };
 
   const deleteMaterial = async (index: number) => {
-    const name = materials[index].key;
-    const copy = [...materials];
-    copy.splice(index, 1);
-    setMaterials(copy);
+    // @ts-ignore
+    const fileName = materials[courseId][index].key;
+    setMaterials((draft) => {
+      // @ts-ignore
+      draft[courseId].splice(index, 1);
+    });
 
     const userId = await getUserId();
-    const key = `${userId}/${courseId}/materials/${name}`;
+    const key = `${userId}/${courseId}/materials/${fileName}`;
     await Storage.remove(key);
   };
 
   const downloadMaterial = async (index: number) => {
-    const name = materials[index].key;
+    // @ts-ignore
+    const name = materials[courseId][index].key;
     const userId = await getUserId();
     const key = `${userId}/${courseId}/materials/${name}`;
     const result = await Storage.get(key, { download: true });
@@ -71,6 +98,13 @@ function MaterialsTable({
     return a;
   };
 
+  const selectMaterial = (key: string) => {
+    const target: any = document.getElementById(key);
+    target.checked = !target.checked;
+    if (target.checked) setQuizMaterials(quizMaterials.concat(target.id));
+    else setQuizMaterials(quizMaterials.filter((m) => m != key));
+  };
+
   return (
     <div className="materials">
       <table>
@@ -84,11 +118,15 @@ function MaterialsTable({
           </tr>
         </thead>
         <tbody>
-          {materials.map((material: any, index: number) => (
-            <tr>
+          {/* @ts-ignore*/}
+          {(materials[courseId] ?? []).map((material: any, index: number) => (
+            <tr
+              key={`${courseId}${material.key}`}
+              onClick={() => selectMaterial(material.key)}
+            >
               <td>
                 {isSelecting ? (
-                  <input type="checkbox" />
+                  <input type="checkbox" id={material.key} />
                 ) : (
                   <FontAwesomeIcon icon={faFile} size="xl" />
                 )}

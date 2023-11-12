@@ -5,3 +5,7 @@ export const getUserId = async (setter?: any) => {
   if (setter) setter(id);
   return id;
 };
+
+export const isEqual = <T>(val: T, other: T) => {
+  return JSON.stringify(val) === JSON.stringify(other);
+};

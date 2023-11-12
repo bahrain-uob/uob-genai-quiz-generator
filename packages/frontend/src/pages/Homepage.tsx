@@ -7,10 +7,15 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
-import { TextField, useAuthenticator } from "@aws-amplify/ui-react";
-// import Upload from "../components/Upload";
+import { TextField } from "@aws-amplify/ui-react";
+import Carousel from "../components/Carousel";
+import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
+import { Link } from "react-router-dom";
+import { Container } from "tsparticles-engine";
+import Navbar from "../components/Navbar";
+import { useCallback, useState } from "react";
 
-import { useState } from "react";
 function Homepage() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [UploadModalIsOpen, setUploadModalIsOpen] = useState(false);
@@ -27,42 +32,120 @@ function Homepage() {
   function closeUploadModal() {
     setUploadModalIsOpen(false);
   }
+
+  const particlesInit = async (main: any) => {
+    console.log(main);
+
+    // you can initialize the tsParticles instance (main) here, adding custom shapes or presets
+    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+    // starting from v2 you can add only the features you need reducing the bundle size
+    await loadFull(main);
+  };
+  const particlesLoaded = useCallback(
+    async (container: Container | undefined) => {
+      await console.log(container);
+    },
+    []
+  );
   return (
     <>
-      <Navbar />
+      <Navbar active="home" />
       <div className="homepage-container">
+        <Particles
+          id="tsparticles"
+          init={particlesInit}
+          loaded={particlesLoaded}
+          options={{
+            background: {
+              color: {
+                value: "white",
+              },
+            },
+            fullScreen: {
+              zIndex: -1,
+            },
+            fpsLimit: 120,
+            interactivity: {
+              events: {
+                onClick: {
+                  enable: true,
+                  mode: "push",
+                },
+                onHover: {
+                  enable: true,
+                  mode: "repulse",
+                },
+                resize: true,
+              },
+              modes: {
+                push: {
+                  quantity: 4,
+                },
+                repulse: {
+                  distance: 200,
+                  duration: 0.4,
+                },
+              },
+            },
+            particles: {
+              color: {
+                value: "#4a4e699c",
+              },
+              links: {
+                color: "#4a4e699c",
+                distance: 150,
+                enable: true,
+                opacity: 0.5,
+                width: 1,
+              },
+              move: {
+                direction: "none",
+                enable: true,
+                outModes: {
+                  default: "bounce",
+                },
+                random: false,
+                speed: 6,
+                straight: false,
+              },
+              number: {
+                density: {
+                  enable: true,
+                  area: 800,
+                },
+                value: 80,
+              },
+              opacity: {
+                value: 0.5,
+              },
+              shape: {
+                type: "circle",
+              },
+              size: {
+                value: { min: 1, max: 5 },
+              },
+            },
+            detectRetina: true,
+          }}
+        />
+
         <h2>Start creating your quizzes with just four steps</h2>
-        <div className="stepper-wrapper">
-          <div className="stepper-item active">
-            <div className="step-counter"></div>
-            <div className="step-name">Select Course</div>
-          </div>
-          <div className="stepper-item active">
-            <div className="step-counter"></div>
-            <div className="step-name">Select Material</div>
-          </div>
-          <div className="stepper-item active">
-            <div className="step-counter"></div>
-            <div className="step-name">Quiz Setup</div>
-          </div>
-          <div className="stepper-item active">
-            <div className="step-counter"></div>
-            <div className="step-name">Questions Setup</div>
-          </div>
+        <div className="background-carousel">
+          <Carousel />
         </div>
+
         <div className="quick-access">
-          <h2>Quick Access</h2>
           <div className="access-cards">
             <Link
               to="/createquiz"
-              style={{ color: "black" }}
+              style={{ color: "white" }}
               className="access-item"
             >
               <div>
                 <FontAwesomeIcon
                   icon={faFilePen}
                   size="4x"
-                  style={{ color: "#00000077" }}
+                  style={{ color: "white" }}
                 />
 
                 <p>GENERATE QUIZ</p>
@@ -71,14 +154,14 @@ function Homepage() {
 
             <Link
               to="/quizzes"
-              style={{ color: "black" }}
+              style={{ color: "white" }}
               className="access-item"
             >
               <div>
                 <FontAwesomeIcon
                   icon={faFileLines}
                   size="4x"
-                  style={{ color: "#00000077" }}
+                  style={{ color: "white" }}
                 />
 
                 <p>MY QUIZZES</p>
@@ -89,7 +172,7 @@ function Homepage() {
               <FontAwesomeIcon
                 icon={faBook}
                 size="4x"
-                style={{ color: "#00000077" }}
+                style={{ color: "white" }}
               />
               <p>CREATE COURSE</p>
             </div>
@@ -142,7 +225,7 @@ function Homepage() {
               <FontAwesomeIcon
                 icon={faFolder}
                 size="4x"
-                style={{ color: "#00000077" }}
+                style={{ color: "white" }}
               />
               <p>UPLOAD MATERIAL</p>
             </div>
@@ -189,45 +272,6 @@ function Homepage() {
         </div>
       </div>
     </>
-  );
-}
-
-import Logo from "../assets/Logo.svg";
-import { Link } from "react-router-dom";
-
-function Navbar() {
-  const { signOut } = useAuthenticator((context) => [context.signOut]);
-  return (
-    <div>
-      <nav>
-        <div className="top-navbar">
-          <a href="/">
-            <div className="logo">
-              <img src={Logo} alt="logo" />
-            </div>
-          </a>
-
-          <a onClick={signOut}>
-            <p>SIGN OUT</p>
-          </a>
-        </div>
-
-        <div className="links homepage">
-          <a href="/">
-            <p>HOME</p>
-          </a>
-          <a href="/courses">
-            <p>COURSES</p>
-          </a>
-          <a href="/quizzes">
-            <p>QUIZZES</p>
-          </a>
-          <a href="/createquiz">
-            <p>CREATE QUIZ</p>
-          </a>
-        </div>
-      </nav>
-    </div>
   );
 }
 

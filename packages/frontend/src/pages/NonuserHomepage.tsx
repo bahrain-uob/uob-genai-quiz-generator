@@ -11,7 +11,7 @@ function NonuserHomepage() {
       <div className="homepage-logo logo">
         <img src={Logo} alt="logo" />
 
-        <a href="/signin">
+        <a href="/signin" className="sign-in">
           <p>SIGN IN</p>
         </a>
       </div>
