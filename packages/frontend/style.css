@@ -43,6 +43,7 @@ a {
 }
 .homepage-container h2 {
   text-align: center;
+  line-height: 40px;
   margin-top: 10rem;
   color: #ca867a;
   font-weight: 600;
