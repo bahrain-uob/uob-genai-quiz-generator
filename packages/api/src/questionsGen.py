@@ -1,7 +1,6 @@
 import json
 import os
 import boto3
-number =1
 # endpoint_name = os.environ["LLAMA_2_13B_ENDPOINT"]
 endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-13b"  # need to make environ
 sm_client = boto3.client("sagemaker-runtime")
@@ -14,30 +13,6 @@ Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ron
 He is considered to be one of the greatest footballers of all time, and, by some, as the greatest ever.
 Ronaldo began his professional career with Sporting CP at age 17 in 2002, and signed for Manchester United a year later. He won three back-to-back Premier League titles: in 2006-07, 2007-08, and 2008-09. In 2007-08, Ronaldo, helped United win the UEFA Champions League. In 2008-09, he won his first FIFA Club World Cup in December 2008, and he also won his first Ballon d'Or. At one point Ronaldo was the most expensive professional footballer of all time, after moving from Manchester United to Real Madrid for approximately £80 m in July 2009.
 """
-# topic = """
-# ITCE464: Intelligent System LESSON  1 Part 1
-# Lesson 1 : What is Intelligence
-# Dr. Alauddin Al-Omary
-# What is Intelligence?
-# The ability of a system to:
-# calculate,
-# reason,
-# perceive relationships and analogies,
-# learn from experience,
-# store and retrieve information from memory,
-# solve problems,
-# comprehend complex ideas,
-# use natural language fluently,
-# classify, generalize, and
-# adapt new situations.
-# What is Intelligence Composed of?
-# The intelligence is intangible. It is composed of −
-# Reasoning
-# Learning
-# Problem Solving
-# Perception
-# Linguistic Intelligence
-# """
 topic = """
 Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Services (AWS) that provides object storage through a web service interface.Amazon S3 uses the same scalable storage infrastructure that Amazon.com uses to run its e-commerce network.
 Amazon S3 can store any type of object, which allows uses like storage for Internet applications, backups, disaster recovery, data archives, data lakes for analytics, and hybrid cloud storage.
@@ -51,6 +26,10 @@ These cloud computing web services provide various services related to networkin
 This frees clients from managing, scaling, and patching hardware and operating systems.
 One of the foundational services is Amazon Elastic Compute Cloud (EC2), which allows users to have at their disposal a virtual cluster of computers, with extremely high availability, which can be interacted with over the internet via REST APIs, a CLI or the AWS console.
 
+"""
+topicbig = """
+Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Services (AWS) that provides object storage through a web service interface.[1][2] Amazon S3 uses the same scalable storage infrastructure that Amazon.com uses to run its e-commerce network.[3] Amazon S3 can store any type of object, which allows uses like storage for Internet applications, backups, disaster recovery, data archives, data lakes for analytics, and hybrid cloud storage. AWS launched Amazon S3 in the United States on March 14, 2006,[1][4] then in Europe in November 2007.[5]
+Amazon S3 manages data with an object storage architecture[6] which aims to provide scalability, high availability, and low latency with high durability.[3] The basic storage units of Amazon S3 are objects which are organized into buckets. Each object is identified by a unique, user-assigned key.[7] Buckets can be managed using the console provided by Amazon S3, programmatically with the AWS SDK, or the REST application programming interface. Objects can be up to five terabytes in size.[8][9] Requests are authorized using an access control list associated with each object bucket and support versioning[10] which is disabled by default.[11] Since buckets are typically the size of an entire file system mount in other systems, this access control scheme is very coarse-grained. In other words, unique access controls cannot be associated with individual files.[citation needed] Amazon S3 can be used to replace static web-hosting infrastructure with HTTP client-accessible objects,[12] index document support, and error document support.[13] The Amazon AWS authentication mechanism allows the creation of authenticated URLs, valid for a specified amount of time. Every item in a bucket can also be served as a BitTorrent feed. The Amazon S3 store can act as a seed host for a torrent and any BitTorrent client can retrieve the file. This can drastically reduce the bandwidth cost for the download of popular objects. A bucket can be configured to save HTTP log information to a sibling bucket; this can be used in data mining operations.[14] There are various User Mode File System (FUSE)–based file systems for Unix-like operating systems (for example, Linux) that can be used to mount an S3 bucket as a file system. The semantics of the Amazon S3 file system are not that of a POSIX file system, so the file system may not behave entirely as expected.[15]
 """
 import re
 user_id=  "47b81c1f-887b-4702-aebc-a2e04760e80c"
@@ -280,6 +259,37 @@ def fill_in_blank(event, context):
     filter(topic)
     prompt = prompt.replace("{{topic}}", topic)
     return  json.loads(create(prompt))
+
+
+def summarize(event, context):
+    prompt= """
+              Write a summary of the following text delimited by triple backticks.
+              Return your response which covers the key points of the text, in a paragraph style. Make sure to shorten the text by covering only the key points.
+              ```{{topic}}```
+              SUMMARY:
+    """
+    prompt= prompt.replace("{{topic}}",topicbig)
+    response = sm_client.invoke_endpoint(
+        EndpointName=endpoint_name,
+        ContentType="application/json",
+        Body=json.dumps(
+            {
+                "inputs": prompt,
+                "parameters": {
+                    "max_new_tokens": 512,
+                    "top_p": 0.9,
+                    # "temperature": random.randfloat(0.7,1),
+                    "temperature": 1,
+                    "return_full_text": False,
+                },
+            }
+        ),
+        CustomAttributes="accept_eula=true",
+    )
+    result = json.loads(response["Body"].read().decode())[0]["generation"]
+    print(result)
+    return (result)
+
 
 import random
 import math
