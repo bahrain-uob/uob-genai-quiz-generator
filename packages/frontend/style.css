@@ -7,16 +7,18 @@ a {
   text-decoration: none;
   color: white;
 }
-.logo img {
-  width: 150px;
-  margin-left: 40px;
-  margin-top: 20px;
-}
 .logo {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
 }
+.logo img {
+  width: 250px;
+  align-self: center;
+  padding-left: 35px;
+}
+
 .title {
   margin-top: 1rem;
   background-color: #4a4e69;
@@ -712,113 +714,77 @@ input[type="number"] {
 /* end of create quiz */
 
 /* instructor and students navbar */
-.top-navbar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.top-navbar p {
-  /* letter-spacing: 3px; */
-  color: #4a4e69;
-  padding-top: 30px;
-  margin-right: 40px;
-  transform: scale(0.95);
-  transition: box-shadow 0.5s, transform 0.5s;
-  cursor: pointer;
-  &:hover {
-    transform: translateY(5px);
-    transition: transform 0.5s;
-  }
-}
-.sign-out {
-  font-size: 0.9em;
-  margin-left: auto;
-}
 
-.links p {
-  margin-left: 10px;
-  margin-right: 10px;
-  font-size: small;
-  /* padding: 0 10px 0 10px; */
+.navbar {
+  display: flex;
+  flex-direction: row;
+  color: #4a4e69;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  background-color: white;
 }
 .links a {
-  text-decoration: none;
+  float: left;
   color: #4a4e69;
-  height: 100%;
+  font-size: small;
+  text-decoration: none;
+  text-align: center;
+  padding: 0px 10px 0px 10px;
 }
+.links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 4px;
+}
+
+.links img {
+  width: 150px;
+  padding: 5px 10px 0px 5px;
+}
+
+.sign-out {
+  display: flex;
+  float: right;
+  margin-right: 8px;
+  cursor: pointer;
+  padding: 0px 10px 0px 10px;
+}
+.sign-out a {
+  color: #4a4e69;
+  font-size: small;
+}
+
 .links .active {
   background-color: #c9ada7;
   border-radius: 20px 20px 0px 0px;
   color: white;
-  transition: background-color 0.5s ease-out;
+  transition: background-color 1s ease-in;
   animation-duration: 1s;
-  animation-name: popup;
+  animation-name: slide;
 }
-@keyframes popup {
+@keyframes slide {
   from {
-    padding-top: 10%;
-    width: 10%;
+    padding-top: 6%;
+    width: auto;
   }
 
   to {
-    padding-bottom: 0%;
-    width: 6%;
+    padding: auto;
+    width: auto;
   }
-}
-.links .active.courses {
-  animation-name: quiz;
 }
 
-.links .active.quiz {
-  animation-name: quiz;
-}
-@keyframes quiz {
-  from {
-    padding-top: 10%;
-    width: 10%;
-  }
-
-  to {
-    padding-bottom: 0%;
-    width: 8%;
-  }
-}
-.links .active.createquiz {
-  animation-name: popupQuiz;
-}
-@keyframes popupQuiz {
-  from {
-    padding-top: 10%;
-    width: 15%;
-  }
-
-  to {
-    padding-bottom: 0%;
-    width: 11%;
-  }
-}
-.links a:hover {
+.links a:hover,
+.sign-out:hover {
   border-radius: 20px 20px 0px 0px;
   background-color: #c9ada76b;
   transition: background-color 0.3s ease-in;
 }
-.links {
-  background-color: #c9ada7;
-  color: white;
-  letter-spacing: 3px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.237);
-  gap: 5px;
-  height: 40px;
-  margin-top: 10px;
-  text-align: center;
-  align-items: center;
+.links a:hover:first-child {
+  background-color: transparent;
 }
-
 /* end of instructor and student navbar */
 
 /* materials page */
@@ -854,8 +820,7 @@ input[type="number"] {
 
 .upload-container {
   box-shadow: 2px 3px 5px #00000077;
-  margin-left: auto;
-  margin-right: 10px;
+  margin-right: auto;
 }
 .upload-button {
   background-color: #4a4e69;
@@ -867,6 +832,8 @@ input[type="number"] {
   display: flex;
   gap: 7px;
   font-size: small;
+  margin-left: auto;
+  margin-right: 20px;
 }
 
 .cloud-icon {
