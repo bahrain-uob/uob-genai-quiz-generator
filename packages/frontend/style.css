@@ -1243,7 +1243,8 @@ thead th {
   overflow: hidden;
   color: #4a4e69;
   margin: auto;
-  padding-bottom: 6px;
+  padding-bottom: 16px;
+  padding-top: 5px;
 }
 .underlined:after {
   content: "";
