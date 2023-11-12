@@ -7,12 +7,15 @@ import {
   faX,
 } from "@fortawesome/free-solid-svg-icons";
 import Modal from "react-modal";
-import { TextField, useAuthenticator } from "@aws-amplify/ui-react";
+import { TextField } from "@aws-amplify/ui-react";
 import Carousel from "../components/Carousel";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-
+import { Link } from "react-router-dom";
+import { Container } from "tsparticles-engine";
+import Navbar from "../components/Navbar";
 import { useCallback, useState } from "react";
+
 function Homepage() {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [UploadModalIsOpen, setUploadModalIsOpen] = useState(false);
@@ -46,7 +49,7 @@ function Homepage() {
   );
   return (
     <>
-      <Navbar />
+      <Navbar active="home" />
       <div className="homepage-container">
         <Particles
           id="tsparticles"
@@ -269,46 +272,6 @@ function Homepage() {
         </div>
       </div>
     </>
-  );
-}
-
-import Logo from "../assets/Logo.svg";
-import { Link } from "react-router-dom";
-import { Container } from "tsparticles-engine";
-
-function Navbar() {
-  const { signOut } = useAuthenticator((context) => [context.signOut]);
-  return (
-    <div className="nav">
-      <nav style={{ backgroundColor: "white" }}>
-        <div className="top-navbar">
-          <a href="/">
-            <div className="logo">
-              <img src={Logo} alt="logo" />
-            </div>
-          </a>
-
-          <a onClick={signOut} className="sign-out">
-            <p>SIGN OUT</p>
-          </a>
-        </div>
-
-        <div className="links homepage">
-          <a href="/" className="active">
-            <p>HOME</p>
-          </a>
-          <a href="/courses">
-            <p>COURSES</p>
-          </a>
-          <a href="/quizzes">
-            <p>QUIZZES</p>
-          </a>
-          <a href="/createquiz">
-            <p>CREATE QUIZ</p>
-          </a>
-        </div>
-      </nav>
-    </div>
   );
 }
 
