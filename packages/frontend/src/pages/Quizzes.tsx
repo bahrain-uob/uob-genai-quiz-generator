@@ -10,6 +10,7 @@ import { getUserId, isEqual } from "../lib/helpers";
 import { Storage } from "aws-amplify";
 import { useImmerAtom } from "jotai-immer";
 import { exportKahoot } from "../lib/export";
+import coolkid from "../assets/Cool Kids - Alone Time.svg";
 
 function Quizzes() {
   const [courses, setCourses] = useAtom(coursesAtom);
@@ -71,7 +72,7 @@ function Quizzes() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string,
+    course_name: string
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -80,37 +81,76 @@ function Quizzes() {
   return (
     <>
       <Navrbar active="quizzes" />
-      <div className="top-quizzes">
-        <Link style={{ marginLeft: "auto" }} to="/createquiz">
-          <button className="generate-button">Generate Quiz</button>
-        </Link>
-      </div>
-
-      <div className="container">
-        {courses.map((course: Course) => (
-          <div key={course.id} className="course-quiz-container">
-            <h2
-              className="underlined"
-              onClick={() => {
-                navigate(course.id, course.code, course.name);
-              }}
-            >
-              {`${course.code}  - ${course.name}`}
-            </h2>
-            <div className="quizzes-container">
-              {/* @ts-ignore */}
-              {(quizzes[course.id] ?? []).map((quiz: any) => (
-                <Quiz
-                  onClick={() => exportQuiz(course.id, quiz.name)}
-                  key={`${course.id}${quiz.name}`}
-                  name={quiz.name}
-                  date={quiz.date}
-                />
-              ))}
+      {courses.length > 0 ? (
+        <div className="top-quizzes">
+          <Link style={{ marginLeft: "auto" }} to="/createquiz">
+            <button className="generate-button">Generate Quiz</button>
+          </Link>
+        </div>
+      ) : (
+        <div className="empty-courses" style={{ backgroundColor: "#f2e9e4" }}>
+          <div className="empty-card">
+            <img src={coolkid} alt="coolkid" width="300px" />
+            <h2>Nothing to see here!</h2>
+            <p>
+              You don't have any quizzes because you're not currently enrolled
+              in any courses
+            </p>
+            <div className="wrapper">
+              <div className="link_wrapper">
+                <a href="/courses">Create a course</a>
+                <div className="icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 268.832 268.832"
+                  >
+                    <path d="M134.416 40.832v187.168c0 6.903 5.597 12.5 12.5 12.5s12.5-5.597 12.5-12.5V40.832c0-6.903-5.597-12.5-12.5-12.5s-12.5 5.597-12.5 12.5z" />
+                    <path d="M228.416 134.832H40.248c-6.903 0-12.5 5.597-12.5 12.5s5.597 12.5 12.5 12.5h188.168c6.903 0 12.5-5.597 12.5-12.5s-5.597-12.5-12.5-12.5z" />
+                  </svg>
+                </div>
+              </div>
             </div>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
+
+      {courses.length > 0 && (
+        <div className="container">
+          {courses.map((course: Course) => (
+            <div key={course.id} className="course-quiz-container">
+              <h2
+                className="underlined"
+                onClick={() => {
+                  navigate(course.id, course.code, course.name);
+                }}
+              >
+                {`${course.code}  - ${course.name}`}
+              </h2>
+              {/* @ts-ignore */}
+              {(quizzes[course.id] ?? []).length > 0 ? (
+                <div className="quizzes-container">
+                  {/* @ts-ignore */}
+                  {(quizzes[course.id] ?? []).map((quiz: any) => (
+                    <Quiz
+                      onClick={() => exportQuiz(course.id, quiz.name)}
+                      key={`${course.id}${quiz.name}`}
+                      name={quiz.name}
+                      date={quiz.date}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <img src={coolkid} alt="coolkid" width="300px" />
+                    <h4>Nothing to see here!</h4>
+                  </div>
+                </>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
     </>
   );
 }
