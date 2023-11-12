@@ -30,7 +30,7 @@ function TfQuestionsSetup() {
   const [generated, generatedDispatch] = useAtom(generatedAtomsAtom);
   const [selected, selectedDispatch] = useAtom(TfsAtomsAtom);
   const gArr = useAtomValue(generatedAtom);
-  const qArr = useAtomValue(TfsAtom);
+  const sArr = useAtomValue(TfsAtom);
 
   const [parent] = useAutoAnimate();
 
@@ -68,7 +68,7 @@ function TfQuestionsSetup() {
 
           {selected.map((question, index) => (
             <TfQuestionArea
-              key={qArr[index].id}
+              key={sArr[index].id}
               question={question}
               isSelected={true}
               move={removeQuestion(question)}

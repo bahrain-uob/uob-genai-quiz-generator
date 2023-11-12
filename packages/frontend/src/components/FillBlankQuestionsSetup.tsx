@@ -1,65 +1,51 @@
 import { useState } from "react";
-import { useAtom } from "jotai";
+import { PrimitiveAtom, atom, useAtom, useAtomValue } from "jotai";
 import { FillBlank, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import FillBlankQuestionArea from "./FillBlankQuestionArea";
+import { splitAtom } from "jotai/utils";
+import { useAutoAnimate } from "@formkit/auto-animate/react";
 
 const FillBlanksAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("fillBlankArr")
+  optic.prop("fillBlankArr"),
 );
+const FillBlanksAtomsAtom = splitAtom(FillBlanksAtom);
+const generatedAtom = atom([
+  {
+    id: crypto.randomUUID(),
+    question: "S3 is ",
+    answer: "Simple Storage Service",
+  },
+  {
+    id: crypto.randomUUID(),
+    question: "EC2 is Elastic ",
+    answer: "Cloud Compute",
+  },
+  {
+    id: crypto.randomUUID(),
+    question: "VPC is ",
+    answer: "Virtual Private Cloud",
+  },
+] as FillBlank[]);
+const generatedAtomsAtom = splitAtom(generatedAtom);
 
-function McqQuestionsSetup() {
-  const [generated, setGenerated] = useState([
-    {
-      question: "S3 is ",
-      answer: "Simple Storage Service",
-    },
-    {
-      question: "EC2 is Elastic ",
-      answer: "Cloud Compute",
-    },
-    {
-      question: "VPC is ",
-      answer: "Virtual Private Cloud",
-    },
-  ] as FillBlank[]);
+function FillBlankQuestionsSetup() {
+  const [generated, generatedDispatch] = useAtom(generatedAtomsAtom);
+  const [selected, selectedDispatch] = useAtom(FillBlanksAtomsAtom);
+  const gArr = useAtomValue(generatedAtom);
+  const sArr = useAtomValue(FillBlanksAtom);
 
-  const [fillBlankQuestions, setFillBlankQuestions] = useAtom(FillBlanksAtom);
+  const [parent] = useAutoAnimate();
 
-  const [selected, setSelected] = useState(fillBlankQuestions);
-
-  const selectQuestion = (q: FillBlank, idx: number) => {
-    setSelected([...selected, q as any]);
-    generated.splice(idx, 1);
-    setGenerated(generated);
-    setFillBlankQuestions([...fillBlankQuestions, q as any]);
-  };
-
-  const removeQuestion = (index: number) => {
-    selected.splice(index, 1);
-    setSelected([...selected]);
-    fillBlankQuestions.splice(index, 1);
-    setFillBlankQuestions(fillBlankQuestions);
-  };
-
-  const updateGeneratedQuestion = (event: any, index: number) => {
-    const updatedGenerated = [...generated];
-    updatedGenerated[index] = {
-      ...updatedGenerated[index],
-      question: event.target.value,
+  const selectQuestion = (question: PrimitiveAtom<FillBlank>) => {
+    return (q: FillBlank) => {
+      generatedDispatch({ type: "remove", atom: question });
+      selectedDispatch({ type: "insert", value: q });
     };
-    setGenerated(updatedGenerated);
   };
 
-  const updateSelectedQuestion = (event: any, index: number) => {
-    const updatedQuestions = [...fillBlankQuestions];
-    const updatedSelectedQuestions = [...selected];
-    updatedQuestions[index] = {
-      ...updatedQuestions[index],
-      question: event.target.value,
-    };
-    setFillBlankQuestions(updatedQuestions);
-    setSelected(updatedSelectedQuestions);
+  const removeQuestion = (question: PrimitiveAtom<FillBlank>) => {
+    return () => selectedDispatch({ type: "remove", atom: question });
   };
 
   return (
@@ -67,38 +53,28 @@ function McqQuestionsSetup() {
       <h3>Customize the Fill-in Blank Questions</h3>
 
       <div className="questions">
-        <div className="generated">
+        <div ref={parent} className="generated">
           <h4 style={{ textAlign: "center" }}>Generated Questions</h4>
 
           {generated.map((question, index) => (
             <FillBlankQuestionArea
-              key={question.question}
-              q={question}
-              index={index}
-              add={selectQuestion}
-              remove={removeQuestion}
-              update={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                updateGeneratedQuestion(e, index)
-              }
+              key={gArr[index].id}
+              question={question}
               isSelected={false}
+              move={selectQuestion(question)}
             />
           ))}
         </div>
 
-        <div className="selected">
+        <div ref={parent} className="selected">
           <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
 
-          {selected.map((qu, index) => (
+          {selected.map((question, index) => (
             <FillBlankQuestionArea
-              key={qu.question}
-              q={qu}
-              index={index}
-              add={selectQuestion}
-              remove={removeQuestion}
-              update={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                updateSelectedQuestion(e, index)
-              }
+              key={sArr[index].id}
+              question={question}
               isSelected={true}
+              move={removeQuestion(question)}
             />
           ))}
         </div>
@@ -106,4 +82,4 @@ function McqQuestionsSetup() {
     </div>
   );
 }
-export default McqQuestionsSetup;
+export default FillBlankQuestionsSetup;
