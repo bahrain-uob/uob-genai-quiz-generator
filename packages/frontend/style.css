@@ -750,6 +750,7 @@ input[type="number"] {
   margin-right: 8px;
   cursor: pointer;
   padding: 0px 10px 0px 10px;
+  margin-top: -10px;
 }
 .sign-out a {
   color: #4a4e69;
@@ -844,7 +845,7 @@ input[type="number"] {
   margin-right: 10rem;
 } */
 .materials table {
-  margin-top: 100px;
+  /* margin-top: 100px; */
   align-self: center;
   margin: auto;
   width: 100%;
@@ -874,7 +875,7 @@ thead th {
 }
 
 .materials {
-  margin-top: 100px;
+  /* margin-top: 100px; */
   height: 100%;
   display: flex;
   align-items: center;
