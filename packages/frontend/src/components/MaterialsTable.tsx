@@ -12,8 +12,7 @@ import { useImmerAtom } from "jotai-immer";
 import { materialsAtom, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import { useAtom } from "jotai";
-import emptymaterials from "../assets/empty_comp.svg";
-import arrow from "../assets/arrow_comp.svg";
+import emptymaterials from "../assets/Cool Kids - Bust-comp.svg";
 import koala from "../assets/Sweet Koala-comp.svg";
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
@@ -119,28 +118,29 @@ function MaterialsTable({
             margin: isSelecting ? "0px auto auto auto" : "0 auto",
           }}
         >
-          <div style={{ display: "flex", flexDirection: "column" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginTop: !isSelecting ? "80px" : undefined,
+            }}
+          >
             <img
               src={isSelecting ? koala : emptymaterials}
               alt="nothing to see here"
-              // width={isSelecting ? "250px" : undefined}
+              width={!isSelecting ? "250px" : undefined}
             />
-            <p style={{ color: "#4a4e69", fontSize: "medium" }}>
+            <p
+              style={{
+                color: "#4a4e69",
+                fontSize: isSelecting ? "medium" : "large",
+              }}
+            >
               {isSelecting
                 ? "This course does not have any content!"
                 : "Add content to this course"}
             </p>
           </div>
-
-          {!isSelecting && (
-            <img
-              src={arrow}
-              alt="arrow"
-              width="500px"
-              height="300px"
-              style={{ paddingRight: "50px" }}
-            />
-          )}
         </div>
       )}
 
