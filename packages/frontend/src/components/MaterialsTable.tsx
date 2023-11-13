@@ -12,9 +12,11 @@ import { useImmerAtom } from "jotai-immer";
 import { materialsAtom, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import { useAtom } from "jotai";
+import emptymaterials from "../assets/Cool Kids - Bust-comp.svg";
+import koala from "../assets/Sweet Koala-comp.svg";
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials"),
+  optic.prop("materials")
 );
 
 function MaterialsTable({
@@ -43,7 +45,7 @@ function MaterialsTable({
       `${userId}/${courseId}/materials/`,
       {
         pageSize: 1000,
-      },
+      }
     );
     const prefix_len = userId.length + courseId.length + 9 + 3;
     const results = response.map((obj) => {
@@ -107,57 +109,95 @@ function MaterialsTable({
 
   return (
     <div className="materials">
-      <table>
-        <thead>
-          <tr className="heading">
-            <th></th>
-            <th>FILE NAME</th>
-            <th>SIZE</th>
-            <th>DATE</th>
-            {!isSelecting && <th></th>}
-          </tr>
-        </thead>
-        <tbody>
-          {/* @ts-ignore*/}
-          {(materials[courseId] ?? []).map((material: any, index: number) => (
-            <tr
-              key={`${courseId}${material.key}`}
-              onClick={() => selectMaterial(material.key)}
+      {/* @ts-ignore*/}
+      {(materials[courseId] ?? []).length == 0 && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            margin: isSelecting ? "0px auto auto auto" : "0 auto",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              marginTop: !isSelecting ? "80px" : undefined,
+            }}
+          >
+            <img
+              src={isSelecting ? koala : emptymaterials}
+              alt="nothing to see here"
+              width={!isSelecting ? "250px" : undefined}
+            />
+            <p
+              style={{
+                color: "#4a4e69",
+                fontSize: isSelecting ? "medium" : "large",
+              }}
             >
-              <td>
-                {isSelecting ? (
-                  <input type="checkbox" id={material.key} />
-                ) : (
-                  <FontAwesomeIcon icon={faFile} size="xl" />
-                )}
-              </td>
-              <td>{material.key}</td>
-              <td>{material.size}</td>
-              <td>{material.lastModified}</td>
-              <td>
-                <FontAwesomeIcon
-                  style={{ cursor: "pointer" }}
-                  icon={faFileArrowDown}
-                  size="xl"
-                  onClick={() => downloadMaterial(index)}
-                />
-              </td>
-              {!isSelecting && (
+              {isSelecting
+                ? "This course does not have any content!"
+                : "Add content to this course"}
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* @ts-ignore*/}
+      {(materials[courseId] ?? []).length > 0 && (
+        <table style={{ marginTop: "5em" }}>
+          <thead>
+            <tr className="heading">
+              <th></th>
+              <th>FILE NAME</th>
+              <th>SIZE</th>
+              <th>DATE</th>
+              {!isSelecting && <th></th>}
+            </tr>
+          </thead>
+          <tbody>
+            {/* @ts-ignore*/}
+            {(materials[courseId] ?? []).map((material: any, index: number) => (
+              <tr
+                key={`${courseId}${material.key}`}
+                onClick={() => selectMaterial(material.key)}
+              >
+                <td>
+                  {isSelecting ? (
+                    <input type="checkbox" id={material.key} />
+                  ) : (
+                    <FontAwesomeIcon icon={faFile} size="xl" />
+                  )}
+                </td>
+                <td>{material.key}</td>
+                <td>{material.size}</td>
+                <td>{material.lastModified}</td>
                 <td>
                   <FontAwesomeIcon
                     style={{ cursor: "pointer" }}
-                    icon={faTrash}
+                    icon={faFileArrowDown}
                     size="xl"
-                    onClick={() => {
-                      deleteMaterial(index);
-                    }}
+                    onClick={() => downloadMaterial(index)}
                   />
                 </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                {!isSelecting && (
+                  <td>
+                    <FontAwesomeIcon
+                      style={{ cursor: "pointer" }}
+                      icon={faTrash}
+                      size="xl"
+                      onClick={() => {
+                        deleteMaterial(index);
+                      }}
+                    />
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }

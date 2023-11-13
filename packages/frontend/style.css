@@ -43,6 +43,7 @@ a {
 }
 .homepage-container h2 {
   text-align: center;
+  line-height: 40px;
   margin-top: 10rem;
   color: #ca867a;
   font-weight: 600;
@@ -268,6 +269,117 @@ label {
 /* end of signin & signup page */
 
 /* courses page */
+.empty-courses {
+  max-width: 700px;
+  color: #4a4e69;
+  margin: auto;
+  margin-top: 20px;
+  background-color: rgba(122, 128, 165, 0.21);
+  display: flex;
+  flex-direction: column;
+  width: 800px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 40px 90px 40px;
+  box-shadow: 1px 1px 15px #00000058;
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+  &:hover {
+    transform: scale(1);
+    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.372);
+    transform: translateY(5px);
+    transition: transform 0.5s;
+  }
+}
+.empty-courses p,
+h2 {
+  line-height: 13px;
+  color: #4a4e69d8;
+}
+.empty-courses h2 {
+  position: relative;
+  font-size: 38px;
+  font-weight: bold;
+  color: #4a4e6957;
+  mix-blend-mode: multiply;
+}
+.empty-courses h2::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  color: #4a4e69;
+}
+.empty-courses h2::before {
+  content: attr(data-text);
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  color: #4a4e69b0;
+}
+.empty-courses .wrapper {
+  position: fixed;
+  top: 90%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.empty-courses .link_wrapper {
+  position: relative;
+}
+
+.empty-courses a {
+  display: block;
+  width: 200px;
+  height: 50px;
+  line-height: 50px;
+  font-weight: bold;
+  font-size: small;
+  text-decoration: none;
+  background-color: #4a4e69;
+  text-align: center;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 3px solid #4a4e69;
+  transition: all 0.35s;
+}
+
+.empty-courses .icon {
+  width: 50px;
+  height: 50px;
+  border: 3px solid transparent;
+  position: absolute;
+  transform: rotate(45deg);
+  right: 0;
+  top: 0;
+  z-index: -1;
+  transition: all 0.35s;
+}
+
+.empty-courses .icon svg {
+  width: 30px;
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 15px);
+  transform: rotate(-45deg);
+  fill: #4a4e69;
+  transition: all 0.35s;
+}
+
+.empty-courses a:hover {
+  width: 200px;
+  border: 3px solid #4a4e69;
+  background: transparent;
+  color: #4a4e69;
+}
+
+.empty-courses a:hover + .icon {
+  border: 3px solid #4a4e69;
+  left: 100%;
+}
+
 .courses-container {
   display: flex;
   margin-top: 5rem;
@@ -750,6 +862,7 @@ input[type="number"] {
   margin-right: 8px;
   cursor: pointer;
   padding: 0px 10px 0px 10px;
+  margin-top: -10px;
 }
 .sign-out a {
   color: #4a4e69;
@@ -844,7 +957,7 @@ input[type="number"] {
   margin-right: 10rem;
 } */
 .materials table {
-  margin-top: 100px;
+  /* margin-top: 100px; */
   align-self: center;
   margin: auto;
   width: 100%;
@@ -874,7 +987,7 @@ thead th {
 }
 
 .materials {
-  margin-top: 100px;
+  /* margin-top: 100px; */
   height: 100%;
   display: flex;
   align-items: center;
@@ -1130,7 +1243,8 @@ thead th {
   overflow: hidden;
   color: #4a4e69;
   margin: auto;
-  padding-bottom: 6px;
+  padding-bottom: 16px;
+  padding-top: 5px;
 }
 .underlined:after {
   content: "";
