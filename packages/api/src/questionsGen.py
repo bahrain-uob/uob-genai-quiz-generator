@@ -32,8 +32,8 @@ Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Se
 Amazon S3 manages data with an object storage architecture[6] which aims to provide scalability, high availability, and low latency with high durability.[3] The basic storage units of Amazon S3 are objects which are organized into buckets. Each object is identified by a unique, user-assigned key.[7] Buckets can be managed using the console provided by Amazon S3, programmatically with the AWS SDK, or the REST application programming interface. Objects can be up to five terabytes in size.[8][9] Requests are authorized using an access control list associated with each object bucket and support versioning[10] which is disabled by default.[11] Since buckets are typically the size of an entire file system mount in other systems, this access control scheme is very coarse-grained. In other words, unique access controls cannot be associated with individual files.[citation needed] Amazon S3 can be used to replace static web-hosting infrastructure with HTTP client-accessible objects,[12] index document support, and error document support.[13] The Amazon AWS authentication mechanism allows the creation of authenticated URLs, valid for a specified amount of time. Every item in a bucket can also be served as a BitTorrent feed. The Amazon S3 store can act as a seed host for a torrent and any BitTorrent client can retrieve the file. This can drastically reduce the bandwidth cost for the download of popular objects. A bucket can be configured to save HTTP log information to a sibling bucket; this can be used in data mining operations.[14] There are various User Mode File System (FUSE)–based file systems for Unix-like operating systems (for example, Linux) that can be used to mount an S3 bucket as a file system. The semantics of the Amazon S3 file system are not that of a POSIX file system, so the file system may not behave entirely as expected.[15]
 """
 import re
-user_id=  "47b81c1f-887b-4702-aebc-a2e04760e80c"
-course_id ="33e64777-7a00-45af-bbde-957fd6e07319"
+user_id   = "47b81c1f-887b-4702-aebc-a2e04760e80c"
+course_id = "33e64777-7a00-45af-bbde-957fd6e07319"
 materials = "s3"
 def create(prompt):
     # parameters needed,
@@ -67,67 +67,69 @@ def create(prompt):
 
 
 def MCQ(event, context):
-    # user_id = event["id"]
-    # materials = event["materials"]
-    # course_id =event["course"]
+    body = json.loads(event["body"])
+    user_id = event["requestContext"]["authorizer"]["jwt"]["claims"]["sub"]
+    materials = body["materials"]
+    course_id =body["course_id"]
     cutted_text = []
-    object_key = user_id+"/"+course_id+"/materials/"+materials+".txt"
+    for material in materials:
+        object_key = user_id+"/"+course_id+"/materials/"+material+".txt"
+        response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
+        topic = response['Body'].read().decode('utf-8')
+        cutted_text.extend(filter(topic))
+    # topic = cutted_text[random.randint(0,len(cutted_text)-1)]
+    # prompt = """
+    # Human: i want you to generate 1 MCQ question about  this :
+    # Cristiano Ronaldo dos Santos Aveiro:  (born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
+    # He is considered to be one of the greatest footballers of all time, and, by some, as the greatest ever.
+    # Ronaldo began his professional career with Sporting CP at age 17 in 2002, and signed for Manchester United a year later. He won three back-to-back Premier League titles: in 2006-07, 2007-08, and 2008-09. In 2007-08, Ronaldo, helped United win the UEFA Champions League. In 2008-09, he won his first FIFA Club World Cup in December 2008, and he also won his first Ballon d'Or. At one point Ronaldo was the most expensive professional footballer of all time, after moving from Manchester United to Real Madrid for approximately £80 m in July 2009
 
-    response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
-    topic = response['Body'].read().decode('utf-8')
-    cutted_text.extend(filter(topic))
-    topic = cutted_text[random.randint(0,len(cutted_text)-1)]
-    prompt = """
-    Human: i want you to generate 1 MCQ question about  this :
-    Cristiano Ronaldo dos Santos Aveiro:  (born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
-    He is considered to be one of the greatest footballers of all time, and, by some, as the greatest ever.
-    Ronaldo began his professional career with Sporting CP at age 17 in 2002, and signed for Manchester United a year later. He won three back-to-back Premier League titles: in 2006-07, 2007-08, and 2008-09. In 2007-08, Ronaldo, helped United win the UEFA Champions League. In 2008-09, he won his first FIFA Club World Cup in December 2008, and he also won his first Ballon d'Or. At one point Ronaldo was the most expensive professional footballer of all time, after moving from Manchester United to Real Madrid for approximately £80 m in July 2009
+    # The output should be a code snippet formatted in the following schema with only one correct answer:
+    # {
+    #   "question": string // the question
+    #   "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
+    #   "correct_answer": string // the correct answer from the choices
+    # }
+    # Assistant:
+    # {
+    #   "question": "what is Ronaldo's birthplace?",
+    #   "choices": ["germany", "Portugal", "Spain", "England"],
+    #   "correct_answer": "Portugal"
+    # }
 
-    The output should be a code snippet formatted in the following schema with only one correct answer:
-    {
-      "question": string // the question
-      "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
-      "correct_answer": string // the correct answer from the choices
-    }
-    Assistant:
-    {
-      "question": "what is Ronaldo's birthplace?",
-      "choices": ["germany", "Portugal", "Spain", "England"],
-      "correct_answer": "Portugal"
-    }
+    # Human: i want you to generate 1 MCQ question about  this :
+    # Apple Inc. is an American multinational technology company headquartered in Cupertino, California.
+    # As of March 2023, Apple is the world's biggest company by market capitalization, and with US$394.3 billion the largest technology company by 2022 revenue. 
+    # As of June 2022, Apple is the fourth-largest personal computer vendor by unit sales; the largest manufacturing company by revenue; and the second-largest mobile phone manufacturer in the world. 
+    # It is considered one of the Big Five American information technology companies, alongside Alphabet (parent company of Google), Amazon, Meta, and Microsoft.
+    # Apple was founded as Apple Computer Company on April 1, 1976, by Steve Wozniak, Steve Jobs and Ronald Wayne to develop and sell Wozniak's Apple I personal computer. 
+    # It was incorporated by Jobs and Wozniak as Apple Computer, Inc. in 1977. 
 
-    Human: i want you to generate 1 MCQ question about  this :
-    Apple Inc. is an American multinational technology company headquartered in Cupertino, California.
-    As of March 2023, Apple is the world's biggest company by market capitalization, and with US$394.3 billion the largest technology company by 2022 revenue. 
-    As of June 2022, Apple is the fourth-largest personal computer vendor by unit sales; the largest manufacturing company by revenue; and the second-largest mobile phone manufacturer in the world. 
-    It is considered one of the Big Five American information technology companies, alongside Alphabet (parent company of Google), Amazon, Meta, and Microsoft.
-    Apple was founded as Apple Computer Company on April 1, 1976, by Steve Wozniak, Steve Jobs and Ronald Wayne to develop and sell Wozniak's Apple I personal computer. 
-    It was incorporated by Jobs and Wozniak as Apple Computer, Inc. in 1977. 
-
-    The output should be a code snippet formatted in the following schema with only one correct answer:
-    {
-      "question": string // the question
-      "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
-      "correct_answer": string // the correct answer from the choices
-    }
-    Assistant:
-    {
-      "question": "When was Apple the world's biggest company by market capitilization?",
-      "choices": ["March 2023", "June 2023", "May 2023", "March 2022"],
-      "correct_answer": "March 2023"
-    }
+    # The output should be a code snippet formatted in the following schema with only one correct answer:
+    # {
+    #   "question": string // the question
+    #   "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
+    #   "correct_answer": string // the correct answer from the choices
+    # }
+    # Assistant:
+    # {
+    #   "question": "When was Apple the world's biggest company by market capitilization?",
+    #   "choices": ["March 2023", "June 2023", "May 2023", "March 2022"],
+    #   "correct_answer": "March 2023"
+    # }
    
-    Human: i want you to generate 1 MCQ question about this : {{topic}}
-    The output should be a code snippet formatted in the following schema with only one correct answer
-    {
-      "question": string // the question
-      "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
-      "correct_answer": string // the correct answer from the choices
-    }  
-    Assistant:"""
-    filter(topic)
-    prompt = prompt.replace("{{topic}}", topic)
-    return  json.loads(create(prompt))
+    # Human: i want you to generate 1 MCQ question about this : {{topic}}
+    # The output should be a code snippet formatted in the following schema with only one correct answer
+    # {
+    #   "question": string // the question
+    #   "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
+    #   "correct_answer": string // the correct answer from the choices
+    # }  
+    # Assistant:"""
+    # filter(topic)
+    # prompt = prompt.replace("{{topic}}", topic)
+    # return  json.loads(create(prompt))
+    # return topic
 
 
 def TF(event, context):
