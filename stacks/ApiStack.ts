@@ -1,4 +1,4 @@
-import { Api, StackContext, use } from "sst/constructs";
+import { Api, StackContext, Table, WebSocketApi, use } from "sst/constructs";
 import { CacheHeaderBehavior, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 import { Duration } from "aws-cdk-lib/core";
 import { DBStack } from "./DBStack";
@@ -31,6 +31,35 @@ export function ApiStack({ stack }: StackContext) {
     },
   });
 
+  const connectionsTable = new Table(stack, "Connections", {
+    fields: {
+      id: "string",
+      username: "string",
+      gameId: "string",
+      master: "string",
+    },
+    primaryIndex: { partitionKey: "id" },
+  });
+
+  const socket = new WebSocketApi(stack, "Socket", {
+    defaults: {
+      function: {
+        bind: [connectionsTable],
+      },
+    },
+    routes: {
+      $connect: "packages/api/src/connect.main",
+      $disconnect: "packages/api/src/disconnect.main",
+      pubQuestion: "packages/api/src/pubQuestion.main",
+      pubResult: "packages/api/src/pubResults.main",
+      sendAnswer: "packages/api/src/sendAnswer.main",
+    },
+  });
+
+  stack.addOutputs({
+    socketUrl: socket.url,
+  });
+
   // cache policy to use with cloudfront as reverse proxy to avoid cors
   // https://dev.to/larswww/real-world-serverless-part-3-cloudfront-reverse-proxy-no-cors-cgj
   const apiCachePolicy = new CachePolicy(stack, "CachePolicy", {
@@ -44,5 +73,5 @@ export function ApiStack({ stack }: StackContext) {
     ),
   });
 
-  return { api, apiCachePolicy };
+  return { api, apiCachePolicy, socket };
 }

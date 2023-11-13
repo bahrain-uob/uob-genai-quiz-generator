@@ -13,7 +13,7 @@ import { AuthStack } from "./AuthStack";
 import { DBStack } from "./DBStack";
 
 export function FrontendStack({ stack, app }: StackContext) {
-  const { api, apiCachePolicy } = use(ApiStack);
+  const { api, apiCachePolicy, socket } = use(ApiStack);
   const { auth } = use(AuthStack);
   const { materialBucket } = use(DBStack);
 
@@ -24,6 +24,7 @@ export function FrontendStack({ stack, app }: StackContext) {
     buildOutput: "dist",
     environment: {
       VITE_APP_API_URL: api.url,
+      VITE_APP_SOCKET_URL: socket.url,
       VITE_APP_REGION: app.region,
       VITE_APP_USER_POOL_ID: auth.userPoolId,
       VITE_APP_USER_POOL_CLIENT_ID: auth.userPoolClientId,
