@@ -16,7 +16,7 @@ import emptymaterials from "../assets/Cool Kids - Bust-comp.svg";
 import koala from "../assets/Sweet Koala-comp.svg";
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials")
+  optic.prop("materials"),
 );
 
 function MaterialsTable({
@@ -45,7 +45,7 @@ function MaterialsTable({
       `${userId}/${courseId}/materials/`,
       {
         pageSize: 1000,
-      }
+      },
     );
     const prefix_len = userId.length + courseId.length + 9 + 3;
     const results = response.map((obj) => {
@@ -57,16 +57,13 @@ function MaterialsTable({
     });
 
     setMaterials((draft) => {
-      // @ts-ignore
       draft[courseId] = results;
     });
   };
 
   const deleteMaterial = async (index: number) => {
-    // @ts-ignore
     const fileName = materials[courseId][index].key;
     setMaterials((draft) => {
-      // @ts-ignore
       draft[courseId].splice(index, 1);
     });
 
@@ -76,7 +73,6 @@ function MaterialsTable({
   };
 
   const downloadMaterial = async (index: number) => {
-    // @ts-ignore
     const name = materials[courseId][index].key;
     const userId = await getUserId();
     const key = `${userId}/${courseId}/materials/${name}`;
@@ -109,7 +105,6 @@ function MaterialsTable({
 
   return (
     <div className="materials">
-      {/* @ts-ignore*/}
       {(materials[courseId] ?? []).length == 0 && (
         <div
           style={{
@@ -144,7 +139,6 @@ function MaterialsTable({
         </div>
       )}
 
-      {/* @ts-ignore*/}
       {(materials[courseId] ?? []).length > 0 && (
         <table style={{ marginTop: "5em" }}>
           <thead>
@@ -157,7 +151,6 @@ function MaterialsTable({
             </tr>
           </thead>
           <tbody>
-            {/* @ts-ignore*/}
             {(materials[courseId] ?? []).map((material: any, index: number) => (
               <tr
                 key={`${courseId}${material.key}`}

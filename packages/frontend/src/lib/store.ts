@@ -13,8 +13,14 @@ export interface Course {
 }
 
 export const coursesAtom = atomWithStorage("coursesList", [] as Course[]);
-export const materialsAtom = atomWithStorage("materialsList", {});
-export const quizzesAtom = atomWithStorage("quizzesList", {});
+export const materialsAtom = atomWithStorage(
+  "materialsList",
+  {} as { [courseId: string]: any[] },
+);
+export const quizzesAtom = atomWithStorage(
+  "quizzesList",
+  {} as { [courseId: string]: any[] },
+);
 
 export interface Mcq {
   id: string;

@@ -46,10 +46,8 @@ function Quizzes() {
             date: r.lastModified!.toLocaleDateString("en-GB"),
           };
         });
-      // @ts-ignore
       if (!isEqual(quizzes[course.id], quizList)) {
         setQuizzes((draft) => {
-          // @ts-ignore
           draft[course.id] = quizList;
         });
       }
@@ -72,7 +70,7 @@ function Quizzes() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -126,10 +124,8 @@ function Quizzes() {
               >
                 {`${course.code}  - ${course.name}`}
               </h2>
-              {/* @ts-ignore */}
               {(quizzes[course.id] ?? []).length > 0 ? (
                 <div className="quizzes-container">
-                  {/* @ts-ignore */}
                   {(quizzes[course.id] ?? []).map((quiz: any) => (
                     <Quiz
                       onClick={() => exportQuiz(course.id, quiz.name)}
