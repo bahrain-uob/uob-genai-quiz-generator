@@ -34,6 +34,12 @@ function Navbar(props: { active: string }) {
             >
               <p>CREATE QUIZ</p>
             </a>
+            <a
+              href="/record"
+              className={props.active == "record" ? "active" : ""}
+            >
+              <p>RECORD</p>
+            </a>
           </div>{" "}
           <div className="sign-out">
             {" "}

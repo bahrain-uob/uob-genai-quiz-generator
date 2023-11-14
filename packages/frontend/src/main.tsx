@@ -10,6 +10,7 @@ import { Authenticator } from "@aws-amplify/ui-react";
 import { RequireAuth } from "./RequireAuth.tsx";
 import { Login } from "./pages/SignIn.tsx";
 import Home from "./components/Home.tsx";
+import Record from "./pages/record.tsx";
 
 Amplify.configure({
   Auth: {
@@ -85,9 +86,17 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
               </RequireAuth>
             }
           />
+          <Route
+            path="/record"
+            element={
+              <RequireAuth>
+                <Record />
+              </RequireAuth>
+            }
+          />
           <Route path="/signin" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </Authenticator.Provider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );
