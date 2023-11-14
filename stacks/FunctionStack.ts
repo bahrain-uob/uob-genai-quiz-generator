@@ -90,6 +90,17 @@ export function FunctionStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".jpeg" }],
     },
+    summarize: {
+      function: {
+        handler: "packages/api/src/summarize_text.summarize",
+        runtime: "python3.11",
+        permissions: ["sagemaker", "s3"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+          INPUT_BUCKET: materialBucket.bucketName,
+        },
+      },
+    },
   });
   materialText.addNotifications(stack, {
     json: {
