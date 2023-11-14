@@ -54,6 +54,18 @@ export function FunctionStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".mp4" }],
     },
+    audio: {
+      function: {
+        handler: "packages/functions/src/process_audio.lambda_handler",
+        runtime: "python3.11",
+        permissions: ["s3", "transcribe"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".webm" }],
+    },
     png: {
       function: {
         handler: "packages/functions/src/process_image.lambda_handler",
