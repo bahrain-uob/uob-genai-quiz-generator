@@ -60,17 +60,6 @@ export function ApiStack({ stack }: StackContext) {
           },
         },
       },
-      "POST /summarize": {
-        function: {
-          handler: "packages/api/src/questionsGen.summarize",
-          runtime: "python3.11",
-          // permissions : "*"
-          permissions: ["sagemaker", "s3"],
-          environment: {
-            TEXT_BUCKET: materialText.bucketName,
-          },
-        },
-      },
       "GET /courses": "packages/api/src/courses.get",
       "POST /courses": "packages/api/src/courses.post",
     },
