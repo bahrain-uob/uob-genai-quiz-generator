@@ -1,21 +1,24 @@
 import { useState, useCallback, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+// import { useSearchParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
-interface questionState {
-  kind: "question";
+interface QuestionState {
+  kind: "questionState";
   data: pubQuestion;
 }
 
-interface resultState {
-  kind: "result";
+interface ResultState {
+  kind: "resultState";
+  place: number;
+  correct: number;
+  total: number;
 }
 
-interface waitState {
-  kind: "wait";
+interface WaitState {
+  kind: "waitState";
 }
 
-type GameState = questionState | resultState | waitState;
+type GameState = QuestionState | ResultState | WaitState;
 
 export function GameClient() {
   const [join, setJoin] = useState(false);
@@ -77,7 +80,7 @@ function Game(props: { socketUrl: string; gameId: string }) {
   return (
     <div>
       <span>The WebSocket is currently {connectionStatus}</span>
-      {state.kind == "question" && (
+      {state.kind == "questionState" && (
         <Question
           key={crypto.randomUUID()}
           state={state}
@@ -85,7 +88,7 @@ function Game(props: { socketUrl: string; gameId: string }) {
           gameId={props.gameId}
         />
       )}
-      {state.kind == "result" && (
+      {state.kind == "resultState" && (
         <div>
           <h1>{state.kind}</h1>
         </div>
@@ -99,7 +102,7 @@ function Question({
   socketSend,
   gameId,
 }: {
-  state: questionState;
+  state: QuestionState;
   socketSend: (data: ClientMessage) => void;
   gameId: string;
 }) {

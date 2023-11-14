@@ -1,17 +1,23 @@
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { Mcq } from "../lib/store";
-import { PrimitiveAtom, atom, useAtom } from "jotai";
+import { atom, useAtomValue } from "jotai";
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useCallback, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const question = atom({
-  id: crypto.randomUUID(),
-  question: "can you clone kahoot in a weekend?",
-  choices: ["yes", "no", "maybe", "idk"],
-  answer_index: 0,
-} as Mcq);
+const questionsAtom = atom([
+  {
+    question: "can you clone kahoot in a weekend?",
+    choices: ["yes", "no", "maybe", "idk"],
+    answer_index: 0,
+  },
+  {
+    question: "whats 9 + 10",
+    choices: ["21", "19", "12", "3"],
+    answer_index: 0,
+  },
+] as Mcq[]);
 
 // const gameId = crypto.randomUUID();
 const gameId = "mcq";
@@ -28,9 +34,8 @@ export function GameServer() {
   } = useWebSocket(socketUrl);
   const [events, setEvents] = useState([] as string[]);
 
-  const [questions, innerSetQuestions] = useState(new Map());
-  const setQuestions = (k: string, v: number) =>
-    innerSetQuestions(new Map(questions.set(k, v)));
+  const questions = useAtomValue(questionsAtom);
+  const [qIndex, setQIndex] = useState(0);
 
   const [scores, innerSetScores] = useState(new Map());
   const setScores = (k: string, v: number) =>
@@ -45,7 +50,9 @@ export function GameServer() {
         setEvents([`${message.username} joined!`, ...events]);
       }
       if (message.action == "sendAnswer") {
-        if (questions.get(message.questionId) == message.answer) {
+        if (
+          questions[message.questionId as any].answer_index == message.answer
+        ) {
           setScores(
             message.connectionId!,
             (scores.get(message.connectionId!) ?? 0) + 1,
@@ -61,7 +68,6 @@ export function GameServer() {
 
   const send = useCallback((message: ServerMessage) => {
     if (message.action) innerSendMessage(JSON.stringify(message));
-    if (message.questionId) setQuestions(message.questionId, message.answer);
   }, []);
 
   const connectionStatus = {
@@ -77,7 +83,15 @@ export function GameServer() {
       <span>The WebSocket is currently {connectionStatus}</span>
       {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
       <div style={{ display: "flex" }}>
-        <QuestionArea question={question} send={send} />
+        <h1>{qIndex}</h1>
+        <h1 onClick={() => setQIndex((qIndex + 1) % questions.length)}>NEXT</h1>
+      </div>
+      <div style={{ display: "flex" }}>
+        <QuestionArea
+          key={qIndex}
+          question={{ ...questions[qIndex], id: qIndex as any }}
+          send={send}
+        />
         <div style={{ margin: "10px" }}>
           <QRCodeSVG
             style={{ margin: "50px" }}
@@ -116,31 +130,21 @@ export function GameServer() {
   );
 }
 
-function QuestionArea(props: {
-  question: PrimitiveAtom<Mcq>;
+function QuestionArea({
+  question,
+  send,
+}: {
+  question: Mcq;
   send: (message: ServerMessage) => void;
 }) {
-  const [question, setQuestion] = useAtom(props.question);
-
-  function handleQuestionChange(event: any) {
-    const updatedQuestion = { ...question, question: event.target.value };
-    setQuestion(updatedQuestion);
-  }
-
-  function handleChoiceChange(event: any, index: number) {
-    const updatedQuestion = { ...question };
-    updatedQuestion.choices[index] = event.target.value;
-    setQuestion(updatedQuestion);
-  }
-
-  const send = () => {
+  const sendQuestion = () => {
     const q = {
-      questionId: crypto.randomUUID(),
+      questionId: question.id,
       question: question.question,
       choices: question.choices,
       answer: question.answer_index,
     };
-    props.send({
+    send({
       action: "pubQuestion",
       gameId,
       ...q,
@@ -157,7 +161,7 @@ function QuestionArea(props: {
             icon={faPlusCircle}
             size="2x"
             className="faMinusCircle"
-            onClick={send}
+            onClick={sendQuestion}
           />
 
           <textarea
@@ -165,7 +169,6 @@ function QuestionArea(props: {
             rows={2}
             cols={35}
             defaultValue={question.question}
-            onChange={(e) => handleQuestionChange(e)}
           ></textarea>
 
           {question.choices.map((choice: string, index: number) => (
@@ -177,21 +180,13 @@ function QuestionArea(props: {
                 gap: "5px",
               }}
             >
-              <label
-                onClick={() =>
-                  setQuestion({ ...question, answer_index: index })
-                }
-                style={{ fontSize: "medium" }}
-              >
-                {index + 1})
-              </label>
+              <label style={{ fontSize: "medium" }}>{index + 1})</label>
               <input
                 style={{
                   backgroundColor: colors[index],
                 }}
                 type="text"
                 defaultValue={choice}
-                onChange={(e) => handleChoiceChange(e, index)}
               />
             </div>
           ))}
