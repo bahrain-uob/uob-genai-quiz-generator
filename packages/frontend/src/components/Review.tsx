@@ -62,11 +62,9 @@ function QuizSetup() {
   );
 }
 
-const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
-const FillBlanksAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("fillBlankArr"),
-);
 const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
+const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
+const FillBlanksAtom = focusAtom(quizAtom, (optic) => optic.prop("fibArr"));
 
 function Questions(props: { type: string; stepNo: number }) {
   const mcqQuestions = useAtomValue(McqsAtom);

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
 import MaterialsTable from "../components/MaterialsTable";
@@ -17,6 +17,7 @@ const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 function Quizzes() {
   const [stepNo, setStepNo] = useAtom(stageAtom);
   const courseId = useAtomValue(courseIdAtom);
+  const inFlight = useRef(false);
 
   return (
     <>
@@ -29,9 +30,9 @@ function Quizzes() {
           <MaterialsTable courseId={courseId} isSelecting={true} />
         )}
         {stepNo == 2 && <QuizSetupForm />}
-        {stepNo == 3 && <McqQuestionsSetup />}
-        {stepNo == 4 && <TfQuestionsSetup />}
-        {stepNo == 5 && <FillBlankQuestionsSetup />}
+        {stepNo == 3 && <McqQuestionsSetup inFlight={inFlight} />}
+        {stepNo == 4 && <TfQuestionsSetup inFlight={inFlight} />}
+        {stepNo == 5 && <FillBlankQuestionsSetup inFlight={inFlight} />}
         {stepNo == 6 && <Review />}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>

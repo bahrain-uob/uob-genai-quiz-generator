@@ -5,59 +5,51 @@ import { focusAtom } from "jotai-optics";
 import { splitAtom } from "jotai/utils";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { API } from "aws-amplify";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
-const materialsAtom = focusAtom(quizAtom, (optic) => optic.prop("materials"));
-const McqNumAtom = focusAtom(quizAtom, (optic) => optic.prop("mcq"));
 const McqsAtomsAtom = splitAtom(McqsAtom);
-const generatedAtom = atom([
-  {
-    id: crypto.randomUUID(),
-    question: "S3? Simple Storage Service",
-    choices: ["s3", "ec2", "vpc", "ebs"],
-    answer_index: 0,
-  },
-  {
-    id: crypto.randomUUID(),
-    question: "EC2? Elastic Cloud Compute",
-    choices: ["s3", "ec2", "vpc", "ebs"],
-    answer_index: 2,
-  },
-
-  {
-    id: crypto.randomUUID(),
-    question: "VPC? Virtual Private Cloud",
-    choices: ["s3", "ec2", "vpc", "ebs"],
-    answer_index: 2,
-  },
-] as Mcq[]);
+const generatedAtom = atom([] as Mcq[]);
 const generatedAtomsAtom = splitAtom(generatedAtom);
 
-function McqQuestionsSetup() {
-  const courseIdAtomAtom = useAtomValue(courseIdAtom);
-  const materialsAtomAtom = useAtomValue(materialsAtom);
-  const McqNumAtomAtom = useAtomValue(McqNumAtom);
-  const MCQgen = async () => {
-    let question = await API.post("api", "/MCQ", {
-      body: {
-        materials: materialsAtomAtom,
-        course_id: courseIdAtomAtom,
-      },
-    });
-    generatedDispatch({
-      type: "insert",
-      value: { id: crypto.randomUUID(), ...question },
-    });
-  };
-  useEffect(() => {
-    [...Array(McqNumAtomAtom)].forEach(MCQgen);
-  }, []);
+const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
+const materialsAtom = focusAtom(quizAtom, (optic) => optic.prop("materials"));
+const noQuestionAtom = focusAtom(quizAtom, (optic) => optic.prop("mcq"));
+
+function McqQuestionsSetup(props: { inFlight: any }) {
   const [generated, generatedDispatch] = useAtom(generatedAtomsAtom);
   const [selected, selectedDispatch] = useAtom(McqsAtomsAtom);
   const gArr = useAtomValue(generatedAtom);
   const sArr = useAtomValue(McqsAtom);
+
+  const courseId = useAtomValue(courseIdAtom);
+  const materials = useAtomValue(materialsAtom);
+  const no_questions = useAtomValue(noQuestionAtom);
+  const [maybeGen, setMaybeGen] = useState({});
+
+  // generating question using AI, MAGIC
+  useEffect(() => {
+    if (props.inFlight.current) return;
+    if (gArr.length + sArr.length < no_questions) {
+      props.inFlight.current = true;
+      (async () => {
+        try {
+          const question = await API.post("api", "/mcq", {
+            body: {
+              materials: materials,
+              course_id: courseId,
+            },
+          });
+          generatedDispatch({
+            type: "insert",
+            value: { id: crypto.randomUUID(), ...question },
+          });
+        } catch {}
+        props.inFlight.current = false;
+        setMaybeGen({});
+      })();
+    }
+  }, [maybeGen, gArr, sArr]);
 
   const [parent] = useAutoAnimate();
 

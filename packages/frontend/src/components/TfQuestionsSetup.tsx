@@ -4,33 +4,52 @@ import { Tf, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import { splitAtom } from "jotai/utils";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { useEffect, useState } from "react";
+import { API } from "aws-amplify";
 
 const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 const TfsAtomsAtom = splitAtom(TfsAtom);
-const generatedAtom = atom([
-  {
-    id: crypto.randomUUID(),
-    question: "S3? Simple Storage Service",
-    answer: true,
-  },
-  {
-    id: crypto.randomUUID(),
-    question: "EC2? Elastic Cloud Compute",
-    answer: false,
-  },
-  {
-    id: crypto.randomUUID(),
-    question: "VPC? Virtual Private Cloud",
-    answer: true,
-  },
-] as Tf[]);
+const generatedAtom = atom([] as Tf[]);
 const generatedAtomsAtom = splitAtom(generatedAtom);
 
-function TfQuestionsSetup() {
+const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
+const materialsAtom = focusAtom(quizAtom, (optic) => optic.prop("materials"));
+const noQuestionAtom = focusAtom(quizAtom, (optic) => optic.prop("tf"));
+
+function TfQuestionsSetup(props: { inFlight: any }) {
   const [generated, generatedDispatch] = useAtom(generatedAtomsAtom);
   const [selected, selectedDispatch] = useAtom(TfsAtomsAtom);
   const gArr = useAtomValue(generatedAtom);
   const sArr = useAtomValue(TfsAtom);
+
+  const courseId = useAtomValue(courseIdAtom);
+  const materials = useAtomValue(materialsAtom);
+  const no_questions = useAtomValue(noQuestionAtom);
+  const [maybeGen, setMaybeGen] = useState({});
+
+  // generating question using AI, MAGIC
+  useEffect(() => {
+    if (props.inFlight.current) return;
+    if (gArr.length + sArr.length < no_questions) {
+      props.inFlight.current = true;
+      (async () => {
+        try {
+          const question = await API.post("api", "/tf", {
+            body: {
+              materials: materials,
+              course_id: courseId,
+            },
+          });
+          generatedDispatch({
+            type: "insert",
+            value: { id: crypto.randomUUID(), ...question },
+          });
+        } catch {}
+        props.inFlight.current = false;
+        setMaybeGen({});
+      })();
+    }
+  }, [maybeGen, gArr, sArr]);
 
   const [parent] = useAutoAnimate();
 
