@@ -4,11 +4,13 @@ import boto3
 import re
 import random
 import math
+
 # endpoint_name = os.environ["LLAMA_2_13B_ENDPOINT"]
 endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-13b"  # need to make environ
 sm_client = boto3.client("sagemaker-runtime")
 s3 = boto3.client("s3")
 TEXT_BUCKET = os.environ["TEXT_BUCKET"]
+
 
 def create(prompt):
     response = sm_client.invoke_endpoint(
@@ -20,8 +22,7 @@ def create(prompt):
                 "parameters": {
                     "max_new_tokens": 128,
                     "top_p": 0.9,
-                    # "temperature": random.randfloat(0.7,1),
-                    "temperature": 1,
+                    "temperature": random.uniform(0.2, 0.3),
                     "return_full_text": False,
                 },
             }
@@ -33,18 +34,18 @@ def create(prompt):
     return parse
 
 
-def MCQ(event, context):
+def mcq(event, context):
     body = json.loads(event["body"])
     user_id = event["requestContext"]["authorizer"]["jwt"]["claims"]["sub"]
     materials = body["materials"]
-    course_id =body["course_id"]
+    course_id = body["course_id"]
     cutted_text = []
     for material in materials:
-        object_key = user_id+"/"+course_id+"/materials/"+material+".txt"
+        object_key = user_id + "/" + course_id + "/materials/" + material + ".txt"
         response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
-        topic = response['Body'].read().decode('utf-8')
-        cutted_text.extend(filter(topic))
-    topic = cutted_text[random.randint(0,len(cutted_text)-1)]
+        topic = response["Body"].read().decode("utf-8")
+        cutted_text.extend(partition(topic))
+    topic = cutted_text[random.randint(0, len(cutted_text) - 1)]
     prompt = """
     Human: i want you to generate 1 MCQ question about  this :
     Cristiano Ronaldo dos Santos Aveiro:  (born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
@@ -94,24 +95,24 @@ def MCQ(event, context):
     }  
     Assistant:"""
     prompt = prompt.replace("{{topic}}", topic)
-    question =json.loads(create(prompt))
-    question["answer_index"]= question["choices"].index(question["correct_answer"])
-    return  json.dumps(question)
+    question = json.loads(create(prompt))
+    question["answer_index"] = question["choices"].index(question["correct_answer"])
+    return json.dumps(question)
     # return  json.loads(create(prompt))
 
 
-def TF(event, context):
+def tf(event, context):
     body = json.loads(event["body"])
     user_id = event["requestContext"]["authorizer"]["jwt"]["claims"]["sub"]
     materials = body["materials"]
-    course_id =body["course_id"]
+    course_id = body["course_id"]
     cutted_text = []
     for material in materials:
-        object_key = user_id+"/"+course_id+"/materials/"+material+".txt"
+        object_key = user_id + "/" + course_id + "/materials/" + material + ".txt"
         response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
-        topic = response['Body'].read().decode('utf-8')
-        cutted_text.extend(filter(topic))
-    topic = cutted_text[random.randint(0,len(cutted_text)-1)]
+        topic = response["Body"].read().decode("utf-8")
+        cutted_text.extend(partition(topic))
+    topic = cutted_text[random.randint(0, len(cutted_text) - 1)]
     prompt = """
     Human: i want you to generate 1 TRUE or FALSE question about  this :
     Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
@@ -121,12 +122,12 @@ def TF(event, context):
     The output should be a code snippet formatted in the following schema with only one correct answer:
     {
       "question": string // the true or false question
-      "correct_answer": boolean // the answer of the question (either True or False)
+      "answer": boolean // the answer of the question (either True or False)
     }
     Assistant:
     {
       "question": "Ronaldo is born in Spain",
-      "correct_answer": false
+      "answer": false
     }
 
     Human: i want you to generate 1 TRUE or FALSE question about  this :
@@ -140,37 +141,37 @@ def TF(event, context):
     The output should be a code snippet formatted in the following schema with only one correct answer:
     {
       "question": string // the true or false question
-      "correct_answer": boolean // the answer of the question (either True or False)
+      "answer": boolean // the answer of the question (either True or False)
     }
     Assistant:
     {
       "question": "Steve jobs is one of the founders of Apple?",
-      "correct_answer": true
+      "answer": true
     }
    
     Human: i want you to generate 1 TRUE or FAlSE question about this : {{topic}}
     The output should be a code snippet formatted in the following schema with only one correct answer
     {
       "question": string // the true or false question
-      "correct_answer": boolean // the answer of the question (either True or False)
+      "answer": boolean // the answer of the question (either True or False)
     }
     Assistant:"""
     prompt = prompt.replace("{{topic}}", topic)
-    return  json.loads(create(prompt))
+    return json.loads(create(prompt))
 
 
-def fill_in_blank(event, context):
+def fib(event, context):
     body = json.loads(event["body"])
     user_id = event["requestContext"]["authorizer"]["jwt"]["claims"]["sub"]
     materials = body["materials"]
-    course_id =body["course_id"]
+    course_id = body["course_id"]
     cutted_text = []
     for material in materials:
-        object_key = user_id+"/"+course_id+"/materials/"+material+".txt"
+        object_key = user_id + "/" + course_id + "/materials/" + material + ".txt"
         response = s3.get_object(Bucket=TEXT_BUCKET, Key=object_key)
-        topic = response['Body'].read().decode('utf-8')
-        cutted_text.extend(filter(topic))
-    topic = cutted_text[random.randint(0,len(cutted_text)-1)]
+        topic = response["Body"].read().decode("utf-8")
+        cutted_text.extend(partition(topic))
+    topic = cutted_text[random.randint(0, len(cutted_text) - 1)]
     prompt = """
     Human: i want you to generate 1 fill-in-the-blank question about this :
     Cristiano Ronaldo dos Santos Aveiro:  born 5 February 1985), better known as Ronaldo, is a Portuguese professional footballer who plays as a forward. He is the captain of the Portuguese national team and he is currently playing at Saudi Arabian football club Al Nassr.
@@ -185,7 +186,7 @@ def fill_in_blank(event, context):
     Assistant:
     {
       "question": "Ronaldo won his first Ballon d'Or in ________ .",
-      "correct_answer": "2008"
+      "answer": "2008"
     } 
 
     Human: i want you to generate 1 fill-in-the-blank question about this :
@@ -204,7 +205,7 @@ def fill_in_blank(event, context):
     Assistant:
     {
       "question": "Apple Inc. is an ________ multinational technology company headquartered in Cupertino, California.",
-      "correct_answer": "American"
+      "answer": "American"
     } 
 
     Human: i want you to generate 1 fill-in-the-blank question about this :
@@ -221,7 +222,7 @@ def fill_in_blank(event, context):
     Assistant:
     {
       "question": "Cloud computing is the _______ availability of computing resources (such as storage and infrastructure), as services over the internet.",
-      "correct_answer": "on-demand"
+      "answer": "on-demand"
     } 
 
     Human: i want you to generate 1 fill-in-the-blank question about this : {{topic}}
@@ -231,18 +232,19 @@ def fill_in_blank(event, context):
       "question": string // the question with 1 blank to be filled
       "answer": string // the correct answer to fill the blank
     } 
-    Assistant: """ 
+    Assistant: """
 
     prompt = prompt.replace("{{topic}}", topic)
-    return  json.loads(create(prompt))
+    return json.loads(create(prompt))
 
-def filter(text):
+
+def partition(text):
     words = text.split()
-    cut_size =math.ceil(len(words) / 1000)
+    cut_size = math.ceil(len(words) / 500)
     cuts = []
     mergedcuts = []
-    for i in range(0,len(words),math.ceil(len(words)/cut_size)):
-      cuts.append(words[i:i+math.ceil((len(words)-1)/cut_size)])
+    for i in range(0, len(words), math.ceil(len(words) / cut_size)):
+        cuts.append(words[i : i + math.ceil((len(words) - 1) / cut_size)])
     for item in cuts:
-      mergedcuts.append(" ".join(item))
-    return (mergedcuts)
+        mergedcuts.append(" ".join(item))
+    return mergedcuts

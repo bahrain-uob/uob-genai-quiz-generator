@@ -7,8 +7,9 @@ import { FunctionStack } from "./FunctionStack";
 
 export function ApiStack({ stack }: StackContext) {
   const { auth } = use(AuthStack);
-  const { materialBucket, quiz_bucket, courses_table } = use(DBStack);
+  const { courses_table } = use(DBStack);
   const { materialText } = use(FunctionStack);
+
   // Create the HTTP API
   const api = new Api(stack, "Api", {
     authorizers: {
@@ -23,45 +24,31 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       authorizer: "jwt",
       function: {
-        bind: [materialBucket, quiz_bucket, courses_table],
+        runtime: "python3.11",
+        permissions: ["sagemaker", "s3"],
+        environment: {
+          TEXT_BUCKET: materialText.bucketName,
+        },
       },
     },
     routes: {
-      "POST /MCQ": {
+      "POST /mcq": "packages/api/src/questionsGen.mcq",
+      "POST /tf": "packages/api/src/questionsGen.tf",
+      "POST /fib": "packages/api/src/questionsGen.fib",
+      "GET /courses": {
         function: {
-          handler: "packages/api/src/questionsGen.MCQ",
-          runtime: "python3.11",
-          // permissions : "*"
-          permissions: ["sagemaker", "s3"],
-          environment: {
-            TEXT_BUCKET: materialText.bucketName,
-          },
+          handler: "packages/api/src/courses.get",
+          runtime: "nodejs18.x",
+          bind: [courses_table],
         },
       },
-      "POST /TrueFalse": {
+      "POST /courses": {
         function: {
-          handler: "packages/api/src/questionsGen.TF",
-          runtime: "python3.11",
-          // permissions : "*"
-          permissions: ["sagemaker", "s3"],
-          environment: {
-            TEXT_BUCKET: materialText.bucketName,
-          },
+          handler: "packages/api/src/courses.post",
+          runtime: "nodejs18.x",
+          bind: [courses_table],
         },
       },
-      "POST /FillTheBlank": {
-        function: {
-          handler: "packages/api/src/questionsGen.fill_in_blank",
-          runtime: "python3.11",
-          // permissions : "*"
-          permissions: ["sagemaker", "s3"],
-          environment: {
-            TEXT_BUCKET: materialText.bucketName,
-          },
-        },
-      },
-      "GET /courses": "packages/api/src/courses.get",
-      "POST /courses": "packages/api/src/courses.post",
     },
   });
 
@@ -74,7 +61,7 @@ export function ApiStack({ stack }: StackContext) {
       "Accept",
       "Authorization",
       "Content-Type",
-      "Referer"
+      "Referer",
     ),
   });
 
