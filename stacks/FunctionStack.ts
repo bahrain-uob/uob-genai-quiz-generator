@@ -90,17 +90,6 @@ export function FunctionStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".jpeg" }],
     },
-    summarize: {
-      function: {
-        handler: "packages/api/src/summarize_text.summarize",
-        runtime: "python3.11",
-        permissions: ["sagemaker", "s3"],
-        environment: {
-          OUTPUT_BUCKET: materialText.bucketName,
-          INPUT_BUCKET: materialBucket.bucketName,
-        },
-      },
-    },
   });
   materialText.addNotifications(stack, {
     json: {
@@ -113,19 +102,5 @@ export function FunctionStack({ stack }: StackContext) {
       filters: [{ suffix: ".json" }],
     },
   });
-  // This is an example of creating notification, modify for your use
-  //
-  // materialBucket.addNotifications(stack, {
-  //   notification1: {
-  //     function: "packages/functions/src/pdf.main",
-  //     events: ["object_created"],
-  //     filters: [{ suffix: ".pdf" }],
-  //   },
-  //   notification2: {
-  //     function: "packages/functions/src/pptx.main",
-  //     events: ["object_created"],
-  //     filters: [{ suffix: ".txt" }],
-  //   },
-  // });
   return { materialText };
 }
