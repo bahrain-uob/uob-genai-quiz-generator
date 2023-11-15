@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "start": "cd packages/frontend; sst bind vite",
     "dev": "sst dev",
     "build": "sst build",
     "deploy": "sst deploy",
@@ -22,3 +23,4 @@
     "packages/*"
   ]
 }
+
