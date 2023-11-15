@@ -6,6 +6,28 @@ import { useState, useCallback, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+interface RegisterState {
+  kind: "registerState";
+}
+
+interface QuestionState {
+  kind: "questionState";
+}
+
+interface ScoreboardState {
+  kind: "scoreboardState";
+}
+
+interface EndGameState {
+  kind: "endGameState";
+}
+
+type ServerState =
+  | RegisterState
+  | QuestionState
+  | ScoreboardState
+  | EndGameState;
+
 const questionsAtom = atom([
   {
     question: "can you clone kahoot in a weekend?",
@@ -45,13 +67,13 @@ export function GameServer() {
     if (lastMessage !== null) {
       const message = JSON.parse(lastMessage.data) as ClientMessage;
       console.log(message);
-      if (message.action == "joinGame") {
+      if (message.action == "sendName") {
         usernames.set(message.connectionId, message.username);
         setEvents([`${message.username} joined!`, ...events]);
       }
       if (message.action == "sendAnswer") {
         if (
-          questions[message.questionId as any].answer_index == message.answer
+          questions[message.questionIndex as any].answer_index == message.answer
         ) {
           setScores(
             message.connectionId!,
@@ -138,16 +160,12 @@ function QuestionArea({
   send: (message: ServerMessage) => void;
 }) {
   const sendQuestion = () => {
-    const q = {
-      questionId: question.id,
-      question: question.question,
-      choices: question.choices,
-      answer: question.answer_index,
-    };
     send({
       action: "pubQuestion",
       gameId,
-      ...q,
+      questionIndex: 0,
+      noOptions: question.choices.length,
+      totalQuestions: 10,
     });
   };
 

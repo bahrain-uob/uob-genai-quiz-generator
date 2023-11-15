@@ -1,18 +1,18 @@
-type ClientMessage = joinGame | sendAnswer;
+type ClientMessage = sendName | sendAnswer;
 
-interface joinGame {
-  action: "joinGame";
-  gameId: string;
+interface sendName {
+  action: "sendName";
+  gameId?: string;
   connectionId?: string;
   username: string;
 }
 
 interface sendAnswer {
   action: "sendAnswer";
-  gameId: string;
+  gameId?: string;
   connectionId?: string;
   time?: number;
-  questionId: string;
+  questionIndex: number;
   answer: number;
 }
 
@@ -20,16 +20,16 @@ type ServerMessage = pubQuestion | pubResult;
 
 interface pubQuestion {
   action: "pubQuestion";
-  gameId: string;
-  questionId: string;
-  question: string;
-  choices: string[];
-  answer: number;
+  gameId?: string;
+  questionIndex: number;
+  totalQuestions: number;
+  noOptions: number;
 }
 
 interface pubResult {
   action: "pubResult";
-  gameId: string;
+  gameId?: string;
+  connectionId?: string;
   questionId: string;
   answer: number;
 }

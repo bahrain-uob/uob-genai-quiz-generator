@@ -2,23 +2,40 @@ import { useState, useCallback, useEffect } from "react";
 // import { useSearchParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
-interface QuestionState {
-  kind: "questionState";
-  data: pubQuestion;
-}
-
-interface ResultState {
-  kind: "resultState";
-  place: number;
-  correct: number;
-  total: number;
+interface PreGameState {
+  kind: "preGameState";
 }
 
 interface WaitState {
   kind: "waitState";
 }
 
-type GameState = QuestionState | ResultState | WaitState;
+interface QuestionState {
+  kind: "questionState";
+  questionIndex: number;
+  totalQuestions: number;
+  noOptions: number;
+}
+
+interface ResultState {
+  kind: "resultState";
+  rank: number;
+  score: number;
+}
+
+interface EndGameState {
+  kind: "endGameState";
+  rank: number;
+  correctQuestions: number;
+  totalQuestions: number;
+}
+
+type ClientState =
+  | PreGameState
+  | WaitState
+  | QuestionState
+  | ResultState
+  | EndGameState;
 
 export function GameClient() {
   const [join, setJoin] = useState(false);
@@ -63,7 +80,7 @@ function Game(props: { socketUrl: string; gameId: string }) {
     }
   }, [lastMessage]);
 
-  const [state, setState]: [GameState, any] = useState({} as GameState);
+  const [state, setState]: [ClientState, any] = useState({} as ClientState);
 
   const send = useCallback((data: ClientMessage) => {
     if (data.action) innerSendMessage(JSON.stringify(data));
@@ -107,17 +124,15 @@ function Question({
   gameId: string;
 }) {
   const [answered, setAnswered] = useState(false);
-  const [chosenAnswer, setChosenAnswer] = useState(0xcafe);
 
   const answer = (index: number) => {
     socketSend({
       action: "sendAnswer",
       gameId,
-      questionId: state.data.questionId,
+      questionIndex: state.questionIndex,
       answer: index,
     });
     setAnswered(true);
-    setChosenAnswer(index);
   };
 
   const colors = ["#d55e00", "#56b4e9", "#019e73", "#f0e442"];
@@ -127,10 +142,9 @@ function Question({
     <>
       {!answered && (
         <div>
-          <h1>{state.data.question}</h1>
-          {state.data.choices.map((choice, index) => (
+          {[...Array(state.noOptions)].map((index) => (
             <button
-              key={choice}
+              key={index}
               style={{
                 backgroundColor: colors[index],
                 width: "40%",
@@ -141,17 +155,12 @@ function Question({
             >
               {art[index]}
               <br />
-              {choice}
+              {index}
             </button>
           ))}
         </div>
       )}
-      {answered && (
-        <h1>
-          {chosenAnswer === state.data.answer ? "TRUE" : "FALSE"} WAITING FOR
-          NEXT QUESTION
-        </h1>
-      )}
+      {answered && <h1>NEXT QUESTION</h1>}
     </>
   );
 }
