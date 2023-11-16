@@ -12,7 +12,6 @@ interface sendAnswer {
   gameId?: string;
   connectionId?: string;
   time?: number;
-  questionIndex: number;
   answer: number;
 }
 
@@ -30,6 +29,5 @@ interface pubResult {
   action: "pubResult";
   gameId?: string;
   connectionId?: string;
-  questionId: string;
   answer: number;
 }

@@ -38,50 +38,25 @@ type ClientState =
   | EndGameState;
 
 export function GameClient() {
-  const [join, setJoin] = useState(false);
-  // const gameId = useSearchParams()[0].get("gameId");
+  const [state, _setState] = useState({ kind: "preGameState" } as ClientState);
   const gameId = "mcq";
-  const [username, setUsername] = useState("username");
-  const socketUrl = `${
-    import.meta.env.VITE_APP_SOCKET_URL
-  }?username=${username}&gameId=${gameId}`;
+  // const gameId = useSearchParams()[0].get("gameId");
+  const socketUrl = `${import.meta.env.VITE_APP_SOCKET_URL}?gameId=${gameId}`;
 
-  return (
-    <>
-      {!join && (
-        <div>
-          <h1>SET USERNAME</h1>
-          <input
-            type="text"
-            defaultValue={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <button onClick={() => setJoin(true)}>JOIN</button>
-        </div>
-      )}
-      {join && <Game key={0} socketUrl={socketUrl} gameId={gameId!} />}
-    </>
-  );
-}
-
-function Game(props: { socketUrl: string; gameId: string }) {
   const {
     sendMessage: innerSendMessage,
     lastMessage,
     readyState,
-  } = useWebSocket(props.socketUrl);
+  } = useWebSocket(socketUrl);
 
   useEffect(() => {
     if (lastMessage !== null) {
+      // @ts-ignore
       const newMessage = JSON.parse(lastMessage.data) as ServerMessage;
-      if (newMessage.action == "pubQuestion") {
-        setState({ kind: "question", data: newMessage });
-      }
     }
   }, [lastMessage]);
 
-  const [state, setState]: [ClientState, any] = useState({} as ClientState);
-
+  // @ts-ignore
   const send = useCallback((data: ClientMessage) => {
     if (data.action) innerSendMessage(JSON.stringify(data));
   }, []);
@@ -95,72 +70,44 @@ function Game(props: { socketUrl: string; gameId: string }) {
   }[readyState];
 
   return (
-    <div>
+    <>
+      {state.kind == "preGameState" && <PreGame />}
+      {state.kind == "waitState" && <Wait />}
+      {state.kind == "questionState" && <Question state={state} />}
+      {state.kind == "resultState" && <Result state={state} />}
+      {state.kind == "endGameState" && <EndGame state={state} />}
+      <h1>IGNORE BELOW</h1>
       <span>The WebSocket is currently {connectionStatus}</span>
-      {state.kind == "questionState" && (
-        <Question
-          key={crypto.randomUUID()}
-          state={state}
-          socketSend={send}
-          gameId={props.gameId}
-        />
-      )}
-      {state.kind == "resultState" && (
-        <div>
-          <h1>{state.kind}</h1>
-        </div>
-      )}
-    </div>
+      {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
+    </>
   );
 }
 
-function Question({
-  state,
-  socketSend,
-  gameId,
-}: {
-  state: QuestionState;
-  socketSend: (data: ClientMessage) => void;
-  gameId: string;
-}) {
-  const [answered, setAnswered] = useState(false);
+function PreGame() {
+  return <h1>PreGame</h1>;
+}
 
-  const answer = (index: number) => {
-    socketSend({
-      action: "sendAnswer",
-      gameId,
-      questionIndex: state.questionIndex,
-      answer: index,
-    });
-    setAnswered(true);
-  };
+function Wait() {
+  return <h1>Wait</h1>;
+}
 
-  const colors = ["#d55e00", "#56b4e9", "#019e73", "#f0e442"];
-  const art = ["٩(◕‿◕｡)۶", "(*≧ω≦*)", "(๑>◡<๑)", "(⁀ᗢ⁀)"];
+function Question(props: { state: QuestionState }) {
+  // @ts-ignore
+  const { questionIndex, totalQuestions, noOptions } = props.state;
 
-  return (
-    <>
-      {!answered && (
-        <div>
-          {[...Array(state.noOptions)].map((index) => (
-            <button
-              key={index}
-              style={{
-                backgroundColor: colors[index],
-                width: "40%",
-                height: "200px",
-                margin: "5px",
-              }}
-              onClick={() => answer(index)}
-            >
-              {art[index]}
-              <br />
-              {index}
-            </button>
-          ))}
-        </div>
-      )}
-      {answered && <h1>NEXT QUESTION</h1>}
-    </>
-  );
+  return <h1>Question</h1>;
+}
+
+function Result(props: { state: ResultState }) {
+  // @ts-ignore
+  const { rank, score } = props.state;
+
+  return <h1>Result</h1>;
+}
+
+function EndGame(props: { state: EndGameState }) {
+  // @ts-ignore
+  const { rank, correctQuestions, totalQuestions } = props.state;
+
+  return <h1>EndGame</h1>;
 }

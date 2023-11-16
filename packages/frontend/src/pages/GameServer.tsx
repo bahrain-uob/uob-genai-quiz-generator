@@ -6,12 +6,19 @@ import { useState, useCallback, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
+interface PreGameState {
+  kind: "preGameState";
+}
+
 interface RegisterState {
   kind: "registerState";
 }
 
 interface QuestionState {
   kind: "questionState";
+  // questionIndex: number;
+  // noOptions: number;
+  // answer: number;
 }
 
 interface ScoreboardState {
@@ -23,6 +30,7 @@ interface EndGameState {
 }
 
 type ServerState =
+  | PreGameState
   | RegisterState
   | QuestionState
   | ScoreboardState
@@ -49,6 +57,8 @@ const socketUrl = `${gameUrl}&username=master&master=true`;
 const usernames = new Map();
 
 export function GameServer() {
+  const [state, setState] = useState({ kind: "preGameState" } as ServerState);
+
   const {
     sendMessage: innerSendMessage,
     lastMessage,
@@ -102,6 +112,27 @@ export function GameServer() {
 
   return (
     <div>
+      {state.kind == "preGameState" && <PreGame />}
+      {state.kind == "registerState" && <Register />}
+      {state.kind == "questionState" && <Question />}
+      {state.kind == "scoreboardState" && <Scoreboard />}
+      {state.kind == "endGameState" && <Endgame />}
+      <button onClick={() => setState({ kind: "preGameState" })}>
+        preGame
+      </button>
+      <button onClick={() => setState({ kind: "registerState" })}>
+        Register
+      </button>
+      <button onClick={() => setState({ kind: "questionState" })}>
+        Question
+      </button>
+      <button onClick={() => setState({ kind: "scoreboardState" })}>
+        Scoreboard
+      </button>
+      <button onClick={() => setState({ kind: "endGameState" })}>
+        endGameState
+      </button>
+      <h1>IGNORE BELOW</h1>
       <span>The WebSocket is currently {connectionStatus}</span>
       {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
       <div style={{ display: "flex" }}>
@@ -122,16 +153,7 @@ export function GameServer() {
           <p>{gameId}</p>
         </div>
         <div style={{ marginLeft: "20px" }}>
-          <h1
-            onClick={() => {
-              console.log("SCORE");
-              console.log(scores);
-              console.log("QUESTIONS");
-              console.log(questions);
-            }}
-          >
-            Events
-          </h1>
+          <h1>Events</h1>
           {events.map((message) => (
             <div>
               <span>{message}</span>
@@ -212,4 +234,57 @@ function QuestionArea({
       </div>
     </>
   );
+}
+
+function PreGame() {
+  return <h1>PreGame</h1>;
+}
+
+function Register() {
+  return <h1>Register</h1>;
+}
+
+interface QuestionOnlyState {
+  kind: "questionOnlyState";
+}
+
+interface QuestionOptionsState {
+  kind: "questionOptionsState";
+}
+
+interface QuestionAnswerState {
+  kind: "questionAnswerState";
+}
+
+type InnerQuestionState =
+  | QuestionOnlyState
+  | QuestionOptionsState
+  | QuestionAnswerState;
+
+function Question() {
+  const [state, _setState] = useState({
+    kind: "questionOnlyState",
+  } as InnerQuestionState);
+  return (
+    <div>
+      {state.kind == "questionOnlyState" && <QuestionOnly />}
+      {state.kind == "questionOptionsState" && <QuestionOptions />}
+    </div>
+  );
+}
+
+function QuestionOnly() {
+  return <h1>Question Only</h1>;
+}
+
+function QuestionOptions() {
+  return <h1>Question Options</h1>;
+}
+
+function Scoreboard() {
+  return <h1>Scoreboard</h1>;
+}
+
+function Endgame() {
+  return <h1>Endgame</h1>;
 }
