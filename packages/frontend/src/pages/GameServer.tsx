@@ -452,7 +452,7 @@ function Endgame() {
         {/* <div className="header">Podium</div> */}
         <div className="ranks">
           <div className="second">
-            <div className="name">Maram</div>
+            <div className="name">Jaffar</div>
             <div className="details">
               <div className="medal">
                 <div className="medal-icon" data-medal="S">
