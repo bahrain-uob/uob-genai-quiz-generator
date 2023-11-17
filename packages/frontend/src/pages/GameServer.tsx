@@ -13,6 +13,7 @@ import { useState, useCallback, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import caraval from "../assets/Caraval-comp.svg";
+import Confetti from "react-confetti";
 import "../caraval.css";
 
 interface PreGameState {
@@ -438,29 +439,51 @@ function Endgame() {
   return (
     <>
       <div className="end-game">
-        <div className="header">Podium</div>
+        <Confetti
+          colors={["#f44336", "#9c27b0", "#3f51b5"]}
+          wind={0.03}
+          gravity={0.1}
+          width={window.innerWidth - 20}
+        />
+
+        <div className="firework"></div>
+        <div className="firework"></div>
+        <div className="firework"></div>
+        {/* <div className="header">Podium</div> */}
         <div className="ranks">
           <div className="second">
             <div className="name">Maram</div>
             <div className="details">
-              <div className="silver-medal">Ca</div>
-              <div className="score">8,000 Points</div>
+              <div className="medal">
+                <div className="medal-icon" data-medal="S">
+                  <span>Ca</span>
+                </div>
+              </div>
+              <div className="score">8000</div>
               <div className="mark">7 out of 10</div>
             </div>
           </div>
           <div className="first">
-            <div className="name">Maram</div>
+            <div className="name">Fatima</div>
             <div className="details">
-              <div className="gold-medal">Ca</div>
-              <div className="score">11,000 Points</div>
+              <div className="medal">
+                <div className="medal-icon" data-medal="G">
+                  <span>ra</span>
+                </div>
+              </div>
+              <div className="score">11000</div>
               <div className="mark">10 out of 10</div>
             </div>
           </div>
           <div className="third">
             <div className="name">Maram</div>
             <div className="details">
-              <div className="bronze-medal">Ca</div>
-              <div className="score">7,000 Points</div>
+              <div className="medal">
+                <div className="medal-icon" data-medal="B">
+                  <span>val!</span>
+                </div>
+              </div>
+              <div className="score">7000</div>
               <div className="mark">6 out of 10</div>
             </div>
           </div>
