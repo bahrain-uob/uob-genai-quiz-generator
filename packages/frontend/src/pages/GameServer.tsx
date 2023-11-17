@@ -1,10 +1,19 @@
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faCloud,
+  faMeteor,
+  faPlusCircle,
+  faStar,
+  faSun,
+} from "@fortawesome/free-solid-svg-icons";
 import { Mcq } from "../lib/store";
 import { atom, useAtomValue } from "jotai";
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useCallback, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import caraval from "../assets/Caraval-comp.svg";
+import "../caraval.css";
 
 interface PreGameState {
   kind: "preGameState";
@@ -83,11 +92,12 @@ export function GameServer() {
       }
       if (message.action == "sendAnswer") {
         if (
+          //@ts-ignore
           questions[message.questionIndex as any].answer_index == message.answer
         ) {
           setScores(
             message.connectionId!,
-            (scores.get(message.connectionId!) ?? 0) + 1,
+            (scores.get(message.connectionId!) ?? 0) + 1
           );
         }
         setEvents([
@@ -237,11 +247,61 @@ function QuestionArea({
 }
 
 function PreGame() {
-  return <h1>PreGame</h1>;
+  return (
+    <>
+      <div className="caraval">
+        <img src={caraval} alt="caraval!" />
+      </div>
+    </>
+  );
 }
 
 function Register() {
-  return <h1>Register</h1>;
+  return (
+    <>
+      <div className="register-caraval">
+        <div className="area">
+          <ul className="circles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div>
+        <div className="header">
+          <div className="header-text">Join by scanning the QR</div>
+          <div className="QR">
+            <QRCodeSVG
+              style={{ width: "77px", height: "77px", zIndex: "1" }}
+              value={`https://educraft.com/join?gameId=${gameId}`}
+            />
+          </div>
+        </div>
+        <div className="body">
+          <div className="body-title">
+            <h1>Caraval!</h1>
+            {/* <button className="start-button">Start</button> */}
+          </div>
+          <div className="names-container">
+            <div className="name-area">Hamad</div>
+            <div className="name-area">Maram</div>
+            <div className="name-area">Jaffar</div>
+            <div className="name-area">May</div>
+            <div className="name-area">Fajer</div>
+            <div className="name-area">Salman</div>
+            <div className="name-area">Rana</div>
+            <div className="name-area">Lana</div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 interface QuestionOnlyState {
@@ -263,7 +323,7 @@ type InnerQuestionState =
 
 function Question() {
   const [state, _setState] = useState({
-    kind: "questionOnlyState",
+    kind: "questionOptionsState",
   } as InnerQuestionState);
   return (
     <div>
@@ -274,17 +334,138 @@ function Question() {
 }
 
 function QuestionOnly() {
-  return <h1>Question Only</h1>;
+  return (
+    <>
+      <div className="question-only">
+        <h1>Can you clone kahoot in a weekend?</h1>
+      </div>
+    </>
+  );
 }
 
 function QuestionOptions() {
-  return <h1>Question Options</h1>;
+  const [showAns, setShowAns] = useState(true);
+  return (
+    <>
+      <div className="question-options">
+        <div className="question">
+          <p> Can you clone kahoot in a weekend?</p>
+        </div>
+        <div className="middle">
+          <div className="timer">19</div>
+          <div className="answers">
+            <p>0</p>
+            <p>Answers</p>
+          </div>
+        </div>
+        <div className="options">
+          <div className="option-area" style={{ background: "#d55e00" }}>
+            <FontAwesomeIcon
+              icon={faCloud}
+              size="2x"
+              style={{ color: "#ffffff" }}
+            />
+            <p>Yes</p>
+            <FontAwesomeIcon
+              icon={faCheck}
+              size="2x"
+              style={{ color: "#ffffff", margin: "0px 20px 0px auto" }}
+            />
+          </div>
+          <div
+            className="option-area"
+            style={{ background: showAns ? "#f0e4429c" : "#f0e442" }}
+          >
+            <FontAwesomeIcon
+              icon={faSun}
+              size="2x"
+              style={{ color: "#ffffff" }}
+            />
+            <p>No</p>
+          </div>
+
+          <div
+            className="option-area"
+            style={{ background: showAns ? "#019e746f" : "#019e73" }}
+          >
+            <FontAwesomeIcon
+              icon={faMeteor}
+              size="2x"
+              style={{ color: "#ffffff" }}
+            />
+            <p>Idk</p>
+          </div>
+          <div
+            className="option-area"
+            style={{ background: showAns ? "#56b3e98e" : "#56b4e9" }}
+          >
+            <FontAwesomeIcon
+              icon={faStar}
+              size="2x"
+              style={{ color: "#ffffff" }}
+            />
+            <p>Maybe</p>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function Scoreboard() {
-  return <h1>Scoreboard</h1>;
+  return (
+    <>
+      <div className="scoreboard">
+        <div className="header">Scoreboard</div>
+        <div className="body">
+          <div className="score-table">
+            <div className="score-item">
+              <div className="name">Maram</div>
+              <div className="score">1000</div>
+            </div>
+            <div className="score-item">
+              <div className="name">Maram</div>
+              <div className="score">950</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function Endgame() {
-  return <h1>Endgame</h1>;
+  return (
+    <>
+      <div className="end-game">
+        <div className="header">Podium</div>
+        <div className="ranks">
+          <div className="second">
+            <div className="name">Maram</div>
+            <div className="details">
+              <div className="silver-medal">Ca</div>
+              <div className="score">8,000 Points</div>
+              <div className="mark">7 out of 10</div>
+            </div>
+          </div>
+          <div className="first">
+            <div className="name">Maram</div>
+            <div className="details">
+              <div className="gold-medal">Ca</div>
+              <div className="score">11,000 Points</div>
+              <div className="mark">10 out of 10</div>
+            </div>
+          </div>
+          <div className="third">
+            <div className="name">Maram</div>
+            <div className="details">
+              <div className="bronze-medal">Ca</div>
+              <div className="score">7,000 Points</div>
+              <div className="mark">6 out of 10</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
