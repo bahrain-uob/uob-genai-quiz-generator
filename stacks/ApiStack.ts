@@ -3,10 +3,12 @@ import { CacheHeaderBehavior, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
 import { Duration } from "aws-cdk-lib/core";
 import { DBStack } from "./DBStack";
 import { AuthStack } from "./AuthStack";
+import { FunctionStack } from "./FunctionStack";
 
 export function ApiStack({ stack }: StackContext) {
   const { auth } = use(AuthStack);
-  const { materialBucket, quiz_bucket, courses_table } = use(DBStack);
+  const { courses_table } = use(DBStack);
+  const { materialText } = use(FunctionStack);
 
   // Create the HTTP API
   const api = new Api(stack, "Api", {
@@ -22,12 +24,31 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       authorizer: "jwt",
       function: {
-        bind: [materialBucket, quiz_bucket, courses_table],
+        runtime: "python3.11",
+        permissions: ["sagemaker", "s3"],
+        environment: {
+          TEXT_BUCKET: materialText.bucketName,
+        },
       },
     },
     routes: {
-      "GET /courses": "packages/api/src/courses.get",
-      "POST /courses": "packages/api/src/courses.post",
+      "POST /mcq": "packages/api/src/questionsGen.mcq",
+      "POST /tf": "packages/api/src/questionsGen.tf",
+      "POST /fib": "packages/api/src/questionsGen.fib",
+      "GET /courses": {
+        function: {
+          handler: "packages/api/src/courses.get",
+          runtime: "nodejs18.x",
+          bind: [courses_table],
+        },
+      },
+      "POST /courses": {
+        function: {
+          handler: "packages/api/src/courses.post",
+          runtime: "nodejs18.x",
+          bind: [courses_table],
+        },
+      },
     },
   });
 

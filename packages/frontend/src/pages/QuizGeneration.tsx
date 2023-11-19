@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
 import MaterialsTable from "../components/MaterialsTable";
@@ -11,12 +11,14 @@ import { focusAtom } from "jotai-optics";
 import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
 import TfQuestionsSetup from "../components/TfQuestionsSetup";
 import FillBlankQuestionsSetup from "../components/FillBlankQuestionsSetup";
+import elephant from "../assets/Little Elephant.svg";
 
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
 function Quizzes() {
   const [stepNo, setStepNo] = useAtom(stageAtom);
   const courseId = useAtomValue(courseIdAtom);
+  const inFlight = useRef(false);
 
   return (
     <>
@@ -29,9 +31,9 @@ function Quizzes() {
           <MaterialsTable courseId={courseId} isSelecting={true} />
         )}
         {stepNo == 2 && <QuizSetupForm />}
-        {stepNo == 3 && <McqQuestionsSetup />}
-        {stepNo == 4 && <TfQuestionsSetup />}
-        {stepNo == 5 && <FillBlankQuestionsSetup />}
+        {stepNo == 3 && <McqQuestionsSetup inFlight={inFlight} />}
+        {stepNo == 4 && <TfQuestionsSetup inFlight={inFlight} />}
+        {stepNo == 5 && <FillBlankQuestionsSetup inFlight={inFlight} />}
         {stepNo == 6 && <Review />}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
@@ -61,7 +63,7 @@ function Quizzes() {
 }
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials"),
+  optic.prop("materials")
 );
 
 function CoursesTable() {
@@ -87,34 +89,53 @@ function CoursesTable() {
   }
   return (
     <>
-      <div className="courses-table">
-        <table>
-          <thead>
-            <tr className="heading">
-              <th></th>
-              <th>COURSE CODE</th>
-              <th>COURSE NAME</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {courses.map((course) => (
-              <tr key={course.id} onClick={() => selectCourse(course.id)}>
-                <td style={{ textAlign: "center" }}>
-                  <input
-                    type="radio"
-                    name="course"
-                    style={{ width: "20px", height: "20px" }}
-                    id={course.id}
-                  />
-                </td>
-                <td>{course.code}</td>
-                <td>{course.name}</td>
+      {courses.length > 0 ? (
+        <div className="courses-table">
+          <table>
+            <thead>
+              <tr className="heading">
+                <th></th>
+                <th>COURSE CODE</th>
+                <th>COURSE NAME</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+
+            <tbody>
+              {courses.map((course) => (
+                <tr key={course.id} onClick={() => selectCourse(course.id)}>
+                  <td style={{ textAlign: "center" }}>
+                    <input
+                      type="radio"
+                      name="course"
+                      style={{ width: "20px", height: "20px" }}
+                      id={course.id}
+                    />
+                  </td>
+                  <td>{course.code}</td>
+                  <td>{course.name}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            margin: "auto",
+          }}
+        >
+          <div
+            style={{ display: "flex", flexDirection: "column", margin: "auto" }}
+          >
+            <img src={elephant} alt="nothing to see here" />
+            <p style={{ color: "#4a4e69", fontSize: "medium" }}>
+              You are not enrolled in any course
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }
