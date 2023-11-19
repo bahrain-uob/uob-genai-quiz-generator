@@ -6,6 +6,16 @@ export function FunctionStack({ stack }: StackContext) {
   const materialText = new Bucket(stack, "Material-Text");
 
   materialBucket.addNotifications(stack, {
+    defaults: {
+      function: {
+        runtime: "python3.11",
+        permissions: ["s3"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+    },
+
     pdf: {
       function: {
         handler: "packages/functions/src/process_pdf.handler",
@@ -92,6 +102,16 @@ export function FunctionStack({ stack }: StackContext) {
     },
   });
   materialText.addNotifications(stack, {
+    summarize: {
+      function: {
+        handler: "packages/api/src/summarize_text.summarize",
+        runtime: "python3.11",
+        permissions: ["sagemaker", "s3"],
+        environment: {
+          MATERIAL_BUCKET: materialBucket.bucketName,
+        },
+      },
+    },
     json: {
       function: {
         handler: "packages/functions/src/process_json.extract_transcript",
