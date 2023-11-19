@@ -1,8 +1,16 @@
 import { useState, useRef } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
+import { quizAtom, stageAtom } from "../lib/store";
+import { useAtom } from "jotai";
+import { focusAtom } from "jotai-optics";
+import { useNavigate } from "react-router-dom";
 
 const mimeType = "audio/webm";
+const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
+  optic.prop("materials")
+);
+const quizCourseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
 function AudioRecorder() {
   const [permission, setPermission] = useState(false);
@@ -14,7 +22,7 @@ function AudioRecorder() {
   const [audioChunks, setAudioChunks] = useState<Blob[]>([]);
   const [audio, setAudio] = useState<string | null>(null);
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
-
+  const [canGenerate, setCanGenerate] = useState<boolean>(false);
   async function getMicrophonePermission() {
     if ("MediaRecorder" in window) {
       try {
@@ -69,6 +77,18 @@ function AudioRecorder() {
       audioBlob!,
       { contentType: mimeType }
     );
+    setCanGenerate(true);
+  }
+  const [stepNo, setStepNo] = useAtom(stageAtom);
+  const navigation = useNavigate();
+  const [quizMaterials, setQuizMaterials] = useAtom(quizMaterialsAtom);
+  const [quizCourseId, setQuizCourseId] = useAtom(quizCourseIdAtom);
+  function generateQuiz() {
+    console.log("anfkdn");
+    setQuizMaterials(quizMaterials.concat("ben.webm"));
+    setQuizCourseId("33e64777-7a00-45af-bbde-957fd6e07319");
+    setStepNo(2);
+    navigation("/createQuiz");
   }
 
   return (
@@ -96,7 +116,10 @@ function AudioRecorder() {
           </a>
         </div>
       ) : null}
-      <button onClick={uploadToS3}>Press to save in S3</button>
+      <button onClick={() => uploadToS3()}>Press to save in S3</button>
+      {canGenerate && (
+        <button onClick={() => generateQuiz()}>generate quiz</button>
+      )}
     </div>
   );
 }
