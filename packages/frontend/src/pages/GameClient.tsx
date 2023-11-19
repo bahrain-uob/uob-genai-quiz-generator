@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 // import { useSearchParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import "../caravalClient.css";
 
 interface PreGameState {
   kind: "preGameState";
@@ -84,11 +85,33 @@ export function GameClient() {
 }
 
 function PreGame() {
-  return <h1>PreGame</h1>;
+  return (
+    <>
+      <div className="pre-game-client">
+        <h1>Caraval!</h1>
+        <input className="name-input" placeholder="Name" />
+        <button>Enter</button>
+      </div>
+    </>
+  );
 }
 
 function Wait() {
-  return <h1>Wait</h1>;
+  return (
+    <>
+      <div className="wait-container">
+        <h1>Get Ready!</h1>
+        <div style={{ marginTop: "30px" }}>
+          <div className="square">
+            <div className="sword">
+              <div className="blade"></div>
+              <div className="handle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function Question(props: { state: QuestionState }) {
