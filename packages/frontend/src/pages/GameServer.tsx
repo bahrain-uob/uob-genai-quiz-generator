@@ -285,9 +285,9 @@ function Register() {
           </div>
         </div>
         <div className="body">
+          <button className="start-button">Start</button>
           <div className="body-title">
             <h1>Caraval!</h1>
-            {/* <button className="start-button">Start</button> */}
           </div>
           <div className="names-container">
             <div className="name-area">Hamad</div>
