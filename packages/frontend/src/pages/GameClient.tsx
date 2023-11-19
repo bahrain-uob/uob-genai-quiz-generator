@@ -207,5 +207,12 @@ function EndGame(props: { state: EndGameState }) {
   // @ts-ignore
   const { rank, correctQuestions, totalQuestions } = props.state;
 
-  return <h1>EndGame</h1>;
+  return (
+    <>
+      <div className="end-game-client">
+        <h1>You are in the 1st Place!</h1>
+        <p>3 of 3 are correct</p>
+      </div>
+    </>
+  );
 }

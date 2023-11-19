@@ -460,4 +460,31 @@
   font-weight: 100;
 }
 /* end of result state */
+
+/* end game state */
+.end-game-client {
+  background-color: #4a4e69;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  animation: color 9s infinite linear;
+}
+
+.end-game-client h1 {
+  color: white;
+  font-family: "Bubblegum Sans", sans-serif;
+  font-weight: 100;
+  font-size: 2rem;
+  max-width: 180px;
+  text-align: center;
+}
+.end-game-client p {
+  background: white;
+  padding: 10px 20px;
+  color: #22223b;
+  border-radius: 5px;
+}
+/* end of end game state */
 /* end of gameClient page */
