@@ -356,5 +356,57 @@
     transform: translateX(0);
   }
 }
+/* question state */
+.question-client {
+  background-color: #f2e9e4;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.question-client .num-of-questions {
+  background-color: white;
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.question-client .num-of-questions p {
+  color: #22223b;
+  font-family: "Bubblegum Sans", sans-serif;
+  font-size: x-large;
+}
+.options-client {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+}
+.option-area-client:first-child,
+.option-area-client:last-child,
+.option-area-client:nth-child(2),
+.option-area-client:nth-child(3) {
+  width: 49%;
+  height: 43.8vh;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 6px 10px 6px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 4px solid #f2e9e4;
+}
+.option-area-client:first-child {
+  background-color: #d55e00;
+}
+.option-area-client:nth-child(2) {
+  background: #f0e442;
+}
+.option-area-client:nth-child(3) {
+  background: #019e73;
+}
+.option-area-client:last-child {
+  background: #56b4e9;
+}
+/* end of question state */
 
 /* end of gameClient page */

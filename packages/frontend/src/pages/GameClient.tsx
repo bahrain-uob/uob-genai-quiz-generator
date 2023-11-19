@@ -2,6 +2,13 @@ import { useState, useCallback, useEffect } from "react";
 // import { useSearchParams } from "react-router-dom";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "../caravalClient.css";
+import {
+  faCloud,
+  faMeteor,
+  faStar,
+  faSun,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface PreGameState {
   kind: "preGameState";
@@ -118,7 +125,45 @@ function Question(props: { state: QuestionState }) {
   // @ts-ignore
   const { questionIndex, totalQuestions, noOptions } = props.state;
 
-  return <h1>Question</h1>;
+  return (
+    <>
+      <div className="question-client">
+        <div className="num-of-questions">
+          <p>1 of 3{/* {questionIndex + 1} of {totalQuestions} */}</p>
+        </div>
+        <div className="options-client">
+          <div className="option-area-client">
+            <FontAwesomeIcon
+              icon={faCloud}
+              size="4x"
+              style={{ color: "#ffffff" }}
+            />
+          </div>
+          <div className="option-area-client">
+            <FontAwesomeIcon
+              icon={faSun}
+              size="4x"
+              style={{ color: "#ffffff" }}
+            />
+          </div>
+          <div className="option-area-client">
+            <FontAwesomeIcon
+              icon={faMeteor}
+              size="4x"
+              style={{ color: "#ffffff" }}
+            />
+          </div>
+          <div className="option-area-client">
+            <FontAwesomeIcon
+              icon={faStar}
+              size="4x"
+              style={{ color: "#ffffff" }}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
 }
 
 function Result(props: { state: ResultState }) {
