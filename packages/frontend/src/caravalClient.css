@@ -409,4 +409,55 @@
 }
 /* end of question state */
 
+/* result state */
+.result-client {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.result-client.red {
+  background-color: #a31616;
+}
+.result-client.green {
+  background-color: #29a316;
+}
+.result-client h1 {
+  color: white;
+  font-family: "Bubblegum Sans", sans-serif;
+  font-weight: 100;
+  font-size: 3.5rem;
+  line-height: 0px;
+}
+.result-client h1,
+.result-client .icon-client,
+.result-client .score-container,
+.result-client small {
+  animation-duration: 0.9s;
+  animation-name: ansReveal;
+}
+@keyframes ansReveal {
+  0% {
+    transform: scale(0.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.result-client .score-container {
+  background: #1c730fa5;
+  color: white;
+  padding: 10px;
+  width: 50%;
+  text-align: center;
+  margin: 4px 0px 4px 0px;
+}
+.result-client small {
+  color: white;
+  padding-top: 1.5rem;
+  font-size: small;
+  font-weight: 100;
+}
+/* end of result state */
 /* end of gameClient page */

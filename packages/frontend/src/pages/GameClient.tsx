@@ -3,10 +3,12 @@ import { useState, useCallback, useEffect } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "../caravalClient.css";
 import {
+  faCheck,
   faCloud,
   faMeteor,
   faStar,
   faSun,
+  faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
@@ -169,8 +171,36 @@ function Question(props: { state: QuestionState }) {
 function Result(props: { state: ResultState }) {
   // @ts-ignore
   const { rank, score } = props.state;
-
-  return <h1>Result</h1>;
+  const scor = 0;
+  return (
+    <>
+      <div className={`result-client ${scor > 0 ? "green" : "red"}`}>
+        {scor > 0 ? (
+          <>
+            <h1>Bingo!</h1>
+            <FontAwesomeIcon
+              className="icon-client"
+              icon={faCheck}
+              size="4x"
+              style={{ color: "white" }}
+            />
+            <div className="score-container">+ 1000</div>
+            <small>You are in the first place</small>
+          </>
+        ) : (
+          <>
+            <h1>Wrong!</h1>
+            <FontAwesomeIcon
+              className="icon-client"
+              icon={faXmark}
+              size="5x"
+              style={{ color: "white" }}
+            />
+          </>
+        )}
+      </div>
+    </>
+  );
 }
 
 function EndGame(props: { state: EndGameState }) {
