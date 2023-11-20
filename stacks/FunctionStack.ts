@@ -2,7 +2,7 @@ import { Bucket, StackContext, use } from "sst/constructs";
 import { DBStack } from "./DBStack";
 
 export function FunctionStack({ stack }: StackContext) {
-  const { materialBucket } = use(DBStack);
+  const materialBucket = new Bucket(stack, "Material-Bucket");
   const materialText = new Bucket(stack, "Material-Text");
 
   materialBucket.addNotifications(stack, {
@@ -98,7 +98,7 @@ export function FunctionStack({ stack }: StackContext) {
         runtime: "python3.11",
         permissions: ["sagemaker", "s3"],
         environment: {
-          // MATERIAL_BUCKET: materialBucket.bucketName,
+          MATERIAL_BUCKET: materialBucket.bucketName,
         },
       },
       events: ["object_created"],
@@ -114,5 +114,5 @@ export function FunctionStack({ stack }: StackContext) {
       filters: [{ suffix: ".json" }],
     },
   });
-  return { materialText };
+  return { materialText, materialBucket };
 }
