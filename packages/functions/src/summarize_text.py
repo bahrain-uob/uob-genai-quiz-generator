@@ -44,5 +44,5 @@ def summarize(event, context):
     result = json.loads(response["Body"].read().decode())[0]["generation"]
     print(result)
     response = S3.put_object(
-            Body=result, Bucket=MATERIAL_BUCKET, Key=object_key.removesuffix(".txt") + ".summary"
+            Body=result, Bucket=MATERIAL_BUCKET, Key=object_key.removesuffix(".txt").replace("materials","summaries") + ".summary"
         )

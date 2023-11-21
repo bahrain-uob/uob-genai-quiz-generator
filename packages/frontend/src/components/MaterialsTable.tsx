@@ -48,18 +48,13 @@ function MaterialsTable({
       }
     );
     const prefix_len = userId.length + courseId.length + 9 + 3;
-    const results = response
-      .filter((obj) => {
-        if (obj.key!.endsWith(".summary")) return false;
-        return true;
-      })
-      .map((obj) => {
-        return {
-          key: obj.key!.slice(prefix_len),
-          lastModified: obj.lastModified!.toLocaleDateString("en-GB") as any,
-          size: filesize(obj.size!, { round: 0 }) as any,
-        };
-      });
+    const results = response.map((obj) => {
+      return {
+        key: obj.key!.slice(prefix_len),
+        lastModified: obj.lastModified!.toLocaleDateString("en-GB") as any,
+        size: filesize(obj.size!, { round: 0 }) as any,
+      };
+    });
 
     setMaterials((draft) => {
       draft[courseId] = results;
@@ -195,7 +190,7 @@ function MaterialsTable({
                   onClick={async () => {
                     const name = materials[courseId][index].key + ".summary";
                     const userId = await getUserId();
-                    const key = `${userId}/${courseId}/materials/${name}`;
+                    const key = `${userId}/${courseId}/summaries/${name}`;
                     const result = await Storage.get(key, { download: true });
                     downloadBlob(result.Body, name + ".txt");
                   }}
