@@ -94,7 +94,7 @@ export function FunctionStack({ stack }: StackContext) {
   materialText.addNotifications(stack, {
     summarize: {
       function: {
-        handler: "packages/api/src/summarize_text.summarize",
+        handler: "packages/functions/src/summarize_text.summarize",
         runtime: "python3.11",
         permissions: ["sagemaker", "s3"],
         environment: {
