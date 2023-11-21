@@ -16,7 +16,7 @@ import emptymaterials from "../assets/Cool Kids - Bust-comp.svg";
 import koala from "../assets/Sweet Koala-comp.svg";
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials"),
+  optic.prop("materials")
 );
 
 function MaterialsTable({
@@ -45,16 +45,21 @@ function MaterialsTable({
       `${userId}/${courseId}/materials/`,
       {
         pageSize: 1000,
-      },
+      }
     );
     const prefix_len = userId.length + courseId.length + 9 + 3;
-    const results = response.map((obj) => {
-      return {
-        key: obj.key!.slice(prefix_len),
-        lastModified: obj.lastModified!.toLocaleDateString("en-GB") as any,
-        size: filesize(obj.size!, { round: 0 }) as any,
-      };
-    });
+    const results = response
+      .filter((obj) => {
+        if (obj.key!.endsWith(".summary")) return false;
+        return true;
+      })
+      .map((obj) => {
+        return {
+          key: obj.key!.slice(prefix_len),
+          lastModified: obj.lastModified!.toLocaleDateString("en-GB") as any,
+          size: filesize(obj.size!, { round: 0 }) as any,
+        };
+      });
 
     setMaterials((draft) => {
       draft[courseId] = results;
@@ -186,6 +191,17 @@ function MaterialsTable({
                     />
                   </td>
                 )}
+                <td
+                  onClick={async () => {
+                    const name = materials[courseId][index].key + ".summary";
+                    const userId = await getUserId();
+                    const key = `${userId}/${courseId}/materials/${name}`;
+                    const result = await Storage.get(key, { download: true });
+                    downloadBlob(result.Body, name + ".txt");
+                  }}
+                >
+                  summary
+                </td>
               </tr>
             ))}
           </tbody>
