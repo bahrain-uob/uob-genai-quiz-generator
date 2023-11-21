@@ -346,6 +346,10 @@ function QuestionOnly() {
 
 function QuestionOptions() {
   const [showAns, setShowAns] = useState(true);
+  const [counter, setCounter] = useState(10);
+  useEffect(() => {
+    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
+  }, [counter]);
   return (
     <>
       <div className="question-options">
@@ -353,29 +357,65 @@ function QuestionOptions() {
           <p> Can you clone kahoot in a weekend?</p>
         </div>
         <div className="middle">
-          <div className="timer">19</div>
+          <div className="timer">
+            <div className="back"></div>
+            {counter}
+          </div>
           <div className="answers">
             <p>0</p>
             <p>Answers</p>
           </div>
+
+          <div
+            style={{
+              position: "absolute",
+              right: "2rem",
+              bottom: "1rem",
+            }}
+          >
+            {counter == 0 && (
+              <div className="next-wrapper">
+                <div className="link_wrapper">
+                  <a href="#">Next</a>
+                  <div className="icon">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 268.832 268.832"
+                    >
+                      <path d="M265.17 125.577l-80-80c-4.88-4.88-12.796-4.88-17.677 0-4.882 4.882-4.882 12.796 0 17.678l58.66 58.66H12.5c-6.903 0-12.5 5.598-12.5 12.5 0 6.903 5.597 12.5 12.5 12.5h213.654l-58.66 58.662c-4.88 4.882-4.88 12.796 0 17.678 2.44 2.44 5.64 3.66 8.84 3.66s6.398-1.22 8.84-3.66l79.997-80c4.883-4.882 4.883-12.796 0-17.678z" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         <div className="options">
-          <div className="option-area" style={{ background: "#d55e00" }}>
+          <div
+            className="option-area"
+            style={{
+              background: showAns && counter == 0 ? "#d55c008e" : "#d55e00",
+            }}
+          >
             <FontAwesomeIcon
               icon={faCloud}
               size="2x"
               style={{ color: "#ffffff" }}
             />
             <p>Yes</p>
-            <FontAwesomeIcon
-              icon={faCheck}
-              size="2x"
-              style={{ color: "#ffffff", margin: "0px 20px 0px auto" }}
-            />
+            {counter == 0 && (
+              <FontAwesomeIcon
+                icon={faCheck}
+                size="2x"
+                style={{ color: "#ffffff", margin: "0px 20px 0px auto" }}
+              />
+            )}
           </div>
           <div
             className="option-area"
-            style={{ background: showAns ? "#f0e4429c" : "#f0e442" }}
+            style={{
+              background: showAns && counter == 0 ? "#f0e4429c" : "#f0e442",
+            }}
           >
             <FontAwesomeIcon
               icon={faSun}
@@ -387,7 +427,9 @@ function QuestionOptions() {
 
           <div
             className="option-area"
-            style={{ background: showAns ? "#019e746f" : "#019e73" }}
+            style={{
+              background: showAns && counter == 0 ? "#019e746f" : "#019e73",
+            }}
           >
             <FontAwesomeIcon
               icon={faMeteor}
@@ -398,7 +440,9 @@ function QuestionOptions() {
           </div>
           <div
             className="option-area"
-            style={{ background: showAns ? "#56b3e98e" : "#56b4e9" }}
+            style={{
+              background: showAns && counter == 0 ? "#56b3e98e" : "#56b4e9",
+            }}
           >
             <FontAwesomeIcon
               icon={faStar}

@@ -240,7 +240,7 @@
 
 .question-options {
   height: 100vh;
-  background-color: #4a4e69;
+  background-color: #f2e9e4;
 }
 .question-options .question {
   background: white;
@@ -262,17 +262,83 @@
   align-items: center;
   justify-content: space-around;
   height: 260px;
+  position: relative;
 }
 .middle .timer {
   border-radius: 50px;
-  border: 4px solid #f2e9e4;
-  padding: 20px 23px;
+  border: 4px solid #4a4e69;
   font-size: x-large;
-  color: white;
+  color: #4a4e69;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.next-wrapper {
+  position: absolute;
+  right: -6.35rem;
+  bottom: -2.4rem;
+  transform: translate(-50%, -50%);
+}
+
+.next-wrapper .link_wrapper {
+  position: relative;
+}
+
+.next-wrapper a {
+  display: block;
+  width: 160px;
+  height: 50px;
+  line-height: 50px;
+  font-weight: bold;
+  text-decoration: none;
+  background: #333;
+  text-align: center;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border: 3px solid #333;
+  transition: all 0.35s;
+}
+
+.next-wrapper .icon {
+  width: 50px;
+  height: 50px;
+  border: 3px solid transparent;
+  position: absolute;
+  transform: rotate(45deg);
+  right: 0;
+  top: 0;
+  z-index: -1;
+  transition: all 0.35s;
+}
+
+.next-wrapper .icon svg {
+  width: 30px;
+  position: absolute;
+  top: calc(50% - 15px);
+  left: calc(50% - 15px);
+  transform: rotate(-45deg);
+  fill: #4a4e69;
+  transition: all 0.35s;
+}
+
+.next-wrapper a:hover {
+  width: 200px;
+  border: 3px solid #4a4e69;
+  background: transparent;
+  color: #4a4e69;
+}
+
+.next-wrapper a:hover + .icon {
+  border: 3px solid #4a4e69;
+  left: 75%;
 }
 .middle .answers {
   font-size: x-large;
-  color: white;
+  color: #4a4e69;
 }
 .middle .answers p:first-child {
   font-size: xx-large;
