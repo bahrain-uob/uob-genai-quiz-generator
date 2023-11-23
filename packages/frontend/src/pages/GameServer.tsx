@@ -159,7 +159,7 @@ export function GameServer() {
         <div style={{ marginLeft: "20px" }}>
           <h1>Events</h1>
           {events.map((message) => (
-            <div key={message}>
+            <div key={crypto.randomUUID()}>
               <span>{message}</span>
               <br />
             </div>
