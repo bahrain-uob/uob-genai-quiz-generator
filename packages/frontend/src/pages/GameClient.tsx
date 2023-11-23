@@ -87,7 +87,9 @@ export function GameClient() {
         <PreGame send={send} setState={setState} />
       )}
       {state.kind == "waitState" && <Wait />}
-      {state.kind == "questionState" && <Question state={state} />}
+      {state.kind == "questionState" && (
+        <Question state={state} send={send} setState={setState} />
+      )}
       {state.kind == "resultState" && <Result state={state} />}
       {state.kind == "endGameState" && <EndGame state={state} />}
       <h1>IGNORE BELOW</h1>
@@ -141,9 +143,19 @@ function Wait() {
   );
 }
 
-function Question(props: { state: QuestionState }) {
+function Question(props: {
+  state: QuestionState;
+  send: (m: sendAnswer) => void;
+  setState: (s: WaitState) => void;
+}) {
   // @ts-ignore
   const { questionIndex, totalQuestions, noOptions } = props.state;
+  const icons = [faCloud, faSun, faMeteor, faStar];
+
+  const sendAnswer = (index: number) => {
+    props.send({ action: "sendAnswer", answer: index });
+    props.setState({ kind: "waitState" });
+  };
 
   return (
     <>
@@ -154,34 +166,17 @@ function Question(props: { state: QuestionState }) {
           </p>
         </div>
         <div className="options-client">
-          <div className="option-area-client">
-            <FontAwesomeIcon
-              icon={faCloud}
-              size="4x"
-              style={{ color: "#ffffff" }}
-            />
-          </div>
-          <div className="option-area-client">
-            <FontAwesomeIcon
-              icon={faSun}
-              size="4x"
-              style={{ color: "#ffffff" }}
-            />
-          </div>
-          <div className="option-area-client">
-            <FontAwesomeIcon
-              icon={faMeteor}
-              size="4x"
-              style={{ color: "#ffffff" }}
-            />
-          </div>
-          <div className="option-area-client">
-            <FontAwesomeIcon
-              icon={faStar}
-              size="4x"
-              style={{ color: "#ffffff" }}
-            />
-          </div>
+          {[...Array(noOptions).keys()].map((i) => {
+            return (
+              <div onClick={() => sendAnswer(i)} className="option-area-client">
+                <FontAwesomeIcon
+                  icon={icons[i]}
+                  size="4x"
+                  style={{ color: "#ffffff" }}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </>

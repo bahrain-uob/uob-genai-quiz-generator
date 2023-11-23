@@ -92,15 +92,6 @@ export function GameServer() {
         setEvents([`${message.username} joined!`, ...events]);
       }
       if (message.action == "sendAnswer") {
-        if (
-          //@ts-ignore
-          questions[message.questionIndex as any].answer_index == message.answer
-        ) {
-          setScores(
-            message.connectionId!,
-            (scores.get(message.connectionId!) ?? 0) + 1,
-          );
-        }
         setEvents([
           `${usernames.get(message.connectionId)} answered "${message.answer}"`,
           ...events,
@@ -281,7 +272,7 @@ function QuestionOnly(props: {
   const questions = useAtomValue(questionsAtom);
   const currentQuestion = questions[qIndex];
 
-  const [timer, setTimer] = useState(4);
+  const [timer, setTimer] = useState(1);
   useEffect(() => {
     if (timer <= 0) {
       props.setState({ kind: "questionOptionsState" });
@@ -309,6 +300,13 @@ function QuestionOptions() {
   useEffect(() => {
     timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
   }, [timer]);
+
+  const qIndex = useAtomValue(qIndexAtom);
+  const questions = useAtomValue(questionsAtom);
+  const currentQuestion = questions[qIndex];
+  const icons = [faCloud, faSun, faMeteor, faStar];
+  const ogColors = ["#d55e00", "#f0e442", "#019e73", "#56b4e9"];
+  const fadedColors = ["#d55c008e", "#f0e4429c", "#019e746f", "#56b3e98e"];
 
   return (
     <>
@@ -351,66 +349,33 @@ function QuestionOptions() {
           </div>
         </div>
         <div className="options">
-          <div
-            className="option-area"
-            style={{
-              background: timer == 0 ? "#d55c008e" : "#d55e00",
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faCloud}
-              size="2x"
-              style={{ color: "#ffffff" }}
-            />
-            <p>Yes</p>
-            {timer == 0 && (
-              <FontAwesomeIcon
-                icon={faCheck}
-                size="2x"
-                style={{ color: "#ffffff", margin: "0px 20px 0px auto" }}
-              />
-            )}
-          </div>
-          <div
-            className="option-area"
-            style={{
-              background: timer == 0 ? "#f0e4429c" : "#f0e442",
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faSun}
-              size="2x"
-              style={{ color: "#ffffff" }}
-            />
-            <p>No</p>
-          </div>
-
-          <div
-            className="option-area"
-            style={{
-              background: timer == 0 ? "#019e746f" : "#019e73",
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faMeteor}
-              size="2x"
-              style={{ color: "#ffffff" }}
-            />
-            <p>Idk</p>
-          </div>
-          <div
-            className="option-area"
-            style={{
-              background: timer == 0 ? "#56b3e98e" : "#56b4e9",
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faStar}
-              size="2x"
-              style={{ color: "#ffffff" }}
-            />
-            <p>Maybe</p>
-          </div>
+          {[...Array(currentQuestion.choices.length).keys()].map((i) => {
+            return (
+              <div
+                className={"option-area"}
+                style={{
+                  backgroundColor:
+                    timer > 0 || currentQuestion.answer_index == i
+                      ? ogColors[i]
+                      : fadedColors[i],
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={icons[i]}
+                  size="2x"
+                  style={{ color: "#ffffff" }}
+                />
+                <p>{currentQuestion.choices[i]}</p>
+                {timer == 0 && i == currentQuestion.answer_index && (
+                  <FontAwesomeIcon
+                    icon={faCheck}
+                    size="2x"
+                    style={{ color: "#ffffff", margin: "0px 20px 0px auto" }}
+                  />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     </>
