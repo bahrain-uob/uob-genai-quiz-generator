@@ -176,7 +176,11 @@ function Question(props: {
         <div className="options-client">
           {[...Array(noOptions).keys()].map((i) => {
             return (
-              <div onClick={() => sendAnswer(i)} className="option-area-client">
+              <div
+                key={i}
+                onClick={() => sendAnswer(i)}
+                className="option-area-client"
+              >
                 <FontAwesomeIcon
                   icon={icons[i]}
                   size="4x"

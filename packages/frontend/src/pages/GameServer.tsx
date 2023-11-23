@@ -159,7 +159,7 @@ export function GameServer() {
         <div style={{ marginLeft: "20px" }}>
           <h1>Events</h1>
           {events.map((message) => (
-            <div>
+            <div key={message}>
               <span>{message}</span>
               <br />
             </div>
@@ -222,7 +222,9 @@ function Register(props: {
           </div>
           <div className="names-container">
             {[...props.usernames.values()].map((username) => (
-              <div className="name-area">{username}</div>
+              <div key={crypto.randomUUID()} className="name-area">
+                {username}
+              </div>
             ))}
           </div>
         </div>
@@ -402,6 +404,7 @@ function QuestionOptions(props: {
           {[...Array(currentQuestion.choices.length).keys()].map((i) => {
             return (
               <div
+                key={i}
                 className={"option-area"}
                 style={{
                   backgroundColor:
