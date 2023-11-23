@@ -64,7 +64,7 @@ function QuizSetup() {
 
 const McqsAtom = focusAtom(quizAtom, (optic) => optic.prop("mcqArr"));
 const FillBlanksAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("fillBlankArr"),
+  optic.prop("fillBlankArr")
 );
 const TfsAtom = focusAtom(quizAtom, (optic) => optic.prop("TfArr"));
 
@@ -86,8 +86,8 @@ function Questions(props: { type: string; stepNo: number }) {
         <div className="form-container">
           {mcqQuestions.map((question: Mcq) => (
             <div className="question-container review">
-              <div className="question-area">
-                <p>{question.question}</p>
+              <div className="question-area" style={{ height: "7rem" }}>
+                <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
 
               {question.choices.map((choice: string, index: number) => (

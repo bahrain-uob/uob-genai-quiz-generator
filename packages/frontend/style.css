@@ -619,6 +619,7 @@ textarea {
   border: none;
   margin-bottom: 1em;
   background-color: #bdbdbd22;
+  height: 5rem;
 }
 textarea:focus {
   outline: none;
