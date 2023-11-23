@@ -10,7 +10,7 @@ Amazon S3 or Amazon Simple Storage Service is a service offered by Amazon Web Se
 Amazon S3 manages data with an object storage architecture[6] which aims to provide scalability, high availability, and low latency with high durability.[3] The basic storage units of Amazon S3 are objects which are organized into buckets. Each object is identified by a unique, user-assigned key.[7] Buckets can be managed using the console provided by Amazon S3, programmatically with the AWS SDK, or the REST application programming interface. Objects can be up to five terabytes in size.[8][9] Requests are authorized using an access control list associated with each object bucket and support versioning[10] which is disabled by default.[11] Since buckets are typically the size of an entire file system mount in other systems, this access control scheme is very coarse-grained. In other words, unique access controls cannot be associated with individual files.[citation needed] Amazon S3 can be used to replace static web-hosting infrastructure with HTTP client-accessible objects,[12] index document support, and error document support.[13] The Amazon AWS authentication mechanism allows the creation of authenticated URLs, valid for a specified amount of time. Every item in a bucket can also be served as a BitTorrent feed. The Amazon S3 store can act as a seed host for a torrent and any BitTorrent client can retrieve the file. This can drastically reduce the bandwidth cost for the download of popular objects. A bucket can be configured to save HTTP log information to a sibling bucket; this can be used in data mining operations.[14] There are various User Mode File System (FUSE)–based file systems for Unix-like operating systems (for example, Linux) that can be used to mount an S3 bucket as a file system. The semantics of the Amazon S3 file system are not that of a POSIX file system, so the file system may not behave entirely as expected.[15]
 """
 # endpoint_name = os.environ["LLAMA_2_13B_ENDPOINT"]
-endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-13b-f"  # need to make environ
+endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-13b"  # need to make environ
 sm_client = boto3.client("sagemaker-runtime")
 s3 = boto3.client("s3")
 TEXT_BUCKET = os.environ["TEXT_BUCKET"]
@@ -38,7 +38,7 @@ def create(prompt):
     print(result)
     parse = re.search(r"{\n(.*?)}", result, re.DOTALL).group(0)
     print(parse)
-    return parse
+    return json.loads(parse)
 
 
 def mcq(event, context):
@@ -57,15 +57,15 @@ def mcq(event, context):
     i want you to generate 1 MCQ question about this :
     {{topic}}
 
-    The output should be a code snippet formatted in the following schema with only one correct answer:
+    The output should be a code snippet formatted in the following schema(JSON) with only one correct answer:
     {
-      "question": string // the question
-      "choices": string // an array containg all the choices of the question, with only one correct choice, the others should be wrong
-      "correct_answer": string // the correct answer from the choices, should be same as the choice
+      "question": string, // the question
+      "choices": string, // an array containg all the choices of the question, with only one correct choice, the others should be wrong
+      "correct_answer": string // the correct answer from the choices, should be the answer itself, not the index of the choice, 
     }
     """
     prompt = prompt.replace("{{topic}}", topic)
-    question = json.loads(create(prompt))
+    question = create(prompt)
     question["answer_index"] = question["choices"].index(question["correct_answer"])
     return question
     # return  json.loads(create(prompt))
@@ -87,14 +87,16 @@ def tf(event, context):
     i want you to generate 1 TRUE or FAlSE question about this :
     {{topic}}
 
-    The output should be a code snippet formatted in the following schema with only one correct answer
+    The output should be a code snippet formatted in the following schema(JSON) with only one correct answer
     {
-      "question": string // the true or false question
-      "answer": boolean // the answer of the question (either True or False)
+      "question": string, // the true or false question
+      "answer": boolean// the answer of the question (either true or false)
     }
     """
     prompt = prompt.replace("{{topic}}", topic)
-    return json.loads(create(prompt))
+    question =  create(prompt)
+    return question
+
 
 
 def fib(event, context):
@@ -113,15 +115,15 @@ def fib(event, context):
     i want you to generate 1 fill-in-the-blank question about this : 
     {{topic}}
 
-    The output should be a code snippet formatted in the following schema with one blank to be filled:
+    The output should be a code snippet formatted in the following schema(JSON) with one blank to be filled:
     {
-      "question": string // the question with 1 blank to be filled
-      "answer": string // the correct answer to fill the blank
+      "question": string, // the question with 1 blank to be filled
+      "answer": string // the correct answer to fill the blank 
     } 
     """
 
     prompt = prompt.replace("{{topic}}", topic)
-    return json.loads(create(prompt))
+    return create(prompt)
 
 
 def partition(text):
