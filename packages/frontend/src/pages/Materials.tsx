@@ -24,6 +24,7 @@ function Materials() {
   }
   function closeModal() {
     setIsOpen(false);
+    window.location.reload();
   }
 
   return (
