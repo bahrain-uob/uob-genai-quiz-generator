@@ -148,7 +148,7 @@ export function GameServer() {
       </button>
       <h1>IGNORE BELOW</h1>
       <span>The WebSocket is currently {connectionStatus}</span>
-      <h1>{gameId}</h1>
+      <h1>localhost:3000/join?gameId={gameId}</h1>
       {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
       <div style={{ display: "flex" }}>
         <div style={{ margin: "10px" }}>
