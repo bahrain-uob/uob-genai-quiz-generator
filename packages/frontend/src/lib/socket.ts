@@ -1,7 +1,7 @@
-type ClientMessage = sendName | sendAnswer;
+type ClientMessage = sendUsername | sendAnswer;
 
-interface sendName {
-  action: "sendName";
+interface sendUsername {
+  action: "sendUsername";
   gameId?: string;
   connectionId?: string;
   username: string;

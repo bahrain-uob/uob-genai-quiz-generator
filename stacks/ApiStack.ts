@@ -53,6 +53,7 @@ export function ApiStack({ stack }: StackContext) {
       pubQuestion: "packages/api/src/pubQuestion.main",
       pubResult: "packages/api/src/pubResults.main",
       sendAnswer: "packages/api/src/sendAnswer.main",
+      sendUsername: "packages/api/src/sendUsername.main",
     },
   });
 

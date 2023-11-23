@@ -11,6 +11,7 @@ import {
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSearchParams } from "react-router-dom";
 
 interface PreGameState {
   kind: "preGameState";
@@ -48,9 +49,8 @@ type ClientState =
   | EndGameState;
 
 export function GameClient() {
-  const [state, _setState] = useState({ kind: "preGameState" } as ClientState);
-  const gameId = "mcq";
-  // const gameId = useSearchParams()[0].get("gameId");
+  const [state, setState] = useState({ kind: "preGameState" } as ClientState);
+  const gameId = useSearchParams()[0].get("gameId")!;
   const socketUrl = `${import.meta.env.VITE_APP_SOCKET_URL}?gameId=${gameId}`;
 
   const {
@@ -68,7 +68,7 @@ export function GameClient() {
 
   // @ts-ignore
   const send = useCallback((data: ClientMessage) => {
-    if (data.action) innerSendMessage(JSON.stringify(data));
+    if (data.action) innerSendMessage(JSON.stringify({ ...data, gameId }));
   }, []);
 
   const connectionStatus = {
@@ -81,7 +81,9 @@ export function GameClient() {
 
   return (
     <>
-      {state.kind == "preGameState" && <PreGame />}
+      {state.kind == "preGameState" && (
+        <PreGame send={send} setState={setState} />
+      )}
       {state.kind == "waitState" && <Wait />}
       {state.kind == "questionState" && <Question state={state} />}
       {state.kind == "resultState" && <Result state={state} />}
@@ -93,13 +95,27 @@ export function GameClient() {
   );
 }
 
-function PreGame() {
+function PreGame(props: {
+  send: (data: sendUsername) => void;
+  setState: (s: WaitState) => void;
+}) {
+  const [username, setUsername] = useState("");
+
+  const joinGame = () => {
+    props.send({ action: "sendUsername", username });
+    props.setState({ kind: "waitState" });
+  };
+
   return (
     <>
       <div className="pre-game-client">
         <h1>Caraval!</h1>
-        <input className="name-input" placeholder="Name" />
-        <button>Enter</button>
+        <input
+          onChange={(e) => setUsername(e.target.value)}
+          className="name-input"
+          placeholder="Name"
+        />
+        <button onClick={joinGame}>Enter</button>
       </div>
     </>
   );

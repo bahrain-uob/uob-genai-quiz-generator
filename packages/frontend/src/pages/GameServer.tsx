@@ -59,12 +59,10 @@ const questionsAtom = atom([
   },
 ] as Mcq[]);
 
-// const gameId = crypto.randomUUID();
-const gameId = "mcq";
+const gameId = crypto.randomUUID();
+// const gameId = "mcq";
 const gameUrl = `${import.meta.env.VITE_APP_SOCKET_URL}?gameId=${gameId}`;
-const socketUrl = `${gameUrl}&username=master&master=true`;
-
-const usernames = new Map();
+const socketUrl = `${gameUrl}&master=true`;
 
 export function GameServer() {
   const [state, setState] = useState({ kind: "preGameState" } as ServerState);
@@ -79,6 +77,10 @@ export function GameServer() {
   const questions = useAtomValue(questionsAtom);
   const [qIndex, setQIndex] = useState(0);
 
+  const [usernames, innerSetUsernames] = useState(new Map());
+  const setUsernames = (k: string, v: string) =>
+    innerSetUsernames(new Map(scores.set(k, v)));
+
   const [scores, innerSetScores] = useState(new Map());
   const setScores = (k: string, v: number) =>
     innerSetScores(new Map(scores.set(k, v)));
@@ -87,8 +89,8 @@ export function GameServer() {
     if (lastMessage !== null) {
       const message = JSON.parse(lastMessage.data) as ClientMessage;
       console.log(message);
-      if (message.action == "sendName") {
-        usernames.set(message.connectionId, message.username);
+      if (message.action == "sendUsername") {
+        setUsernames(message.connectionId!, message.username);
         setEvents([`${message.username} joined!`, ...events]);
       }
       if (message.action == "sendAnswer") {
@@ -98,7 +100,7 @@ export function GameServer() {
         ) {
           setScores(
             message.connectionId!,
-            (scores.get(message.connectionId!) ?? 0) + 1
+            (scores.get(message.connectionId!) ?? 0) + 1,
           );
         }
         setEvents([
@@ -124,7 +126,7 @@ export function GameServer() {
   return (
     <div>
       {state.kind == "preGameState" && <PreGame />}
-      {state.kind == "registerState" && <Register />}
+      {state.kind == "registerState" && <Register usernames={usernames} />}
       {state.kind == "questionState" && <Question />}
       {state.kind == "scoreboardState" && <Scoreboard />}
       {state.kind == "endGameState" && <Endgame />}
@@ -145,6 +147,7 @@ export function GameServer() {
       </button>
       <h1>IGNORE BELOW</h1>
       <span>The WebSocket is currently {connectionStatus}</span>
+      <h1>{gameId}</h1>
       {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
       <div style={{ display: "flex" }}>
         <h1>{qIndex}</h1>
@@ -257,7 +260,7 @@ function PreGame() {
   );
 }
 
-function Register() {
+function Register(props: { usernames: any }) {
   return (
     <>
       <div className="register-caraval">
@@ -290,14 +293,9 @@ function Register() {
             <h1>Caraval!</h1>
           </div>
           <div className="names-container">
-            <div className="name-area">Hamad</div>
-            <div className="name-area">Maram</div>
-            <div className="name-area">Jaffar</div>
-            <div className="name-area">May</div>
-            <div className="name-area">Fajer</div>
-            <div className="name-area">Salman</div>
-            <div className="name-area">Rana</div>
-            <div className="name-area">Lana</div>
+            {[...props.usernames.values()].map((username) => (
+              <div className="name-area">{username}</div>
+            ))}
           </div>
         </div>
       </div>
@@ -345,7 +343,7 @@ function QuestionOnly() {
 }
 
 function QuestionOptions() {
-  const [showAns, setShowAns] = useState(true);
+  const [showAns, _setShowAns] = useState(true);
   const [counter, setCounter] = useState(10);
   useEffect(() => {
     counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
