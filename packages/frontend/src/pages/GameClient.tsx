@@ -61,8 +61,10 @@ export function GameClient() {
 
   useEffect(() => {
     if (lastMessage !== null) {
-      // @ts-ignore
       const newMessage = JSON.parse(lastMessage.data) as ServerMessage;
+      if (newMessage.action == "pubQuestion") {
+        setState({ kind: "questionState", ...newMessage });
+      }
     }
   }, [lastMessage]);
 
@@ -147,7 +149,9 @@ function Question(props: { state: QuestionState }) {
     <>
       <div className="question-client">
         <div className="num-of-questions">
-          <p>1 of 3{/* {questionIndex + 1} of {totalQuestions} */}</p>
+          <p>
+            {questionIndex + 1} of {totalQuestions}
+          </p>
         </div>
         <div className="options-client">
           <div className="option-area-client">

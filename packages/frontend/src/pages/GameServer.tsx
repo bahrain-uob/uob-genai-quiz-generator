@@ -2,7 +2,6 @@ import {
   faCheck,
   faCloud,
   faMeteor,
-  faPlusCircle,
   faStar,
   faSun,
 } from "@fortawesome/free-solid-svg-icons";
@@ -46,6 +45,7 @@ type ServerState =
   | ScoreboardState
   | EndGameState;
 
+const qIndexAtom = atom(0);
 const questionsAtom = atom([
   {
     question: "can you clone kahoot in a weekend?",
@@ -60,7 +60,6 @@ const questionsAtom = atom([
 ] as Mcq[]);
 
 const gameId = crypto.randomUUID();
-// const gameId = "mcq";
 const gameUrl = `${import.meta.env.VITE_APP_SOCKET_URL}?gameId=${gameId}`;
 const socketUrl = `${gameUrl}&master=true`;
 
@@ -75,7 +74,6 @@ export function GameServer() {
   const [events, setEvents] = useState([] as string[]);
 
   const questions = useAtomValue(questionsAtom);
-  const [qIndex, setQIndex] = useState(0);
 
   const [usernames, innerSetUsernames] = useState(new Map());
   const setUsernames = (k: string, v: string) =>
@@ -112,7 +110,8 @@ export function GameServer() {
   }, [lastMessage]);
 
   const send = useCallback((message: ServerMessage) => {
-    if (message.action) innerSendMessage(JSON.stringify(message));
+    if (message.action)
+      innerSendMessage(JSON.stringify({ ...message, gameId }));
   }, []);
 
   const connectionStatus = {
@@ -126,8 +125,10 @@ export function GameServer() {
   return (
     <div>
       {state.kind == "preGameState" && <PreGame />}
-      {state.kind == "registerState" && <Register usernames={usernames} />}
-      {state.kind == "questionState" && <Question />}
+      {state.kind == "registerState" && (
+        <Register usernames={usernames} setState={setState} />
+      )}
+      {state.kind == "questionState" && <Question send={send} />}
       {state.kind == "scoreboardState" && <Scoreboard />}
       {state.kind == "endGameState" && <Endgame />}
       <button onClick={() => setState({ kind: "preGameState" })}>
@@ -149,16 +150,8 @@ export function GameServer() {
       <span>The WebSocket is currently {connectionStatus}</span>
       <h1>{gameId}</h1>
       {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
+      <div style={{ display: "flex" }}>{/* <h1>{qIndex}</h1> */}</div>
       <div style={{ display: "flex" }}>
-        <h1>{qIndex}</h1>
-        <h1 onClick={() => setQIndex((qIndex + 1) % questions.length)}>NEXT</h1>
-      </div>
-      <div style={{ display: "flex" }}>
-        <QuestionArea
-          key={qIndex}
-          question={{ ...questions[qIndex], id: qIndex as any }}
-          send={send}
-        />
         <div style={{ margin: "10px" }}>
           <QRCodeSVG
             style={{ margin: "50px" }}
@@ -188,68 +181,6 @@ export function GameServer() {
   );
 }
 
-function QuestionArea({
-  question,
-  send,
-}: {
-  question: Mcq;
-  send: (message: ServerMessage) => void;
-}) {
-  const sendQuestion = () => {
-    send({
-      action: "pubQuestion",
-      gameId,
-      questionIndex: 0,
-      noOptions: question.choices.length,
-      totalQuestions: 10,
-    });
-  };
-
-  const colors = ["#d55e00", "#56b4e9", "#019e73", "#f0e442"];
-
-  return (
-    <>
-      <div className="question-container">
-        <form onSubmit={(e) => e.preventDefault()}>
-          <FontAwesomeIcon
-            icon={faPlusCircle}
-            size="2x"
-            className="faMinusCircle"
-            onClick={sendQuestion}
-          />
-
-          <textarea
-            style={{ padding: "5px" }}
-            rows={2}
-            cols={35}
-            defaultValue={question.question}
-          ></textarea>
-
-          {question.choices.map((choice: string, index: number) => (
-            <div
-              key={index}
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                gap: "5px",
-              }}
-            >
-              <label style={{ fontSize: "medium" }}>{index + 1})</label>
-              <input
-                style={{
-                  backgroundColor: colors[index],
-                }}
-                type="text"
-                defaultValue={choice}
-              />
-            </div>
-          ))}
-        </form>
-      </div>
-    </>
-  );
-}
-
 function PreGame() {
   return (
     <>
@@ -260,7 +191,13 @@ function PreGame() {
   );
 }
 
-function Register(props: { usernames: any }) {
+function Register(props: {
+  usernames: any;
+  setState: (s: QuestionState) => void;
+}) {
+  const start = () => {
+    props.setState({ kind: "questionState" });
+  };
   return (
     <>
       <div className="register-caraval">
@@ -288,7 +225,9 @@ function Register(props: { usernames: any }) {
           </div>
         </div>
         <div className="body">
-          <button className="start-button">Start</button>
+          <button onClick={start} className="start-button">
+            Start
+          </button>
           <div className="body-title">
             <h1>Caraval!</h1>
           </div>
@@ -320,34 +259,57 @@ type InnerQuestionState =
   | QuestionOptionsState
   | QuestionAnswerState;
 
-function Question() {
-  const [state, _setState] = useState({
-    kind: "questionOptionsState",
+function Question(props: { send: (m: any) => void }) {
+  const [state, setState] = useState({
+    kind: "questionOnlyState",
   } as InnerQuestionState);
   return (
     <div>
-      {state.kind == "questionOnlyState" && <QuestionOnly />}
+      {state.kind == "questionOnlyState" && (
+        <QuestionOnly send={props.send} setState={setState} />
+      )}
       {state.kind == "questionOptionsState" && <QuestionOptions />}
     </div>
   );
 }
 
-function QuestionOnly() {
+function QuestionOnly(props: {
+  send: (m: pubQuestion) => void;
+  setState: (s: QuestionOptionsState) => void;
+}) {
+  const qIndex = useAtomValue(qIndexAtom);
+  const questions = useAtomValue(questionsAtom);
+  const currentQuestion = questions[qIndex];
+
+  const [timer, setTimer] = useState(4);
+  useEffect(() => {
+    if (timer <= 0) {
+      props.setState({ kind: "questionOptionsState" });
+      props.send({
+        action: "pubQuestion",
+        noOptions: currentQuestion.choices.length,
+        questionIndex: qIndex,
+        totalQuestions: questions.length,
+      });
+    }
+    timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
+  }, [timer]);
+
   return (
     <>
       <div className="question-only">
-        <h1>Can you clone kahoot in a weekend?</h1>
+        <h1>{currentQuestion.question}</h1>
       </div>
     </>
   );
 }
 
 function QuestionOptions() {
-  const [showAns, _setShowAns] = useState(true);
-  const [counter, setCounter] = useState(10);
+  const [timer, setTimer] = useState(10);
   useEffect(() => {
-    counter > 0 && setTimeout(() => setCounter(counter - 1), 1000);
-  }, [counter]);
+    timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
+  }, [timer]);
+
   return (
     <>
       <div className="question-options">
@@ -357,7 +319,7 @@ function QuestionOptions() {
         <div className="middle">
           <div className="timer">
             <div className="back"></div>
-            {counter}
+            {timer}
           </div>
           <div className="answers">
             <p>0</p>
@@ -371,7 +333,7 @@ function QuestionOptions() {
               bottom: "1rem",
             }}
           >
-            {counter == 0 && (
+            {timer == 0 && (
               <div className="next-wrapper">
                 <div className="link_wrapper">
                   <a href="#">Next</a>
@@ -392,7 +354,7 @@ function QuestionOptions() {
           <div
             className="option-area"
             style={{
-              background: showAns && counter == 0 ? "#d55c008e" : "#d55e00",
+              background: timer == 0 ? "#d55c008e" : "#d55e00",
             }}
           >
             <FontAwesomeIcon
@@ -401,7 +363,7 @@ function QuestionOptions() {
               style={{ color: "#ffffff" }}
             />
             <p>Yes</p>
-            {counter == 0 && (
+            {timer == 0 && (
               <FontAwesomeIcon
                 icon={faCheck}
                 size="2x"
@@ -412,7 +374,7 @@ function QuestionOptions() {
           <div
             className="option-area"
             style={{
-              background: showAns && counter == 0 ? "#f0e4429c" : "#f0e442",
+              background: timer == 0 ? "#f0e4429c" : "#f0e442",
             }}
           >
             <FontAwesomeIcon
@@ -426,7 +388,7 @@ function QuestionOptions() {
           <div
             className="option-area"
             style={{
-              background: showAns && counter == 0 ? "#019e746f" : "#019e73",
+              background: timer == 0 ? "#019e746f" : "#019e73",
             }}
           >
             <FontAwesomeIcon
@@ -439,7 +401,7 @@ function QuestionOptions() {
           <div
             className="option-area"
             style={{
-              background: showAns && counter == 0 ? "#56b3e98e" : "#56b4e9",
+              background: timer == 0 ? "#56b3e98e" : "#56b4e9",
             }}
           >
             <FontAwesomeIcon
