@@ -127,7 +127,9 @@ export function GameServer() {
           scores={scores}
         />
       )}
-      {state.kind == "scoreboardState" && <Scoreboard />}
+      {state.kind == "scoreboardState" && (
+        <Scoreboard usernames={usernames} scores={scores} />
+      )}
       {state.kind == "endGameState" && <Endgame />}
       <button onClick={() => setState({ kind: "preGameState" })}>
         preGame
@@ -435,21 +437,27 @@ function QuestionOptions(props: {
   );
 }
 
-function Scoreboard() {
+function Scoreboard(props: { usernames: any; scores: any }) {
+  const rankMap = new Map(
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+  );
+
   return (
     <>
       <div className="scoreboard">
         <div className="header">Scoreboard</div>
         <div className="body">
           <div className="score-table">
-            <div className="score-item">
-              <div className="name">Maram</div>
-              <div className="score">1000</div>
-            </div>
-            <div className="score-item">
-              <div className="name">Maram</div>
-              <div className="score">950</div>
-            </div>
+            {[...rankMap].map(([connId, score]) => {
+              return (
+                <div key={connId as string} className="score-item">
+                  <div className="name">{`${
+                    props.usernames.get(connId) ?? connId
+                  }`}</div>
+                  <div className="score">{`${score}`}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
