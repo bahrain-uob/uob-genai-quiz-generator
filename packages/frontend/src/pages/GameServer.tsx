@@ -8,7 +8,7 @@ import {
 import { Mcq } from "../lib/store";
 import { atom, useAtomValue } from "jotai";
 import { QRCodeSVG } from "qrcode.react";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import caraval from "../assets/Caraval-comp.svg";
@@ -73,15 +73,14 @@ export function GameServer() {
   } = useWebSocket(socketUrl);
   const [events, setEvents] = useState([] as string[]);
 
-  const questions = useAtomValue(questionsAtom);
+  // const questions = useAtomValue(questionsAtom);
 
   const [usernames, innerSetUsernames] = useState(new Map());
   const setUsernames = (k: string, v: string) =>
-    innerSetUsernames(new Map(scores.set(k, v)));
+    innerSetUsernames(new Map(usernames.set(k, v)));
 
-  const [scores, innerSetScores] = useState(new Map());
-  const setScores = (k: string, v: number) =>
-    innerSetScores(new Map(scores.set(k, v)));
+  const answers = useRef([] as sendAnswer[]);
+  const scores = useRef(new Map());
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -92,6 +91,7 @@ export function GameServer() {
         setEvents([`${message.username} joined!`, ...events]);
       }
       if (message.action == "sendAnswer") {
+        answers.current.push({ ...message });
         setEvents([
           `${usernames.get(message.connectionId)} answered "${message.answer}"`,
           ...events,
@@ -119,7 +119,14 @@ export function GameServer() {
       {state.kind == "registerState" && (
         <Register usernames={usernames} setState={setState} />
       )}
-      {state.kind == "questionState" && <Question send={send} />}
+      {state.kind == "questionState" && (
+        <Question
+          send={send}
+          answers={answers}
+          setGlobalState={setState}
+          scores={scores}
+        />
+      )}
       {state.kind == "scoreboardState" && <Scoreboard />}
       {state.kind == "endGameState" && <Endgame />}
       <button onClick={() => setState({ kind: "preGameState" })}>
@@ -141,7 +148,6 @@ export function GameServer() {
       <span>The WebSocket is currently {connectionStatus}</span>
       <h1>{gameId}</h1>
       {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
-      <div style={{ display: "flex" }}>{/* <h1>{qIndex}</h1> */}</div>
       <div style={{ display: "flex" }}>
         <div style={{ margin: "10px" }}>
           <QRCodeSVG
@@ -158,14 +164,6 @@ export function GameServer() {
               <br />
             </div>
           ))}
-          <h1>Scores</h1>
-          {[...scores.entries()].map(([k, v]) => {
-            return (
-              <p>
-                {usernames.get(k)}: {v}
-              </p>
-            );
-          })}
         </div>
       </div>
     </div>
@@ -241,16 +239,14 @@ interface QuestionOptionsState {
   kind: "questionOptionsState";
 }
 
-interface QuestionAnswerState {
-  kind: "questionAnswerState";
-}
+type InnerQuestionState = QuestionOnlyState | QuestionOptionsState;
 
-type InnerQuestionState =
-  | QuestionOnlyState
-  | QuestionOptionsState
-  | QuestionAnswerState;
-
-function Question(props: { send: (m: any) => void }) {
+function Question(props: {
+  send: (m: any) => void;
+  answers: any;
+  setGlobalState: (s: ScoreboardState) => void;
+  scores: any;
+}) {
   const [state, setState] = useState({
     kind: "questionOnlyState",
   } as InnerQuestionState);
@@ -259,7 +255,14 @@ function Question(props: { send: (m: any) => void }) {
       {state.kind == "questionOnlyState" && (
         <QuestionOnly send={props.send} setState={setState} />
       )}
-      {state.kind == "questionOptionsState" && <QuestionOptions />}
+      {state.kind == "questionOptionsState" && (
+        <QuestionOptions
+          send={props.send}
+          setGlobalState={props.setGlobalState}
+          answers={props.answers}
+          scores={props.scores}
+        />
+      )}
     </div>
   );
 }
@@ -295,15 +298,62 @@ function QuestionOnly(props: {
   );
 }
 
-function QuestionOptions() {
-  const [timer, setTimer] = useState(10);
-  useEffect(() => {
-    timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
-  }, [timer]);
-
+function QuestionOptions(props: {
+  send: (m: pubResult) => void;
+  setGlobalState: (s: ScoreboardState) => void;
+  answers: any;
+  scores: any;
+}) {
   const qIndex = useAtomValue(qIndexAtom);
   const questions = useAtomValue(questionsAtom);
   const currentQuestion = questions[qIndex];
+
+  const [timer, setTimer] = useState(10);
+  useEffect(() => {
+    if (timer == 0) {
+      const min = Math.min(
+        ...props.answers.current.map((obj: any) => obj.time),
+      );
+      const max = Math.max(
+        ...props.answers.current.map((obj: any) => obj.time),
+      );
+      const range = max - min + 1;
+
+      const calculateScore = (t: number) =>
+        Math.floor(700 + 300 * (1 - (t - min) / range));
+
+      const currentScore = new Map();
+
+      for (let answer of props.answers.current) {
+        const score =
+          answer.answer == currentQuestion.answer_index
+            ? calculateScore(answer.time)
+            : 0;
+        currentScore.set(answer.connectionId, score);
+        props.scores.current.set(
+          answer.connectionId,
+          (props.scores.current.get(answer.connectionId) ?? 0) + score,
+        );
+      }
+
+      const rankMap = new Map(
+        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+      );
+
+      let i = 0;
+      rankMap.forEach((_totalScore, connId) => {
+        props.send({
+          action: "pubResult",
+          connectionId: connId as string,
+          rank: i + 1,
+          score: currentScore.get(connId) ?? 0,
+        });
+        i++;
+      });
+    }
+    timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
+  }, [timer]);
+
   const icons = [faCloud, faSun, faMeteor, faStar];
   const ogColors = ["#d55e00", "#f0e442", "#019e73", "#56b4e9"];
   const fadedColors = ["#d55c008e", "#f0e4429c", "#019e746f", "#56b3e98e"];

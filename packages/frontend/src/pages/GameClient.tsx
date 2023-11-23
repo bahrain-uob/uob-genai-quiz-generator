@@ -61,9 +61,17 @@ export function GameClient() {
 
   useEffect(() => {
     if (lastMessage !== null) {
-      const newMessage = JSON.parse(lastMessage.data) as ServerMessage;
-      if (newMessage.action == "pubQuestion") {
-        setState({ kind: "questionState", ...newMessage });
+      const message = JSON.parse(lastMessage.data) as ServerMessage;
+      console.log(message);
+      if (message.action == "pubQuestion") {
+        setState({ kind: "questionState", ...message });
+      }
+      if (message.action == "pubResult") {
+        setState({
+          kind: "resultState",
+          rank: message.rank,
+          score: message.score,
+        });
       }
     }
   }, [lastMessage]);
@@ -184,13 +192,11 @@ function Question(props: {
 }
 
 function Result(props: { state: ResultState }) {
-  // @ts-ignore
   const { rank, score } = props.state;
-  const scor = 0;
   return (
     <>
-      <div className={`result-client ${scor > 0 ? "green" : "red"}`}>
-        {scor > 0 ? (
+      <div className={`result-client ${score > 0 ? "green" : "red"}`}>
+        {score > 0 ? (
           <>
             <h1>Bingo!</h1>
             <FontAwesomeIcon
@@ -199,8 +205,8 @@ function Result(props: { state: ResultState }) {
               size="4x"
               style={{ color: "white" }}
             />
-            <div className="score-container">+ 1000</div>
-            <small>You are in the first place</small>
+            <div className="score-container">+ {score}</div>
+            <small>You're no. {rank}</small>
           </>
         ) : (
           <>

@@ -29,5 +29,6 @@ interface pubResult {
   action: "pubResult";
   gameId?: string;
   connectionId?: string;
-  answer: number;
+  rank: number;
+  score: number;
 }
