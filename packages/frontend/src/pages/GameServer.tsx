@@ -140,7 +140,9 @@ export function GameServer() {
           qIndex={qIndex}
         />
       )}
-      {state.kind == "endGameState" && <Endgame />}
+      {state.kind == "endGameState" && (
+        <Endgame usernames={usernames} scores={scores} />
+      )}
       <button onClick={() => setState({ kind: "preGameState" })}>
         preGame
       </button>
@@ -343,7 +345,7 @@ function QuestionOptions(props: {
   const questions = useAtomValue(questionsAtom);
   const currentQuestion = questions[props.qIndex];
 
-  const [timer, setTimer] = useState(20);
+  const [timer, setTimer] = useState(15);
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
@@ -471,24 +473,21 @@ function QuestionOptions(props: {
 function Scoreboard(props: {
   usernames: any;
   scores: any;
-  setGlobalState: (s: QuestionState) => void;
-  setState: (s: QuestionState) => void;
+  setGlobalState: (s: QuestionState | EndGameState) => void;
+  setState: (s: QuestionState | EndGameState) => void;
   send: (m: pubQuestion) => void;
   qIndex: number;
   setQIndex: any;
 }) {
   const questions = useAtomValue(questionsAtom);
-  const currentQuestion = questions[props.qIndex];
 
   const nextQuestion = () => {
-    props.setQIndex(props.qIndex + 1);
-    props.setState({ kind: "questionState" });
-    props.send({
-      action: "pubQuestion",
-      noOptions: currentQuestion.choices.length,
-      questionIndex: props.qIndex,
-      totalQuestions: questions.length,
-    });
+    if (questions.length == props.qIndex + 1) {
+      props.setState({ kind: "endGameState" });
+    } else {
+      props.setQIndex(props.qIndex + 1);
+      props.setState({ kind: "questionState" });
+    }
   };
 
   const rankMap = new Map(
@@ -523,7 +522,14 @@ function Scoreboard(props: {
   );
 }
 
-function Endgame() {
+function Endgame(props: { scores: any; usernames: any }) {
+  const rankMap = new Map(
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+  );
+
+  const medals = ["G", "S", "B"];
+  const medalWord = ["ra", "Ca", "val!"];
+
   return (
     <>
       <div className="end-game">
@@ -539,42 +545,27 @@ function Endgame() {
         <div className="firework"></div>
         {/* <div className="header">Podium</div> */}
         <div className="ranks">
-          <div className="second">
-            <div className="name">Jaffar</div>
-            <div className="details">
-              <div className="medal">
-                <div className="medal-icon" data-medal="S">
-                  <span>Ca</span>
+          {[...rankMap].slice(0, 3).map(([connId, score], index) => {
+            return (
+              <div
+                key={connId as string}
+                className={`rank-${String(index + 1)}`}
+              >
+                <div className="name">{`${
+                  props.usernames.get(connId) ?? connId
+                }`}</div>
+                <div className="details">
+                  <div className="medal">
+                    <div className="medal-icon" data-medal={medals[index]}>
+                      <span>{medalWord[index]}</span>
+                    </div>
+                  </div>
+                  <div className="score"> {`${score}`}</div>
+                  <div className="mark">7 out of 10</div>
                 </div>
               </div>
-              <div className="score">8000</div>
-              <div className="mark">7 out of 10</div>
-            </div>
-          </div>
-          <div className="first">
-            <div className="name">Fatima</div>
-            <div className="details">
-              <div className="medal">
-                <div className="medal-icon" data-medal="G">
-                  <span>ra</span>
-                </div>
-              </div>
-              <div className="score">11000</div>
-              <div className="mark">10 out of 10</div>
-            </div>
-          </div>
-          <div className="third">
-            <div className="name">Maram</div>
-            <div className="details">
-              <div className="medal">
-                <div className="medal-icon" data-medal="B">
-                  <span>val!</span>
-                </div>
-              </div>
-              <div className="score">7000</div>
-              <div className="mark">6 out of 10</div>
-            </div>
-          </div>
+            );
+          })}
         </div>
       </div>
     </>

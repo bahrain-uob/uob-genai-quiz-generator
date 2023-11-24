@@ -458,10 +458,13 @@
   align-items: flex-end;
   min-height: 100vh;
   justify-content: center;
+  position: relative;
+  width: 674px;
+  margin: auto;
 }
-.end-game .ranks .second,
-.end-game .ranks .first,
-.end-game .ranks .third {
+.end-game .ranks .rank-1,
+.end-game .ranks .rank-2,
+.end-game .ranks .rank-3 {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -469,9 +472,17 @@
   width: 200px;
   justify-content: center;
   margin-right: 0px;
+  position: absolute;
 }
-.ranks .first {
+.ranks .rank-1 {
   z-index: 1;
+}
+.ranks .rank-2 {
+  left: 37.3px;
+}
+
+.ranks .rank-3 {
+  right: 37px;
 }
 .end-game .score,
 .end-game .mark {
@@ -484,15 +495,15 @@
 .end-game .score {
   margin-top: 30px;
 }
-.ranks .first .details {
-  min-height: 350px;
+.ranks .rank-1 .details {
+  min-height: 400px;
 }
-.end-game .ranks .second .details {
+.end-game .ranks .rank-2 .details {
   /* padding-bottom: 10rem; */
-  min-height: 250px;
+  min-height: 290px;
 }
-.ranks .third .details {
-  min-height: 200px;
+.ranks .rank-3 .details {
+  min-height: 230px;
 }
 .end-game .details {
   background: rgb(105, 110, 142);
