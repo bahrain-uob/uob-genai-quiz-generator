@@ -381,7 +381,7 @@ function QuestionOptions(props: {
             {timer}
           </div>
           <div className="answers">
-            <p>0</p>
+            <p>{props.answers.current.length}</p>
             <p>Answers</p>
           </div>
 
