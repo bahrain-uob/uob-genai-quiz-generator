@@ -272,6 +272,7 @@ function Question(props: {
           setGlobalState={props.setGlobalState}
           answers={props.answers}
           scores={props.scores}
+          setState={props.setGlobalState}
         />
       )}
     </div>
@@ -314,7 +315,11 @@ function QuestionOptions(props: {
   setGlobalState: (s: ScoreboardState) => void;
   answers: any;
   scores: any;
+  setState: (s: ScoreboardState) => void;
 }) {
+  const next = () => {
+    props.setState({ kind: "scoreboardState" });
+  };
   const qIndex = useAtomValue(qIndexAtom);
   const questions = useAtomValue(questionsAtom);
   const currentQuestion = questions[qIndex];
@@ -394,8 +399,8 @@ function QuestionOptions(props: {
           >
             {timer == 0 && (
               <div className="next-wrapper">
-                <div className="link_wrapper">
-                  <a href="#">Next</a>
+                <div className="link_wrapper" onClick={next}>
+                  <a>Next</a>
                   <div className="icon">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
