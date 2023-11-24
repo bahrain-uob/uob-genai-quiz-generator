@@ -964,35 +964,99 @@ input[type="number"] {
   max-width: 100%;
   table-layout: fixed;
   text-align: center;
-  letter-spacing: 1px;
   border-collapse: collapse;
-  font-weight: lighter;
+  font-weight: 300;
+}
+.materials .course-content-table {
+  margin-top: 5rem;
+  width: 95%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.materials .course-content-table .td {
+  border-bottom: 5px solid white;
+  background-color: #f2e9e4d4;
+  transition: 1s;
+  font-weight: normal;
+  color: #4a4e69;
 }
 
 .materials tr {
   border: none;
   padding: 20px;
+  margin-bottom: 10px;
 }
 
 thead th {
   padding: 10px;
   font-weight: normal;
+  color: #22223b;
 }
 
 .materials td {
-  background-color: #f2e9e4;
+  background: #f2e9e4;
   border: none;
-  padding: 20px;
+  padding: 20px 6px;
   border-bottom: 1px solid #0000007c;
 }
 
 .materials {
-  /* margin-top: 100px; */
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+details {
+  border-radius: 4px;
+  padding: 0.5em 2em 0;
+  cursor: pointer;
+}
+
+details button {
+  background: #606584;
+  color: white;
+  padding: 0.75em 1.6em;
+  font-size: small;
+  border: none;
+  margin: 0.5rem 0 0 1rem;
+  border-radius: 7px;
+  cursor: pointer;
+  animation-name: slideToRight;
+  animation-duration: 2s;
+  box-shadow: 1px 1px 2px #8e8e8e;
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+  &:hover {
+    transform: scale(1);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+    transition: transform 0.5s;
+  }
+}
+
+@keyframes slideToRight {
+  from {
+    margin-left: 30%;
+    width: auto;
+  }
+  to {
+    margin-right: auto;
+    width: auto;
+  }
+}
+
+summary {
+  margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+}
+
+details[open] {
+  padding: 0.5em 2em 0;
+}
+
 /* end of materials page */
 /* Quiz Generation page */
 .courses-table {

@@ -1,9 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFile,
-  faFileArrowDown,
-  faTrash,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFileArrowDown, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
@@ -140,14 +136,14 @@ function MaterialsTable({
       )}
 
       {(materials[courseId] ?? []).length > 0 && (
-        <table style={{ marginTop: "5em" }}>
+        <table className={!isSelecting ? "course-content-table" : ""}>
           <thead>
             <tr className="heading">
-              <th></th>
+              {isSelecting && <th></th>}
               <th>FILE NAME</th>
               <th>SIZE</th>
               <th>DATE</th>
-              {!isSelecting && <th></th>}
+              {!isSelecting && <th>ACTION</th>}
             </tr>
           </thead>
           <tbody>
@@ -156,46 +152,81 @@ function MaterialsTable({
                 key={`${courseId}${material.key}`}
                 onClick={() => selectMaterial(material.key)}
               >
-                <td>
-                  {isSelecting ? (
+                {isSelecting && (
+                  <td>
                     <input type="checkbox" id={material.key} />
+                  </td>
+                )}
+                <td
+                  className={!isSelecting ? "td" : ""}
+                  style={{
+                    borderRadius: !isSelecting ? "15px 0px 0px 15px" : "",
+                  }}
+                >
+                  {isSelecting ? (
+                    material.key
                   ) : (
-                    <FontAwesomeIcon icon={faFile} size="xl" />
+                    <>
+                      <details style={{ textAlign: "left" }}>
+                        <summary>{material.key}</summary>
+                        <button
+                          onClick={async () => {
+                            const name =
+                              materials[courseId][index].key + ".summary";
+                            const userId = await getUserId();
+                            const key = `${userId}/${courseId}/summaries/${name}`;
+                            const result = await Storage.get(key, {
+                              download: true,
+                            });
+                            downloadBlob(result.Body, name + ".txt");
+                          }}
+                        >
+                          Generate Summary
+                        </button>
+                      </details>
+                    </>
                   )}
                 </td>
-                <td>{material.key}</td>
-                <td>{material.size}</td>
-                <td>{material.lastModified}</td>
-                <td>
+                <td className={!isSelecting ? "td" : ""}>{material.size}</td>
+                <td className={!isSelecting ? "td" : ""}>
+                  {material.lastModified}
+                </td>
+                <td
+                  className={!isSelecting ? "td" : ""}
+                  style={{
+                    borderRadius: !isSelecting ? "0px 15px 15px 0px" : "",
+                  }}
+                >
                   <FontAwesomeIcon
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                      padding: "0.5rem 0.7rem",
+                      background: "white",
+                      borderRadius: "50px",
+                      color: "#4a4e69",
+                    }}
                     icon={faFileArrowDown}
-                    size="xl"
+                    size="lg"
                     onClick={() => downloadMaterial(index)}
                   />
-                </td>
-                {!isSelecting && (
-                  <td>
+
+                  {!isSelecting && (
                     <FontAwesomeIcon
-                      style={{ cursor: "pointer" }}
+                      style={{
+                        cursor: "pointer",
+                        padding: "0.5rem 0.6rem",
+                        background: "white",
+                        borderRadius: "50px",
+                        color: "#4a4e69",
+                        marginLeft: "0.7rem",
+                      }}
                       icon={faTrash}
-                      size="xl"
+                      size="lg"
                       onClick={() => {
                         deleteMaterial(index);
                       }}
                     />
-                  </td>
-                )}
-                <td
-                  onClick={async () => {
-                    const name = materials[courseId][index].key + ".summary";
-                    const userId = await getUserId();
-                    const key = `${userId}/${courseId}/summaries/${name}`;
-                    const result = await Storage.get(key, { download: true });
-                    downloadBlob(result.Body, name + ".txt");
-                  }}
-                >
-                  summary
+                  )}
                 </td>
               </tr>
             ))}
