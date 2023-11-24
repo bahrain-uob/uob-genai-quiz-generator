@@ -96,7 +96,7 @@ export function FunctionStack({ stack }: StackContext) {
       function: {
         handler: "packages/functions/src/summarize_text.summarize",
         runtime: "python3.11",
-        permissions: ["sagemaker", "s3", "polly"],
+        permissions: ["sagemaker", "s3"],
         environment: {
           MATERIAL_BUCKET: materialBucket.bucketName,
         },

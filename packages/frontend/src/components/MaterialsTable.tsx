@@ -15,9 +15,6 @@ import { useAtom } from "jotai";
 import emptymaterials from "../assets/Cool Kids - Bust-comp.svg";
 import koala from "../assets/Sweet Koala-comp.svg";
 
-import { faPlay } from '@fortawesome/free-solid-svg-icons';
-
-
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
   optic.prop("materials")
 );
@@ -199,25 +196,6 @@ function MaterialsTable({
                   }}
                 >
                   summary
-                </td>
-                <td><button
-                  onClick={async () => {
-                    const name = materials[courseId][index].key + ".summary"+".mp3";
-                    const userId = await getUserId();
-                    const key = `${userId}/${courseId}/summaries/${name}`;
-                    const result = await Storage.get(key, { download: true });
-                    const audioBlob = await result.Body?.blob();
-                    if (audioBlob) {
-                    const audioUrl = URL.createObjectURL(audioBlob);
-                    const audio = new Audio(audioUrl);
-                    audio.play();
-  }
-                  }}><FontAwesomeIcon
-                  style={{ cursor: "pointer" }}
-                  icon={faPlay}
-                  size="xl"
-                  
-                /></button>
                 </td>
               </tr>
             ))}
