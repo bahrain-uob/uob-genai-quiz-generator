@@ -8,6 +8,10 @@
   align-items: center;
   font-family: "Bubblegum Sans", sans-serif;
 }
+.pre-game-client .error-message {
+  color: #f2e9e4;
+  padding-top: 0.5rem;
+}
 .pre-game-client h1 {
   font-size: 3rem;
   font-family: "Bubblegum Sans", sans-serif;

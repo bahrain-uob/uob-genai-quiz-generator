@@ -118,16 +118,32 @@ function PreGame(props: {
     props.setState({ kind: "waitState" });
   };
 
+  const [errorMessage, setErrorMessage] = useState("");
+
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const inputValue = event.target.value;
+
+    if (inputValue.trim() === "") {
+      setErrorMessage("Please enter a name");
+    } else {
+      setErrorMessage(" ");
+      setUsername(event.target.value);
+    }
+  }
+
   return (
     <>
       <div className="pre-game-client">
         <h1>Caraval!</h1>
         <input
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            handleChange(e);
+          }}
           className="name-input"
           placeholder="Name"
         />
-        <button onClick={joinGame}>Enter</button>
+        <small className="error-message">{errorMessage}</small>
+        {errorMessage == " " && <button onClick={joinGame}>Join</button>}
       </div>
     </>
   );
