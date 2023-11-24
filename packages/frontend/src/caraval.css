@@ -38,7 +38,7 @@
   z-index: 1;
 }
 
-.body-title h1 {
+.register-caraval .body-title h1 {
   font-family: "Bubblegum Sans", sans-serif;
   color: white;
   font-weight: 100;
@@ -54,7 +54,7 @@
   padding: 0px;
   margin: 0px;
 }
-.body-title {
+.register-caraval .body-title {
   margin-top: -10px;
   display: flex;
   flex-direction: row;
