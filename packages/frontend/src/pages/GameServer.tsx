@@ -6,7 +6,7 @@ import {
   faSun,
 } from "@fortawesome/free-solid-svg-icons";
 import { Mcq } from "../lib/store";
-import { atom, useAtomValue } from "jotai";
+import { atom, useAtom, useAtomValue } from "jotai";
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useCallback, useEffect, useRef } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
@@ -82,6 +82,7 @@ export function GameServer() {
   const answers = useRef([] as sendAnswer[]);
   const scores = useRef(new Map());
 
+  const [qIndex, setQIndex] = useAtom(qIndexAtom);
   useEffect(() => {
     if (lastMessage !== null) {
       const message = JSON.parse(lastMessage.data) as ClientMessage;
@@ -125,10 +126,19 @@ export function GameServer() {
           answers={answers}
           setGlobalState={setState}
           scores={scores}
+          qIndex={qIndex}
         />
       )}
       {state.kind == "scoreboardState" && (
-        <Scoreboard usernames={usernames} scores={scores} />
+        <Scoreboard
+          usernames={usernames}
+          scores={scores}
+          setGlobalState={setState}
+          setState={setState}
+          send={send}
+          setQIndex={setQIndex}
+          qIndex={qIndex}
+        />
       )}
       {state.kind == "endGameState" && <Endgame />}
       <button onClick={() => setState({ kind: "preGameState" })}>
@@ -257,6 +267,7 @@ function Question(props: {
   answers: any;
   setGlobalState: (s: ScoreboardState) => void;
   scores: any;
+  qIndex: number;
 }) {
   const [state, setState] = useState({
     kind: "questionOnlyState",
@@ -264,7 +275,11 @@ function Question(props: {
   return (
     <div>
       {state.kind == "questionOnlyState" && (
-        <QuestionOnly send={props.send} setState={setState} />
+        <QuestionOnly
+          send={props.send}
+          setState={setState}
+          qIndex={props.qIndex}
+        />
       )}
       {state.kind == "questionOptionsState" && (
         <QuestionOptions
@@ -273,6 +288,7 @@ function Question(props: {
           answers={props.answers}
           scores={props.scores}
           setState={props.setGlobalState}
+          qIndex={props.qIndex}
         />
       )}
     </div>
@@ -282,10 +298,11 @@ function Question(props: {
 function QuestionOnly(props: {
   send: (m: pubQuestion) => void;
   setState: (s: QuestionOptionsState) => void;
+  qIndex: number;
 }) {
-  const qIndex = useAtomValue(qIndexAtom);
+  // const qIndex = useAtomValue(qIndexAtom);
   const questions = useAtomValue(questionsAtom);
-  const currentQuestion = questions[qIndex];
+  const currentQuestion = questions[props.qIndex];
 
   const [timer, setTimer] = useState(1);
   useEffect(() => {
@@ -294,7 +311,7 @@ function QuestionOnly(props: {
       props.send({
         action: "pubQuestion",
         noOptions: currentQuestion.choices.length,
-        questionIndex: qIndex,
+        questionIndex: props.qIndex,
         totalQuestions: questions.length,
       });
     }
@@ -316,15 +333,17 @@ function QuestionOptions(props: {
   answers: any;
   scores: any;
   setState: (s: ScoreboardState) => void;
+  qIndex: number;
 }) {
   const next = () => {
     props.setState({ kind: "scoreboardState" });
+    props.answers.current = [];
   };
-  const qIndex = useAtomValue(qIndexAtom);
+  // const qIndex = useAtomValue(qIndexAtom);
   const questions = useAtomValue(questionsAtom);
-  const currentQuestion = questions[qIndex];
+  const currentQuestion = questions[props.qIndex];
 
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(20);
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
@@ -378,7 +397,7 @@ function QuestionOptions(props: {
     <>
       <div className="question-options">
         <div className="question">
-          <p> Can you clone kahoot in a weekend?</p>
+          <p> {currentQuestion.question}</p>
         </div>
         <div className="middle">
           <div className="timer">
@@ -449,7 +468,29 @@ function QuestionOptions(props: {
   );
 }
 
-function Scoreboard(props: { usernames: any; scores: any }) {
+function Scoreboard(props: {
+  usernames: any;
+  scores: any;
+  setGlobalState: (s: QuestionState) => void;
+  setState: (s: QuestionState) => void;
+  send: (m: pubQuestion) => void;
+  qIndex: number;
+  setQIndex: any;
+}) {
+  const questions = useAtomValue(questionsAtom);
+  const currentQuestion = questions[props.qIndex];
+
+  const nextQuestion = () => {
+    props.setQIndex(props.qIndex + 1);
+    props.setState({ kind: "questionState" });
+    props.send({
+      action: "pubQuestion",
+      noOptions: currentQuestion.choices.length,
+      questionIndex: props.qIndex,
+      totalQuestions: questions.length,
+    });
+  };
+
   const rankMap = new Map(
     [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
   );
@@ -470,6 +511,11 @@ function Scoreboard(props: { usernames: any; scores: any }) {
                 </div>
               );
             })}
+          </div>
+          <div className="next-question-wrapper" onClick={nextQuestion}>
+            <div className="next-question">
+              <a>Next</a>
+            </div>
           </div>
         </div>
       </div>

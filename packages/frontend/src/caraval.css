@@ -280,6 +280,29 @@
   justify-content: center;
 }
 
+.next-question-wrapper {
+  cursor: pointer;
+  margin-top: 2rem;
+}
+
+.next-question a {
+  background: white;
+  color: #333;
+  display: block;
+  width: 160px;
+  height: 50px;
+  line-height: 50px;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.35s;
+}
+
+.next-question a:hover {
+  background: rgba(255, 255, 255, 0.658);
+}
 .next-wrapper {
   position: absolute;
   right: -6.35rem;
