@@ -232,7 +232,7 @@ function Register(props: {
           <div className="names-container">
             {[...props.usernames.values()].map((username) => (
               <div key={crypto.randomUUID()} className="name-area">
-                {username}
+                <p>{username}</p>
               </div>
             ))}
           </div>
