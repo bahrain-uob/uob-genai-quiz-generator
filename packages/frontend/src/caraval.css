@@ -359,6 +359,7 @@
   justify-content: center;
   border: 2px solid #f2e9e4;
   /* gap: 10px; */
+  height: 50vh;
 }
 .options .option-area {
   width: 50%;
@@ -369,6 +370,7 @@
   font-size: x-large;
   align-items: center;
   padding: 6px 10px 6px 20px;
+  height: 50%;
 }
 .scoreboard {
   display: flex;
