@@ -115,7 +115,7 @@ export function GameServer() {
 
   return (
     <div>
-      {state.kind == "preGameState" && <PreGame />}
+      {state.kind == "preGameState" && <PreGame setState={setState} />}
       {state.kind == "registerState" && (
         <Register usernames={usernames} setState={setState} />
       )}
@@ -172,7 +172,14 @@ export function GameServer() {
   );
 }
 
-function PreGame() {
+function PreGame(props: { setState: (s: RegisterState) => void }) {
+  const [timer, setTimer] = useState(2);
+  useEffect(() => {
+    if (timer <= 0) {
+      props.setState({ kind: "registerState" });
+    }
+    timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
+  }, [timer]);
   return (
     <>
       <div className="caraval">
@@ -316,10 +323,10 @@ function QuestionOptions(props: {
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
-        ...props.answers.current.map((obj: any) => obj.time),
+        ...props.answers.current.map((obj: any) => obj.time)
       );
       const max = Math.max(
-        ...props.answers.current.map((obj: any) => obj.time),
+        ...props.answers.current.map((obj: any) => obj.time)
       );
       const range = max - min + 1;
 
@@ -336,12 +343,12 @@ function QuestionOptions(props: {
         currentScore.set(answer.connectionId, score);
         props.scores.current.set(
           answer.connectionId,
-          (props.scores.current.get(answer.connectionId) ?? 0) + score,
+          (props.scores.current.get(answer.connectionId) ?? 0) + score
         );
       }
 
       const rankMap = new Map(
-        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
       );
 
       let i = 0;
@@ -439,7 +446,7 @@ function QuestionOptions(props: {
 
 function Scoreboard(props: { usernames: any; scores: any }) {
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
   );
 
   return (
