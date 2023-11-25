@@ -45,13 +45,15 @@ function Carousel() {
                 color: "white",
                 fontWeight: "100",
                 fontSize: "0.9em",
-                width: "10em",
+                width: "15em",
                 paddingLeft: "10px",
               }}
             >
-              You can seamlessly upload and store course materials for future
-              reference for generating quizzes. Students enrolled in the courses
-              can easily access and view these materials at their convenience.
+              You can seamlessly upload course materials for future reference
+              for generating quizzes. You can generate summaries for the
+              uploaded materials, providing the option to download these
+              summaries. An auditory experience is available, allowing you to
+              listen to the generated summaries.
             </p>
           </div>
         </div>
