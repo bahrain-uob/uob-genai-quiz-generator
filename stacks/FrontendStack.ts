@@ -11,11 +11,12 @@ import { StaticSite, StackContext, use } from "sst/constructs";
 import { ApiStack } from "./ApiStack";
 import { AuthStack } from "./AuthStack";
 import { DBStack } from "./DBStack";
+import { FunctionStack } from "./FunctionStack";
 
 export function FrontendStack({ stack, app }: StackContext) {
   const { api, apiCachePolicy } = use(ApiStack);
   const { auth } = use(AuthStack);
-  const { materialBucket } = use(DBStack);
+  const { materialBucket } = use(FunctionStack);
 
   // Deploy our React app
   const site = new StaticSite(stack, "ReactSite", {

@@ -6,7 +6,7 @@ import uuid
 def lambda_handler(event, context):
     record = event["Records"][0]
     s3bucket = record["s3"]["bucket"]["name"]
-    s3object = record["s3"]["object"]["key"].replace("+", "")
+    s3object = record["s3"]["object"]["key"].replace("+", " ")
 
     s3Path = "s3://" + s3bucket + "/" + s3object
     jobName = str(uuid.uuid4())
