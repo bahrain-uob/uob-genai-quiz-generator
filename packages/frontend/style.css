@@ -82,7 +82,6 @@ a {
   margin-bottom: 40px;
 }
 .access-item {
-  flex-basis: 33.3333%;
   background-color: rgb(105, 110, 142);
   box-shadow: 2px 2px 9px #000000b8;
   border-radius: 6px;
@@ -114,19 +113,36 @@ a {
 .select-container label {
   margin-bottom: 10px;
   font-size: 1rem;
+  color: #4a4e69;
 }
 .select-container select {
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 15px;
   font-size: 14px;
+  border: none;
+  box-shadow: 1px 2px 5px #c3c3c3;
+  width: 20rem;
+  color: #4a4e69;
+  cursor: pointer;
+  appearance: none;
 }
-.select-container option {
+
+select:focus {
+  outline: none;
+}
+
+option {
   padding: 20px;
   text-align: center;
+  cursor: pointer;
+  color: #22223b;
+  padding: 80px;
 }
-.select-container select:focus {
-  border: 2px solid #4a4e69a4;
+
+.select-container option:focus {
+  background: #4a4e69;
 }
+
 .background-carousel {
   margin-top: 2em;
   margin-bottom: 26em;
