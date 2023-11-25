@@ -119,7 +119,7 @@ export function CoreStack({ stack }: StackContext) {
       function: {
         handler: "packages/functions/src/summarize_text.summarize",
         runtime: "python3.11",
-        permissions: ["sagemaker", "s3"],
+        permissions: ["sagemaker", "s3", "polly"],
         environment: {
           MATERIAL_BUCKET: materialBucket.bucketName,
         },
