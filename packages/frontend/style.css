@@ -444,12 +444,20 @@ h2 {
   justify-content: center;
   color: #4a4e69e5;
   margin-bottom: 40px;
+  letter-spacing: 0px;
 }
 .modal-content {
   text-align: center;
 }
 .modal-content button {
   align-self: center;
+  border-radius: 10px;
+  background-color: #5c617f;
+  width: 10rem;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px #c9c9c9;
+  margin: 1.5rem auto 0 auto;
+  color: white;
 }
 
 /* end of courses page */
