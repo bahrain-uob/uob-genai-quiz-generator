@@ -978,7 +978,7 @@ input[type="number"] {
 .materials .course-content-table .td {
   border-bottom: 5px solid white;
   background-color: #f2e9e4d4;
-  transition: 1s;
+  transition: 0.5s;
   font-weight: normal;
   color: #4a4e69;
 }
@@ -1025,7 +1025,7 @@ details button {
   border-radius: 7px;
   cursor: pointer;
   animation-name: slideToRight;
-  animation-duration: 2s;
+  animation-duration: 1s;
   box-shadow: 1px 1px 2px #8e8e8e;
   transform: scale(0.95);
   transition: box-shadow 0.5s, transform 0.5s;
@@ -1039,7 +1039,7 @@ details button {
 
 @keyframes slideToRight {
   from {
-    margin-left: 30%;
+    margin-left: 20%;
     width: auto;
   }
   to {
