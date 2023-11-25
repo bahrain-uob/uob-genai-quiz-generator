@@ -49,7 +49,6 @@ export function ApiStack({ stack }: StackContext) {
           bind: [courses_table],
         },
       },
-      "POST /summarize": "packages/api/src/summarize_test.summarize",
     },
   });
 
@@ -62,7 +61,7 @@ export function ApiStack({ stack }: StackContext) {
       "Accept",
       "Authorization",
       "Content-Type",
-      "Referer"
+      "Referer",
     ),
   });
 
