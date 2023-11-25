@@ -1024,8 +1024,6 @@ details button {
   margin: 0.5rem 0 0 1rem;
   border-radius: 7px;
   cursor: pointer;
-  animation-name: slideToRight;
-  animation-duration: 1s;
   box-shadow: 1px 1px 2px #8e8e8e;
   transform: scale(0.95);
   transition: box-shadow 0.5s, transform 0.5s;
@@ -1037,15 +1035,72 @@ details button {
   }
 }
 
+.materials .action-item {
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+  &:hover {
+    transform: scale(1);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(3px);
+    transition: transform 0.5s;
+  }
+}
+
+details .summary-container {
+  animation-name: slideToRight;
+  animation-duration: 1s;
+}
+
 @keyframes slideToRight {
   from {
-    margin-left: 20%;
+    padding-left: 7%;
     width: auto;
   }
   to {
-    margin-right: auto;
+    padding-right: auto;
     width: auto;
   }
+}
+
+details .volume-icon {
+  transform: scale(0.95);
+  transition: transform 0.5s;
+  padding: 0.5rem 0.5rem;
+  border-radius: 50px;
+  &:hover {
+    transform: scale(1);
+    transform: translateY(3px);
+    transition: transform 0.5s;
+  }
+}
+
+details .tooltip-container {
+  position: relative;
+}
+
+details .tooltip-container .tooltip-text {
+  visibility: hidden;
+  width: 100px;
+  background-color: #333;
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0px;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 50%;
+  margin-top: 5px;
+  margin-left: -40px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  font-style: italic;
+}
+
+details .tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
 }
 
 summary {

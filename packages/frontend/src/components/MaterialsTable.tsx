@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileArrowDown, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileArrowDown,
+  faTrash,
+  faVolumeHigh,
+} from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
@@ -169,20 +173,56 @@ function MaterialsTable({
                     <>
                       <details style={{ textAlign: "left" }}>
                         <summary>{material.key}</summary>
-                        <button
-                          onClick={async () => {
-                            const name =
-                              materials[courseId][index].key + ".summary";
-                            const userId = await getUserId();
-                            const key = `${userId}/${courseId}/summaries/${name}`;
-                            const result = await Storage.get(key, {
-                              download: true,
-                            });
-                            downloadBlob(result.Body, name + ".txt");
-                          }}
+                        <div
+                          className="summary-container"
+                          style={{ display: "flex", alignItems: "center" }}
                         >
-                          Generate Summary
-                        </button>
+                          <button
+                            onClick={async () => {
+                              const name =
+                                materials[courseId][index].key + ".summary";
+                              const userId = await getUserId();
+                              const key = `${userId}/${courseId}/summaries/${name}`;
+                              const result = await Storage.get(key, {
+                                download: true,
+                              });
+                              downloadBlob(result.Body, name + ".txt");
+                            }}
+                          >
+                            Generate Summary
+                          </button>
+
+                          <Tooltip text="Listen to the summary">
+                            <FontAwesomeIcon
+                              className="volume-icon"
+                              style={{
+                                cursor: "pointer",
+                                color: "#4a4e69",
+                                marginLeft: "5px",
+                              }}
+                              icon={faVolumeHigh}
+                              size="xl"
+                              onClick={async () => {
+                                const name =
+                                  materials[courseId][index].key +
+                                  ".summary" +
+                                  ".mp3";
+                                const userId = await getUserId();
+                                const key = `${userId}/${courseId}/summaries/${name}`;
+                                const result = await Storage.get(key, {
+                                  download: true,
+                                });
+                                const audioBlob = await result.Body?.blob();
+                                if (audioBlob) {
+                                  const audioUrl =
+                                    URL.createObjectURL(audioBlob);
+                                  const audio = new Audio(audioUrl);
+                                  audio.play();
+                                }
+                              }}
+                            />
+                          </Tooltip>
+                        </div>
                       </details>
                     </>
                   )}
@@ -198,6 +238,7 @@ function MaterialsTable({
                   }}
                 >
                   <FontAwesomeIcon
+                    className="action-item"
                     style={{
                       cursor: "pointer",
                       padding: "0.5rem 0.7rem",
@@ -212,6 +253,7 @@ function MaterialsTable({
 
                   {!isSelecting && (
                     <FontAwesomeIcon
+                      className="action-item"
                       style={{
                         cursor: "pointer",
                         padding: "0.5rem 0.6rem",
@@ -233,6 +275,16 @@ function MaterialsTable({
           </tbody>
         </table>
       )}
+    </div>
+  );
+}
+
+function Tooltip(props: { text: string; children: any }) {
+  const { text, children } = props;
+  return (
+    <div className="tooltip-container">
+      {children}
+      <span className="tooltip-text">{text}</span>
     </div>
   );
 }
