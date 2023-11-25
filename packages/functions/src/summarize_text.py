@@ -55,6 +55,7 @@ def summarize(event, context):
     response = S3.put_object(
             Body=summary, Bucket=MATERIAL_BUCKET, Key=object_key.removesuffix(".txt").replace("materials","summaries") + ".summary"
         )
+    convert_text_to_speech(summary,object_key)    
     
 def partition(text):
     cuts = []

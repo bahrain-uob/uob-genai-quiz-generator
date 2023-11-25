@@ -57,7 +57,8 @@ def lambda_handler(event, context):
                 text_content += f"{text['Text']}\n"
 
             # Remove the file extension from the document file name
-            file_name = os.path.splitext(key)[0]
+            file_name = key
+            #os.path.splitext(key)[0]
 
             # Specify the S3 bucket and object key for storing the text file
             # output_bucket = 'output-from-amazontextract'
