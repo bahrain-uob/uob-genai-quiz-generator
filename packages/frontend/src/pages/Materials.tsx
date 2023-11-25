@@ -52,11 +52,11 @@ function Materials() {
               onClick={closeModal}
               className="x-icon"
               size="xl"
-              style={{ color: "#C7C7C7" }}
+              style={{ color: "#5c617f" }}
             />
           </div>
           <div className="modal-content">
-            <h3>Upload Course Content</h3>
+            <h1>Upload Course Content</h1>
             <div className="upload-container">
               <StorageManager
                 maxFileCount={5}
@@ -73,14 +73,9 @@ function Materials() {
 }
 const bg = {
   content: {
-    background: "#F5F5F5",
+    background: "#f5efec",
+    borderRadius: "15px",
+    border: "none",
   },
-  // overlay: {
-  //   top: 40,
-  //   left: 280,
-  //   right: 280,
-  //   bottom: 40,
-  //   background: "rgba(245, 39, 145, 0)",
-  // },
 };
 export default Materials;
