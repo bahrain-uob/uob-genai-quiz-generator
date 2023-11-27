@@ -2,20 +2,14 @@ import "../carousel.css";
 import { useState } from "react";
 function Carousel() {
   const [flip, setFlip] = useState(0);
-  // const [isFlipped, setIsFlipped] = useState(false);
   return (
     <>
       <div className="container-carousel">
         <div className={`card-carousel ${flip == 1 ? "flip flip-imm" : ""}`}>
-          <div className="tooltip">
-            <span className="tooltiptext">Click Me!</span>
-          </div>
-
           <div
             className="front"
             onClick={() => {
               setFlip(1);
-              // setIsFlipped(!isFlipped);
             }}
           >
             <h4 className="title-carousel">Select a Course</h4>
@@ -63,7 +57,6 @@ function Carousel() {
             className="front"
             onClick={() => {
               setFlip(2);
-              // setIsFlipped(!isFlipped);
             }}
           >
             <h4 className="title-carousel">Select Materials</h4>
@@ -114,7 +107,6 @@ function Carousel() {
             className="front"
             onClick={() => {
               setFlip(3);
-              // setIsFlipped(!isFlipped);
             }}
           >
             <h4 className="title-carousel">Quiz Setup</h4>
@@ -166,7 +158,6 @@ function Carousel() {
             className="front"
             onClick={() => {
               setFlip(4);
-              // setIsFlipped(!isFlipped);
             }}
           >
             <h4 className="title-carousel">Questions Setup</h4>
