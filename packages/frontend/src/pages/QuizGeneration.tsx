@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
 import MaterialsTable from "../components/MaterialsTable";
@@ -16,9 +16,24 @@ import elephant from "../assets/Little Elephant.svg";
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
 function Quizzes() {
+  const [quiz, setQuiz] = useAtom(quizAtom);
   const [stepNo, setStepNo] = useAtom(stageAtom);
   const courseId = useAtomValue(courseIdAtom);
   const inFlight = useRef(false);
+
+  let pages = [
+    <CoursesTable />,
+    <MaterialsTable courseId={courseId} isSelecting={true} />,
+    <QuizSetupForm />,
+    quiz["mcq"] > 0 && <McqQuestionsSetup inFlight={inFlight} />,
+    quiz["tf"] > 0 && <TfQuestionsSetup inFlight={inFlight} />,
+    quiz["fillBlank"] > 0 && <FillBlankQuestionsSetup inFlight={inFlight} />,
+    <Review />,
+  ];
+
+  pages = pages.filter((e) => {
+    return e !== false;
+  });
 
   return (
     <>
@@ -26,6 +41,7 @@ function Quizzes() {
       <div className="context"></div>
       <StepProgressBar stepNo={stepNo} />
       <div className="step-container">
+        {/*         
         {stepNo == 0 && <CoursesTable />}
         {stepNo == 1 && (
           <MaterialsTable courseId={courseId} isSelecting={true} />
@@ -34,7 +50,8 @@ function Quizzes() {
         {stepNo == 3 && <McqQuestionsSetup inFlight={inFlight} />}
         {stepNo == 4 && <TfQuestionsSetup inFlight={inFlight} />}
         {stepNo == 5 && <FillBlankQuestionsSetup inFlight={inFlight} />}
-        {stepNo == 6 && <Review />}
+        {stepNo == 6 && <Review />}  */}
+        {pages[stepNo]}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {stepNo > 0 && (
@@ -47,7 +64,7 @@ function Quizzes() {
             Back
           </button>
         )}
-        {stepNo < 6 && (
+        {stepNo < pages.length - 1 ? (
           <button
             className="next"
             onClick={() => {
@@ -55,6 +72,10 @@ function Quizzes() {
             }}
           >
             Next
+          </button>
+        ) : (
+          <button className="next" onClick={async () => {}}>
+            Finish
           </button>
         )}
       </div>
