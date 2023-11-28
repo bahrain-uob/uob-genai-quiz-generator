@@ -5,7 +5,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { FillBlank, Mcq, Tf, quizAtom, stageAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 
-function Review() {
+function Review(props: { stepNo: number }) {
   const [quiz, setQuiz] = useAtom(quizAtom);
   return (
     <div className="review-container">
@@ -14,9 +14,11 @@ function Review() {
 
       <QuizSetup />
       {quiz["mcq"] > 0 && <Questions type="MCQ Setup" stepNo={3} />}
-      {quiz["tf"] > 0 && <Questions type="T/F Setup" stepNo={4} />}
+      {quiz["tf"] > 0 && (
+        <Questions type="T/F Setup" stepNo={quiz["mcq"] > 0 ? 4 : 3} />
+      )}
       {quiz["fillBlank"] > 0 && (
-        <Questions type="Fill-in Blank Setup" stepNo={5} />
+        <Questions type="Fill-in Blank Setup" stepNo={props.stepNo - 1} />
       )}
     </div>
   );

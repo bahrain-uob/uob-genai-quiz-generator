@@ -28,12 +28,13 @@ function Quizzes() {
     quiz["mcq"] > 0 && <McqQuestionsSetup inFlight={inFlight} />,
     quiz["tf"] > 0 && <TfQuestionsSetup inFlight={inFlight} />,
     quiz["fillBlank"] > 0 && <FillBlankQuestionsSetup inFlight={inFlight} />,
-    <Review />,
+    <Review stepNo={7} />,
   ];
 
   pages = pages.filter((e) => {
     return e !== false;
   });
+  pages[pages.length - 1] = <Review stepNo={pages.length - 1} />;
 
   return (
     <>
