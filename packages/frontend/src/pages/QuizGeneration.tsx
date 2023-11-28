@@ -67,9 +67,27 @@ function Quizzes() {
         )}
         {stepNo < pages.length - 1 ? (
           <button
-            className="next"
+            className={quiz["TfArr"].length == 2 ? "next" : ""}
             onClick={() => {
-              setStepNo(stepNo + 1);
+              console.log(stepNo);
+              console.log(pages[stepNo]);
+              console.log();
+              if (
+                pages[stepNo].type === TfQuestionsSetup &&
+                quiz["TfArr"].length !== quiz["tf"]
+              )
+                alert("choose enough questions");
+              else if (
+                pages[stepNo].type === McqQuestionsSetup &&
+                quiz["mcqArr"].length !== quiz["mcq"]
+              )
+                alert("choose enough questions");
+              else if (
+                pages[stepNo].type === FillBlankQuestionsSetup &&
+                quiz["fibArr"].length !== quiz["fillBlank"]
+              )
+                alert("choose enough questions");
+              else setStepNo(stepNo + 1);
             }}
           >
             Next
