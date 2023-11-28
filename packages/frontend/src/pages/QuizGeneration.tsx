@@ -39,7 +39,7 @@ function Quizzes() {
     <>
       <Navbar active="createquiz" />
       <div className="context"></div>
-      <StepProgressBar stepNo={stepNo} />
+      <StepProgressBar stepNo={stepNo == pages.length - 1 ? 6 : stepNo} />
       <div className="step-container">
         {/*         
         {stepNo == 0 && <CoursesTable />}
