@@ -67,7 +67,7 @@ function Quizzes() {
         )}
         {stepNo < pages.length - 1 ? (
           <button
-            className={quiz["TfArr"].length == 2 ? "next" : ""}
+            className="next"
             onClick={() => {
               console.log(stepNo);
               console.log(pages[stepNo]);
