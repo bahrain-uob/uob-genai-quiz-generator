@@ -1,20 +1,23 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "../review.css";
 import { faPenClip } from "@fortawesome/free-solid-svg-icons";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { FillBlank, Mcq, Tf, quizAtom, stageAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 
 function Review() {
+  const [quiz, setQuiz] = useAtom(quizAtom);
   return (
     <div className="review-container">
       <h3>Almost There!</h3>
       <h3 style={{ marginBottom: "20px" }}>Review Your Quiz</h3>
 
       <QuizSetup />
-      <Questions type="MCQ Setup" stepNo={3} />
-      <Questions type="T/F Setup" stepNo={4} />
-      <Questions type="Fill-in Blank Setup" stepNo={5} />
+      {quiz["mcq"] > 0 && <Questions type="MCQ Setup" stepNo={3} />}
+      {quiz["tf"] > 0 && <Questions type="T/F Setup" stepNo={4} />}
+      {quiz["fillBlank"] > 0 && (
+        <Questions type="Fill-in Blank Setup" stepNo={5} />
+      )}
     </div>
   );
 }
