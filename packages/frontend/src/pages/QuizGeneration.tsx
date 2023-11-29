@@ -13,6 +13,9 @@ import TfQuestionsSetup from "../components/TfQuestionsSetup";
 import FillBlankQuestionsSetup from "../components/FillBlankQuestionsSetup";
 import elephant from "../assets/Little Elephant.svg";
 import { Alert } from "@aws-amplify/ui-react";
+import { Storage } from "aws-amplify";
+import { getUserId } from "../lib/helpers";
+import { useNavigate } from "react-router-dom";
 
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
@@ -21,6 +24,14 @@ function Quizzes() {
   const [stepNo, setStepNo] = useAtom(stageAtom);
   const courseId = useAtomValue(courseIdAtom);
   const inFlight = useRef(false);
+
+  const navigate = useNavigate();
+  const saveQuiz = async () => {
+    const userId = await getUserId();
+    const key = `${userId}/${courseId}/quizzes/${quiz.name}.json`;
+    await Storage.put(key, JSON.stringify(quiz));
+    navigate("/quizzes");
+  };
 
   const pages = [
     <CoursesTable />,
@@ -100,7 +111,7 @@ function Quizzes() {
             Next
           </button>
         ) : (
-          <button className="next" onClick={async () => {}}>
+          <button className="next" onClick={saveQuiz}>
             Finish
           </button>
         )}
