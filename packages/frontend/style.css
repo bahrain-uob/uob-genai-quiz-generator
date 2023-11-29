@@ -592,13 +592,13 @@ input[type="checkbox"] {
   margin-top: 10rem;
 }
 .setup-quiz {
-  padding: 50px;
+  padding: 20px;
   display: flex;
   justify-content: center;
 }
 
 .questions-setup {
-  padding: 50px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -704,7 +704,7 @@ textarea:focus {
 .setup-quiz h3,
 .questions-setup h3 {
   font-size: 1.8rem;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 .setup-quiz input[type="text"],
 input[type="number"] {
