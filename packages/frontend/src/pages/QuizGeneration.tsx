@@ -69,9 +69,6 @@ function Quizzes() {
           <button
             className="next"
             onClick={() => {
-              console.log(stepNo);
-              console.log(pages[stepNo]);
-              console.log();
               if (
                 pages[stepNo].type === TfQuestionsSetup &&
                 quiz["TfArr"].length !== quiz["tf"]
