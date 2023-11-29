@@ -12,6 +12,7 @@ import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
 import TfQuestionsSetup from "../components/TfQuestionsSetup";
 import FillBlankQuestionsSetup from "../components/FillBlankQuestionsSetup";
 import elephant from "../assets/Little Elephant.svg";
+import { Alert } from "@aws-amplify/ui-react";
 
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
@@ -36,6 +37,7 @@ function Quizzes() {
   });
   pages[pages.length - 1] = <Review stepNo={pages.length - 1} />;
 
+  const [errorMsg, setErrorMsg] = useState("");
   return (
     <>
       <Navbar active="createquiz" />
@@ -53,6 +55,29 @@ function Quizzes() {
         {stepNo == 5 && <FillBlankQuestionsSetup inFlight={inFlight} />}
         {stepNo == 6 && <Review />}  */}
         {pages[stepNo]}
+        {pages[stepNo].type === TfQuestionsSetup &&
+          quiz["TfArr"].length !== quiz["tf"] &&
+          errorMsg == "tf" && (
+            <Alert variation="error">
+              Please select {quiz["tf"] - quiz["TfArr"].length} more questions
+            </Alert>
+          )}
+        {pages[stepNo].type === McqQuestionsSetup &&
+          quiz["mcqArr"].length !== quiz["mcq"] &&
+          errorMsg == "mcq" && (
+            <Alert variation="warning">
+              Please select {quiz["mcq"] - quiz["mcqArr"].length} more
+              question(s)
+            </Alert>
+          )}
+        {pages[stepNo].type === FillBlankQuestionsSetup &&
+          quiz["fibArr"].length !== quiz["fillBlank"] &&
+          errorMsg == "fillBlank" && (
+            <Alert variation="error">
+              Please select {quiz["fillBlank"] - quiz["fibArr"].length} more
+              questions
+            </Alert>
+          )}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {stepNo > 0 && (
@@ -73,17 +98,17 @@ function Quizzes() {
                 pages[stepNo].type === TfQuestionsSetup &&
                 quiz["TfArr"].length !== quiz["tf"]
               )
-                alert("choose enough questions");
+                setErrorMsg("tf");
               else if (
                 pages[stepNo].type === McqQuestionsSetup &&
                 quiz["mcqArr"].length !== quiz["mcq"]
               )
-                alert("choose enough questions");
+                setErrorMsg("mcq");
               else if (
                 pages[stepNo].type === FillBlankQuestionsSetup &&
                 quiz["fibArr"].length !== quiz["fillBlank"]
               )
-                alert("choose enough questions");
+                setErrorMsg("fillBlank");
               else setStepNo(stepNo + 1);
             }}
           >

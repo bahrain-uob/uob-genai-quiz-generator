@@ -597,6 +597,10 @@ input[type="checkbox"] {
   justify-content: center;
 }
 
+.amplify-alert[data-variation="warning"] {
+  background-color: #ffa6008a;
+}
+
 .questions-setup {
   padding: 50px;
   display: flex;
