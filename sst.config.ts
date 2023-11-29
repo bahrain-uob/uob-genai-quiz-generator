@@ -9,7 +9,7 @@ export default {
   config(_input) {
     return {
       name: "uob-genai-quiz-generator",
-      region: "us-east-1",
+      region: "me-south-1",
     };
   },
   stacks(app) {
