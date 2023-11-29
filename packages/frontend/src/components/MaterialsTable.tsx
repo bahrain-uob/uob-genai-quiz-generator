@@ -1,8 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFileArrowDown,
+  faStop,
   faTrash,
   faVolumeHigh,
+  faVolumeXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { Storage } from "aws-amplify";
@@ -221,40 +223,39 @@ function MaterialsTable({
                                 //let audioPlaying = false;
                                 if (audioBlob) {
                                   const audioUrl = URL.createObjectURL(audioBlob);
-                                  let audio = new Audio(audioUrl);
-                                  // Check if audio is playing                             
-                                  if (audiovoice==true) {
-                                    // If audio is playing, stop or pause it
-                                    audiovoice=false
-                                    x.pause();
-                                    audio.currentTime=0;                                  
-                                    console.log(audiovoice)                                     
-                                    
-                                  
-                                    // or audio.stop() if available
-                                    
-                                  } else if(audiovoice==false){
-                                    // If audio is not playing, start playing it
-                                    //const audio = new Audio(audioUrl);    
+                                  let audio = new Audio(audioUrl);                               
                                     audiovoice=true                              
                                     audio.play();
                                     x=audio;
                                     console.log(audiovoice)                                                                                                             
-                                                                  
-                                    
-                                  }
                                 }
                               }
                               
                             }
                             />
                           </Tooltip>
+                          <Tooltip text="stop the audio"> 
+                          <FontAwesomeIcon 
+                              className="volume-icon"
+                              style={{
+                                cursor: "pointer",
+                                color: "#4a4e69",
+                                marginLeft: "5px",
+                              }}
+                              icon={faStop}
+                              size="xl"
+                              onClick={async () => {
+                                x.pause();
+                              }}
+/>
+                          
+                              </Tooltip>
                         </div>
                       </details>
                     </>
                   )}
                
-                 
+                
                 </td>
                 <td className={!isSelecting ? "td" : ""}>{material.size}</td>
                 <td className={!isSelecting ? "td" : ""}>
