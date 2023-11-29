@@ -32,7 +32,7 @@ def summarize(event, context):
             ContentType="application/json",
             Body=json.dumps(
                 {
-                    "inputs": [[{"role" : "user", "content" : input}]],
+                    "inputs": "<s>[INST]"+input+"[/INST]",
                     "parameters": {
                         "max_new_tokens": 2024,
                         "top_p": 0.9,
@@ -44,7 +44,7 @@ def summarize(event, context):
             ),
             CustomAttributes="accept_eula=true",
         )
-        result = json.loads(response["Body"].read().decode())[0]["generation"]["content"]
+        result = json.loads(response["Body"].read().decode())[0]["generated_text"]
         print(result)
         try:
             result = re.search(r"```\n(.*?)```", result, re.DOTALL).group(1)
