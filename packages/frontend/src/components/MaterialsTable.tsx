@@ -14,7 +14,10 @@ import { focusAtom } from "jotai-optics";
 import { useAtom } from "jotai";
 import emptymaterials from "../assets/Cool Kids - Bust-comp.svg";
 import koala from "../assets/Sweet Koala-comp.svg";
+import React, { useRef } from 'react';
 
+let audiovoice=false;
+let x:any;
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
   optic.prop("materials")
 );
@@ -193,7 +196,7 @@ function MaterialsTable({
                           </button>
 
                           <Tooltip text="Listen to the summary">
-                            <FontAwesomeIcon
+                            <FontAwesomeIcon 
                               className="volume-icon"
                               style={{
                                 cursor: "pointer",
@@ -203,6 +206,7 @@ function MaterialsTable({
                               icon={faVolumeHigh}
                               size="xl"
                               onClick={async () => {
+                                
                                 const name =
                                   materials[courseId][index].key +
                                   ".summary" +
@@ -212,20 +216,45 @@ function MaterialsTable({
                                 const result = await Storage.get(key, {
                                   download: true,
                                 });
+                                
                                 const audioBlob = await result.Body?.blob();
+                                //let audioPlaying = false;
                                 if (audioBlob) {
-                                  const audioUrl =
-                                    URL.createObjectURL(audioBlob);
-                                  const audio = new Audio(audioUrl);
-                                  audio.play();
+                                  const audioUrl = URL.createObjectURL(audioBlob);
+                                  let audio = new Audio(audioUrl);
+                                  // Check if audio is playing                             
+                                  if (audiovoice==true) {
+                                    // If audio is playing, stop or pause it
+                                    audiovoice=false
+                                    x.pause();
+                                    audio.currentTime=0;                                  
+                                    console.log(audiovoice)                                     
+                                    
+                                  
+                                    // or audio.stop() if available
+                                    
+                                  } else if(audiovoice==false){
+                                    // If audio is not playing, start playing it
+                                    //const audio = new Audio(audioUrl);    
+                                    audiovoice=true                              
+                                    audio.play();
+                                    x=audio;
+                                    console.log(audiovoice)                                                                                                             
+                                                                  
+                                    
+                                  }
                                 }
-                              }}
+                              }
+                              
+                            }
                             />
                           </Tooltip>
                         </div>
                       </details>
                     </>
                   )}
+               
+                 
                 </td>
                 <td className={!isSelecting ? "td" : ""}>{material.size}</td>
                 <td className={!isSelecting ? "td" : ""}>
