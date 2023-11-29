@@ -17,12 +17,12 @@ import { Alert } from "@aws-amplify/ui-react";
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
 function Quizzes() {
-  const [quiz, setQuiz] = useAtom(quizAtom);
+  const quiz = useAtomValue(quizAtom);
   const [stepNo, setStepNo] = useAtom(stageAtom);
   const courseId = useAtomValue(courseIdAtom);
   const inFlight = useRef(false);
 
-  let pages = [
+  const pages = [
     <CoursesTable />,
     <MaterialsTable courseId={courseId} isSelecting={true} />,
     <QuizSetupForm />,
@@ -30,11 +30,8 @@ function Quizzes() {
     quiz["tf"] > 0 && <TfQuestionsSetup inFlight={inFlight} />,
     quiz["fillBlank"] > 0 && <FillBlankQuestionsSetup inFlight={inFlight} />,
     <Review stepNo={7} />,
-  ];
+  ].filter((e) => e !== false) as JSX.Element[];
 
-  pages = pages.filter((e) => {
-    return e !== false;
-  });
   pages[pages.length - 1] = <Review stepNo={pages.length - 1} />;
 
   const [errorMsg, setErrorMsg] = useState("");
@@ -44,38 +41,26 @@ function Quizzes() {
       <div className="context"></div>
       <StepProgressBar stepNo={stepNo == pages.length - 1 ? 6 : stepNo} />
       <div className="step-container">
-        {/*         
-        {stepNo == 0 && <CoursesTable />}
-        {stepNo == 1 && (
-          <MaterialsTable courseId={courseId} isSelecting={true} />
-        )}
-        {stepNo == 2 && <QuizSetupForm />}
-        {stepNo == 3 && <McqQuestionsSetup inFlight={inFlight} />}
-        {stepNo == 4 && <TfQuestionsSetup inFlight={inFlight} />}
-        {stepNo == 5 && <FillBlankQuestionsSetup inFlight={inFlight} />}
-        {stepNo == 6 && <Review />}  */}
         {pages[stepNo]}
         {pages[stepNo].type === TfQuestionsSetup &&
           quiz["TfArr"].length !== quiz["tf"] &&
           errorMsg == "tf" && (
             <Alert variation="error">
-              Please select {quiz["tf"] - quiz["TfArr"].length} more questions
+              Please select exactly {quiz["tf"]} questions
             </Alert>
           )}
         {pages[stepNo].type === McqQuestionsSetup &&
           quiz["mcqArr"].length !== quiz["mcq"] &&
           errorMsg == "mcq" && (
             <Alert variation="warning">
-              Please select {quiz["mcq"] - quiz["mcqArr"].length} more
-              question(s)
+              Please select exactly {quiz["mcq"]} questions
             </Alert>
           )}
         {pages[stepNo].type === FillBlankQuestionsSetup &&
           quiz["fibArr"].length !== quiz["fillBlank"] &&
           errorMsg == "fillBlank" && (
             <Alert variation="error">
-              Please select {quiz["fillBlank"] - quiz["fibArr"].length} more
-              questions
+              Please select exactly {quiz["fillBlank"]} questions
             </Alert>
           )}
       </div>
@@ -125,7 +110,7 @@ function Quizzes() {
 }
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials")
+  optic.prop("materials"),
 );
 
 function CoursesTable() {
