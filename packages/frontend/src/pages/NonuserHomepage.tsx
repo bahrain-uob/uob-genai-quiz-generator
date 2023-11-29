@@ -1,7 +1,7 @@
 import quizsetupimg from "../assets/quizsetup.svg";
 import materialsimg from "../assets/materials.svg";
 import quizzesimg from "../assets/quizzes.svg";
-import quiestionsimg from "../assets/quiestions.svg";
+import quiestionsimg from "../assets/questions.svg";
 import "../nonuser.css";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";

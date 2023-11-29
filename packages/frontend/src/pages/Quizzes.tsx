@@ -83,8 +83,7 @@ function Quizzes() {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
   }
-  // const [modal, setModal] = useState(false);
-  // const [checked, setChecked] = useState("norm");
+
   return (
     <>
       <Navrbar active="quizzes" />
@@ -155,84 +154,6 @@ function Quizzes() {
           </div>
         </div>
       )}
-      {/* <button onClick={() => setModal(true)}>open</button>
-
-      <Modal
-        isOpen={modal}
-        onRequestClose={() => setModal(false)}
-        style={bg}
-        ariaHideApp={false}
-      >
-        <div className="quiz-header">
-          <div className="top-box">
-            <div className="close" onClick={() => setModal(false)}>
-              <p>close</p>
-            </div>
-            <h1 className="quiz-name">Quiz name</h1>
-          </div>
-          <div className="actions-menu">
-            <button className="play-caraval">
-              <FontAwesomeIcon icon={faPlay} /> Play Caraval
-            </button>
-            <Dropdown
-              trigger={
-                <button>
-                  <FontAwesomeIcon
-                    icon={faDownload}
-                    className="download-icon"
-                    size="lg"
-                  />
-                </button>
-              }
-              menu={[
-                <button>Export as Moodle</button>,
-                <button>Export as PDF</button>,
-              ]}
-            />
-          </div>
-        </div>
-        <div className="list-options">
-          <FontAwesomeIcon
-            onClick={() => setChecked("rec")}
-            icon={faRectangleList}
-            size="lg"
-            className={`rec-list ${checked == "rec" ? "checked" : ""}`}
-          />
-          <FontAwesomeIcon
-            onClick={() => setChecked("norm")}
-            icon={faList}
-            size="lg"
-            className={`norm-list ${checked == "norm" ? "checked" : ""}`}
-          />
-        </div>
-        <div className={checked == "norm" ? "" : "quiz-questions"}>
-          <div className={checked == "norm" ? "" : "quiz-questions type"}>
-            {checked == "rec" && <h1>True/False</h1>}
-            <TfQuestion
-              question="Updates made to the source DB are asynchronously copied to the read replica"
-              answer={true}
-              list={checked}
-            />
-          </div>
-          <div className={checked == "norm" ? "" : "quiz-questions type"}>
-            {checked == "rec" && <h1>MCQ</h1>}
-            <McqQuestion
-              question="How many types of cloud computing are there?"
-              choices={["2", "3", "4", "5"]}
-              ans_index={1}
-              list={checked}
-            />
-          </div>
-          <div className={checked == "norm" ? "" : "quiz-questions type"}>
-            {checked == "rec" && <h1>Fill-in Blank</h1>}
-            <FillBlankQuestion
-              question="____ are used to grant permissions to your IAM Users to access AWS resources within your own or different account."
-              answer="IAM roles"
-              list={checked}
-            />
-          </div>
-        </div>
-      </Modal> */}
     </>
   );
 }
