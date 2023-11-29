@@ -20,6 +20,7 @@ import React, { useRef } from 'react';
 
 let audiovoice=false;
 let x:any;
+
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
   optic.prop("materials")
 );
@@ -207,8 +208,7 @@ function MaterialsTable({
                               }}
                               icon={faVolumeHigh}
                               size="xl"
-                              onClick={async () => {
-                                
+                              onClick={async () => {                             
                                 const name =
                                   materials[courseId][index].key +
                                   ".summary" +
@@ -223,33 +223,51 @@ function MaterialsTable({
                                 //let audioPlaying = false;
                                 if (audioBlob) {
                                   const audioUrl = URL.createObjectURL(audioBlob);
-                                  let audio = new Audio(audioUrl);                               
-                                    audiovoice=true                              
+                                  let audio = new Audio(audioUrl);
+                                  // Check if audio is playing    
+                                  let durationInSeconds=0; 
+                                  console.log(audiovoice) ;
+                                  audio.addEventListener('ended', function() {
+                                  audiovoice = false; // Set audiovoice to false when audio playback ends
+                                  console.log('Audio playback complete');
+                                  });
+                                                         
+                                  if (audiovoice==true) {
+                                    // If audio is playing, stop or pause it
+                                    audiovoice=false;
+                                    x.pause();
+                                    audio.currentTime=0;                                  
+                                    console.log(audiovoice)   
+                                    durationInSeconds=audio.duration;
+                                    
+
+                                    // or audio.stop() if available
+
+                                  }
+                               
+                                  else if(audiovoice==false){
+                                    // If audio is not playing, start playing it
+                                    //const audio = new Audio(audioUrl);    
+                                    audiovoice=true;                        
                                     audio.play();
                                     x=audio;
-                                    console.log(audiovoice)                                                                                                             
+                                    console.log(audiovoice)   
+                                    
                                 }
+                                
+                                
                               }
                               
+                                    
+                                  }
+                                 
                             }
+                              
+                            
+                            
                             />
                           </Tooltip>
-                          <Tooltip text="stop the audio"> 
-                          <FontAwesomeIcon 
-                              className="volume-icon"
-                              style={{
-                                cursor: "pointer",
-                                color: "#4a4e69",
-                                marginLeft: "5px",
-                              }}
-                              icon={faStop}
-                              size="xl"
-                              onClick={async () => {
-                                x.pause();
-                              }}
-/>
                           
-                              </Tooltip>
                         </div>
                       </details>
                     </>
