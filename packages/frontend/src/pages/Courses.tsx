@@ -121,7 +121,7 @@ function CreateCourse(props: { updateCourses: any; isempty: boolean }) {
             onClick={() => setModal(false)}
             className="x-icon"
             size="xl"
-            style={{ color: "#C7C7C7" }}
+            style={{ color: "#5c617f" }}
           />
         </div>
         <div className="modal-content">
@@ -134,6 +134,9 @@ function CreateCourse(props: { updateCourses: any; isempty: boolean }) {
               inputStyles={{
                 backgroundColor: "white",
                 width: "30rem",
+                boxShadow: "1px 1px 5px #c9c9c9",
+                borderRadius: "15px",
+                border: "none",
               }}
               onChange={(e) => {
                 setCode(e.target.value);
@@ -148,6 +151,9 @@ function CreateCourse(props: { updateCourses: any; isempty: boolean }) {
               inputStyles={{
                 backgroundColor: "white",
                 width: "30rem",
+                boxShadow: "1px 1px 5px #c9c9c9",
+                borderRadius: "15px",
+                border: "none",
               }}
               onChange={(e) => {
                 setName(e.target.value);
@@ -164,14 +170,9 @@ function CreateCourse(props: { updateCourses: any; isempty: boolean }) {
 }
 const bg = {
   content: {
-    background: "#F5F5F5",
+    background: "#f5efec",
+    borderRadius: "15px",
+    border: "none",
   },
-  // overlay: {
-  //   top: 50,
-  //   left: 280,
-  //   right: 280,
-  //   bottom: 50,
-  //   background: "rgba(245, 39, 145, 0)",
-  // },
 };
 export default Courses;

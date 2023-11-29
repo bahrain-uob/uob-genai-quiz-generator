@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Navbar from "../components/Navbar";
 import StepProgressBar from "../components/StepProgressBar";
 import MaterialsTable from "../components/MaterialsTable";
@@ -12,29 +12,57 @@ import { coursesAtom, quizAtom, stageAtom } from "../lib/store";
 import TfQuestionsSetup from "../components/TfQuestionsSetup";
 import FillBlankQuestionsSetup from "../components/FillBlankQuestionsSetup";
 import elephant from "../assets/Little Elephant.svg";
+import { Alert } from "@aws-amplify/ui-react";
 
 const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
 
 function Quizzes() {
+  const quiz = useAtomValue(quizAtom);
   const [stepNo, setStepNo] = useAtom(stageAtom);
   const courseId = useAtomValue(courseIdAtom);
   const inFlight = useRef(false);
 
+  const pages = [
+    <CoursesTable />,
+    <MaterialsTable courseId={courseId} isSelecting={true} />,
+    <QuizSetupForm />,
+    quiz["mcq"] > 0 && <McqQuestionsSetup inFlight={inFlight} />,
+    quiz["tf"] > 0 && <TfQuestionsSetup inFlight={inFlight} />,
+    quiz["fillBlank"] > 0 && <FillBlankQuestionsSetup inFlight={inFlight} />,
+    <Review stepNo={7} />,
+  ].filter((e) => e !== false) as JSX.Element[];
+
+  pages[pages.length - 1] = <Review stepNo={pages.length - 1} />;
+
+  const [errorMsg, setErrorMsg] = useState("");
   return (
     <>
       <Navbar active="createquiz" />
       <div className="context"></div>
-      <StepProgressBar stepNo={stepNo} />
+      <StepProgressBar stepNo={stepNo == pages.length - 1 ? 6 : stepNo} />
       <div className="step-container">
-        {stepNo == 0 && <CoursesTable />}
-        {stepNo == 1 && (
-          <MaterialsTable courseId={courseId} isSelecting={true} />
-        )}
-        {stepNo == 2 && <QuizSetupForm />}
-        {stepNo == 3 && <McqQuestionsSetup inFlight={inFlight} />}
-        {stepNo == 4 && <TfQuestionsSetup inFlight={inFlight} />}
-        {stepNo == 5 && <FillBlankQuestionsSetup inFlight={inFlight} />}
-        {stepNo == 6 && <Review />}
+        {pages[stepNo]}
+        {pages[stepNo].type === TfQuestionsSetup &&
+          quiz["TfArr"].length !== quiz["tf"] &&
+          errorMsg == "tf" && (
+            <Alert variation="error">
+              Please select exactly {quiz["tf"]} questions
+            </Alert>
+          )}
+        {pages[stepNo].type === McqQuestionsSetup &&
+          quiz["mcqArr"].length !== quiz["mcq"] &&
+          errorMsg == "mcq" && (
+            <Alert variation="warning">
+              Please select exactly {quiz["mcq"]} questions
+            </Alert>
+          )}
+        {pages[stepNo].type === FillBlankQuestionsSetup &&
+          quiz["fibArr"].length !== quiz["fillBlank"] &&
+          errorMsg == "fillBlank" && (
+            <Alert variation="error">
+              Please select exactly {quiz["fillBlank"]} questions
+            </Alert>
+          )}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {stepNo > 0 && (
@@ -47,14 +75,33 @@ function Quizzes() {
             Back
           </button>
         )}
-        {stepNo < 6 && (
+        {stepNo < pages.length - 1 ? (
           <button
             className="next"
             onClick={() => {
-              setStepNo(stepNo + 1);
+              if (
+                pages[stepNo].type === TfQuestionsSetup &&
+                quiz["TfArr"].length !== quiz["tf"]
+              )
+                setErrorMsg("tf");
+              else if (
+                pages[stepNo].type === McqQuestionsSetup &&
+                quiz["mcqArr"].length !== quiz["mcq"]
+              )
+                setErrorMsg("mcq");
+              else if (
+                pages[stepNo].type === FillBlankQuestionsSetup &&
+                quiz["fibArr"].length !== quiz["fillBlank"]
+              )
+                setErrorMsg("fillBlank");
+              else setStepNo(stepNo + 1);
             }}
           >
             Next
+          </button>
+        ) : (
+          <button className="next" onClick={async () => {}}>
+            Finish
           </button>
         )}
       </div>
@@ -63,7 +110,7 @@ function Quizzes() {
 }
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials")
+  optic.prop("materials"),
 );
 
 function CoursesTable() {

@@ -1,31 +1,65 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faBook,
+  // faBook,
   faFileLines,
   faFilePen,
   faFolder,
   faX,
 } from "@fortawesome/free-solid-svg-icons";
+import { StorageManager } from "@aws-amplify/ui-react-storage";
 import Modal from "react-modal";
-import { TextField } from "@aws-amplify/ui-react";
+// import { TextField } from "@aws-amplify/ui-react";
 import Carousel from "../components/Carousel";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { Link } from "react-router-dom";
 import { Container } from "tsparticles-engine";
 import Navbar from "../components/Navbar";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { getUserId } from "../lib/helpers";
+import { useAtom } from "jotai";
+import { coursesAtom } from "../lib/store";
 
 function Homepage() {
-  const [modalIsOpen, setIsOpen] = useState(false);
+  // const [modalIsOpen, setIsOpen] = useState(false);
   const [UploadModalIsOpen, setUploadModalIsOpen] = useState(false);
 
-  function openModal() {
-    setIsOpen(true);
+  const [userId, setUserId] = useState("");
+  useEffect(() => {
+    getUserId(setUserId);
+  }, []);
+
+  const [courses, _setCourses] = useAtom(coursesAtom);
+  const [course_id, setCourse_id] = useState("");
+
+  function handleChange(event: any) {
+    const id = event.target.value;
+    setCourse_id(id);
   }
-  function closeModal() {
-    setIsOpen(false);
-  }
+
+  // const [courses, setCourses] = useAtom(coursesAtom);
+  // useEffect(() => {
+  //   updateCourses();
+  // }, []);
+
+  // const updateCourses = async () => {
+  //   let courses = await API.get("api", "/courses", {});
+  //   setCourses(courses);
+  // };
+  // const [code, setCode] = useState("");
+  // const [name, setName] = useState("");
+  // const createCourse = async () => {
+  //   API.post("api", "/courses", {
+  //     body: { code, name },
+  //   }).then(updateCourses);
+  // };
+
+  // function openModal() {
+  //   setIsOpen(true);
+  // }
+  // function closeModal() {
+  //   setIsOpen(false);
+  // }
   function openUploadModal() {
     setUploadModalIsOpen(true);
   }
@@ -168,7 +202,7 @@ function Homepage() {
               </div>
             </Link>
 
-            <div className="access-item" onClick={openModal}>
+            {/* <div className="access-item" onClick={openModal}>
               <FontAwesomeIcon
                 icon={faBook}
                 size="4x"
@@ -181,6 +215,7 @@ function Homepage() {
               onRequestClose={closeModal}
               contentLabel="Create Course Modal"
               style={bg}
+              ariaHideApp={false}
             >
               <div className="x">
                 <FontAwesomeIcon
@@ -188,7 +223,7 @@ function Homepage() {
                   onClick={closeModal}
                   className="x-icon"
                   size="xl"
-                  style={{ color: "#C7C7C7" }}
+                  style={{ color: "#5c617f" }}
                 />
               </div>
               <div className="modal-content">
@@ -202,7 +237,13 @@ function Homepage() {
                       inputStyles={{
                         backgroundColor: "white",
                         width: "30rem",
+                        boxShadow: "1px 1px 5px #c9c9c9",
+                        borderRadius: "15px",
+                        border: "none",
                       }}
+                      // onChange={(e) => {
+                      //   setCode(e.target.value);
+                      // }}
                     />
                   </div>
                   <div className="input-container">
@@ -213,13 +254,19 @@ function Homepage() {
                       inputStyles={{
                         backgroundColor: "white",
                         width: "30rem",
+                        boxShadow: "1px 1px 5px #c9c9c9",
+                        borderRadius: "15px",
+                        border: "none",
                       }}
+                      // onChange={(e) => {
+                      //   setName(e.target.value);
+                      // }}
                     />
                   </div>
                   <button className="next">Create</button>
                 </form>
               </div>
-            </Modal>
+            </Modal> */}
 
             <div className="access-item" onClick={openUploadModal}>
               <FontAwesomeIcon
@@ -241,30 +288,30 @@ function Homepage() {
                   onClick={closeUploadModal}
                   className="x-icon"
                   size="xl"
-                  style={{ color: "#C7C7C7" }}
+                  style={{ color: "#5c617f" }}
                 />
               </div>
               <div className="modal-content">
                 <h1>Upload Course Content</h1>
                 <form>
                   <div className="select-container">
-                    <label htmlFor="course">Select a Course</label>
-                    <select style={{ width: "20rem" }} name="course">
-                      <option value="ITCS444">ITCS444</option>
-                      <option value="ITCS453">ITCS453</option>
-                      <option value="ITCS441">ITCS441</option>
-                      <option value="ITCS440">ITCS440</option>
+                    {/* <label htmlFor="course">Select a Course</label> */}
+                    <select name="course" onChange={(e) => handleChange(e)}>
+                      <option style={{ fontSize: "medium" }}>
+                        select a course
+                      </option>
+                      {courses.map((course: any) => (
+                        <option id={course.id} value={course.id}>
+                          {course.code}
+                        </option>
+                      ))}
                     </select>
                   </div>
-                  <div
-                    style={{
-                      height: "200px",
-                    }}
-                  >
-                    {/* <Upload /> */}
-                  </div>
-                  <div className="input-container"></div>
-                  <button className="next">Upload</button>
+                  <StorageManager
+                    maxFileCount={5}
+                    accessLevel="public"
+                    path={`${userId}/${course_id}/materials/`}
+                  />
                 </form>
               </div>
             </Modal>
@@ -277,14 +324,9 @@ function Homepage() {
 
 const bg = {
   content: {
-    background: "#F5F5F5",
+    background: "#f5efec",
+    borderRadius: "15px",
+    border: "none",
   },
-  // overlay: {
-  //   top: 40,
-  //   left: 280,
-  //   right: 280,
-  //   bottom: 40,
-  //   background: "rgba(245, 39, 145, 0)",
-  // },
 };
 export default Homepage;

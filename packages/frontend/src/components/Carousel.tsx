@@ -2,20 +2,14 @@ import "../carousel.css";
 import { useState } from "react";
 function Carousel() {
   const [flip, setFlip] = useState(0);
-  // const [isFlipped, setIsFlipped] = useState(false);
   return (
     <>
       <div className="container-carousel">
         <div className={`card-carousel ${flip == 1 ? "flip flip-imm" : ""}`}>
-          <div className="tooltip">
-            <span className="tooltiptext">Click Me!</span>
-          </div>
-
           <div
             className="front"
             onClick={() => {
               setFlip(1);
-              // setIsFlipped(!isFlipped);
             }}
           >
             <h4 className="title-carousel">Select a Course</h4>
@@ -45,13 +39,15 @@ function Carousel() {
                 color: "white",
                 fontWeight: "100",
                 fontSize: "0.9em",
-                width: "10em",
+                width: "15em",
                 paddingLeft: "10px",
               }}
             >
-              You can seamlessly upload and store course materials for future
-              reference for generating quizzes. Students enrolled in the courses
-              can easily access and view these materials at their convenience.
+              You can seamlessly upload course materials for future reference
+              for generating quizzes. You can generate summaries for the
+              uploaded materials, providing the option to download these
+              summaries. An auditory experience is available, allowing you to
+              listen to the generated summaries.
             </p>
           </div>
         </div>
@@ -61,7 +57,6 @@ function Carousel() {
             className="front"
             onClick={() => {
               setFlip(2);
-              // setIsFlipped(!isFlipped);
             }}
           >
             <h4 className="title-carousel">Select Materials</h4>
@@ -112,7 +107,6 @@ function Carousel() {
             className="front"
             onClick={() => {
               setFlip(3);
-              // setIsFlipped(!isFlipped);
             }}
           >
             <h4 className="title-carousel">Quiz Setup</h4>
@@ -164,7 +158,6 @@ function Carousel() {
             className="front"
             onClick={() => {
               setFlip(4);
-              // setIsFlipped(!isFlipped);
             }}
           >
             <h4 className="title-carousel">Questions Setup</h4>
