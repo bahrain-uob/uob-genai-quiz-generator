@@ -1,14 +1,10 @@
 import { Api, StackContext, use } from "sst/constructs";
-import { CacheHeaderBehavior, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
-import { Duration } from "aws-cdk-lib/core";
-import { DBStack } from "./DBStack";
 import { AuthStack } from "./AuthStack";
-import { FunctionStack } from "./FunctionStack";
+import { CoreStack } from "./CoreStack";
 
 export function ApiStack({ stack }: StackContext) {
   const { auth } = use(AuthStack);
-  const { courses_table } = use(DBStack);
-  const { materialText } = use(FunctionStack);
+  const { coursesTable, materialText } = use(CoreStack);
 
   // Create the HTTP API
   const api = new Api(stack, "Api", {
@@ -39,31 +35,18 @@ export function ApiStack({ stack }: StackContext) {
         function: {
           handler: "packages/api/src/courses.get",
           runtime: "nodejs18.x",
-          bind: [courses_table],
+          bind: [coursesTable],
         },
       },
       "POST /courses": {
         function: {
           handler: "packages/api/src/courses.post",
           runtime: "nodejs18.x",
-          bind: [courses_table],
+          bind: [coursesTable],
         },
       },
     },
   });
 
-  // cache policy to use with cloudfront as reverse proxy to avoid cors
-  // https://dev.to/larswww/real-world-serverless-part-3-cloudfront-reverse-proxy-no-cors-cgj
-  const apiCachePolicy = new CachePolicy(stack, "CachePolicy", {
-    minTtl: Duration.seconds(0), // no cache by default unless backend decides otherwise
-    defaultTtl: Duration.seconds(0),
-    headerBehavior: CacheHeaderBehavior.allowList(
-      "Accept",
-      "Authorization",
-      "Content-Type",
-      "Referer",
-    ),
-  });
-
-  return { api, apiCachePolicy };
+  return { api };
 }

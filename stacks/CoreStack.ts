@@ -1,10 +1,22 @@
-import { Bucket, StackContext, use } from "sst/constructs";
-import { DBStack } from "./DBStack";
+import { Bucket, StackContext, Table } from "sst/constructs";
 
-export function FunctionStack({ stack }: StackContext) {
-  const materialBucket = new Bucket(stack, "Material-Bucket");
-  const materialText = new Bucket(stack, "Material-Text");
+export function CoreStack({ stack }: StackContext) {
+  const coursesTable = new Table(stack, "Courses", {
+    fields: {
+      user_id: "string",
+      course_id: "string",
+      course_code: "string",
+      course_name: "string",
+    },
+    primaryIndex: { partitionKey: "user_id", sortKey: "course_id" },
+  });
 
+  // stores the material uploaded by the user
+  const materialBucket = new Bucket(stack, "MaterialBucket");
+  // stores the text version of the file after processing it
+  const materialText = new Bucket(stack, "MaterialText");
+
+  // proccess each file uploaded to text format
   materialBucket.addNotifications(stack, {
     pdf: {
       function: {
@@ -91,7 +103,9 @@ export function FunctionStack({ stack }: StackContext) {
       filters: [{ suffix: ".jpeg" }],
     },
   });
+
   materialText.addNotifications(stack, {
+    // generate summary after material is processed to text
     summarize: {
       function: {
         handler: "packages/functions/src/summarize_text.summarize",
@@ -114,5 +128,6 @@ export function FunctionStack({ stack }: StackContext) {
       filters: [{ suffix: ".json" }],
     },
   });
-  return { materialText, materialBucket };
+
+  return { materialText, materialBucket, coursesTable };
 }

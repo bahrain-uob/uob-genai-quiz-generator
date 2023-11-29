@@ -12,7 +12,7 @@ const dynamodb = new DynamoDBClient();
 export const get = async (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
   const user_id = event.requestContext.authorizer.jwt.claims.sub as string;
   const command = new QueryCommand({
-    TableName: (Table as any).courses.tableName,
+    TableName: Table.Courses.tableName,
     ProjectionExpression: "course_id, course_code, course_name",
     KeyConditionExpression: "user_id = :uid",
     ExpressionAttributeValues: {
@@ -52,7 +52,7 @@ export const post = async (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
   const course_id = randomUUID();
 
   const command = new PutItemCommand({
-    TableName: Table.courses.tableName,
+    TableName: Table.Courses.tableName,
     Item: {
       user_id: { S: user_id },
       course_id: { S: course_id },

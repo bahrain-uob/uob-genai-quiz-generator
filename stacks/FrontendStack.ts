@@ -1,22 +1,12 @@
-import { Fn } from "aws-cdk-lib";
-import {
-  AllowedMethods,
-  OriginProtocolPolicy,
-  OriginSslPolicy,
-  ViewerProtocolPolicy,
-} from "aws-cdk-lib/aws-cloudfront";
-import { HttpOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
-
 import { StaticSite, StackContext, use } from "sst/constructs";
+import { CoreStack } from "./CoreStack";
 import { ApiStack } from "./ApiStack";
 import { AuthStack } from "./AuthStack";
-import { DBStack } from "./DBStack";
-import { FunctionStack } from "./FunctionStack";
 
 export function FrontendStack({ stack, app }: StackContext) {
-  const { api, apiCachePolicy } = use(ApiStack);
+  const { api } = use(ApiStack);
   const { auth } = use(AuthStack);
-  const { materialBucket } = use(FunctionStack);
+  const { materialBucket } = use(CoreStack);
 
   // Deploy our React app
   const site = new StaticSite(stack, "ReactSite", {
@@ -30,24 +20,6 @@ export function FrontendStack({ stack, app }: StackContext) {
       VITE_APP_USER_POOL_CLIENT_ID: auth.userPoolClientId,
       VITE_APP_IDENTITY_POOL_ID: auth.cognitoIdentityPoolId!,
       VITE_APP_MATERIAL_BUCKET: materialBucket.bucketName,
-    },
-    cdk: {
-      distribution: {
-        additionalBehaviors: {
-          "/api/*": {
-            origin: new HttpOrigin(Fn.parseDomainName(api.url), {
-              originSslProtocols: [OriginSslPolicy.TLS_V1_2],
-              protocolPolicy: OriginProtocolPolicy.HTTPS_ONLY,
-            }),
-            viewerProtocolPolicy: ViewerProtocolPolicy.HTTPS_ONLY,
-            cachePolicy: {
-              cachePolicyId: apiCachePolicy.cachePolicyId,
-            },
-            allowedMethods: AllowedMethods.ALLOW_ALL,
-            cachedMethods: AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
-          },
-        },
-      },
     },
   });
 

@@ -1,14 +1,13 @@
 import { Cognito, StackContext, use } from "sst/constructs";
 import * as iam from "aws-cdk-lib/aws-iam";
-import { DBStack } from "./DBStack";
-import { FunctionStack } from "./FunctionStack";
+import { CoreStack } from "./CoreStack";
 
 export function AuthStack({ stack }: StackContext) {
   const auth = new Cognito(stack, "Auth", {
     login: ["email"],
   });
 
-  const { materialBucket } = use(FunctionStack);
+  const { materialBucket } = use(CoreStack);
   auth.attachPermissionsForAuthUsers(stack, [
     new iam.PolicyStatement({
       actions: ["s3:*"],
