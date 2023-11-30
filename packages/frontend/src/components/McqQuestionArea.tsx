@@ -11,7 +11,8 @@ import { PrimitiveAtom, useAtom } from "jotai";
 function QuestionArea(props: {
   question: PrimitiveAtom<Mcq>;
   isSelected: boolean;
-  move: any;
+  add?: any;
+  remove: any;
 }) {
   const [question, setQuestion] = useAtom(props.question);
 
@@ -30,16 +31,29 @@ function QuestionArea(props: {
     const updatedQuestion = { ...question, answer_index: answer };
     setQuestion(updatedQuestion);
   }
+
   return (
     <>
       <div className="question-container">
         <form onSubmit={(e) => e.preventDefault()}>
-          <FontAwesomeIcon
-            icon={props.isSelected ? faMinusCircle : faPlusCircle}
-            size="2x"
-            className="faMinusCircle"
-            onClick={() => props.move(question)}
-          />
+          <div
+            style={{ display: "flex", justifyContent: "center", gap: "5px" }}
+          >
+            <FontAwesomeIcon
+              icon={faMinusCircle}
+              size="2x"
+              className="faMinusCircle"
+              onClick={() => props.remove(question)}
+            />
+            {!props.isSelected && (
+              <FontAwesomeIcon
+                icon={faPlusCircle}
+                size="2x"
+                className="faPlusCircle"
+                onClick={() => props.add(question)}
+              />
+            )}
+          </div>
 
           <textarea
             style={{ padding: "5px" }}

@@ -60,8 +60,12 @@ function FillBlankQuestionsSetup(props: { inFlight: any }) {
     };
   };
 
-  const removeQuestion = (question: PrimitiveAtom<FillBlank>) => {
+  const removeSelected = (question: PrimitiveAtom<FillBlank>) => {
     return () => selectedDispatch({ type: "remove", atom: question });
+  };
+
+  const removeGenerated = (question: PrimitiveAtom<FillBlank>) => {
+    return () => generatedDispatch({ type: "remove", atom: question });
   };
 
   return (
@@ -77,7 +81,8 @@ function FillBlankQuestionsSetup(props: { inFlight: any }) {
               key={gArr[index].id}
               question={question}
               isSelected={false}
-              move={selectQuestion(question)}
+              add={selectQuestion(question)}
+              remove={removeGenerated(question)}
             />
           ))}
         </div>
@@ -90,7 +95,7 @@ function FillBlankQuestionsSetup(props: { inFlight: any }) {
               key={sArr[index].id}
               question={question}
               isSelected={true}
-              move={removeQuestion(question)}
+              remove={removeSelected(question)}
             />
           ))}
         </div>

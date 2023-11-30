@@ -60,8 +60,12 @@ function TfQuestionsSetup(props: { inFlight: any }) {
     };
   };
 
-  const removeQuestion = (question: PrimitiveAtom<Tf>) => {
+  const removeSelected = (question: PrimitiveAtom<Tf>) => {
     return () => selectedDispatch({ type: "remove", atom: question });
+  };
+
+  const removeGenerated = (question: PrimitiveAtom<Tf>) => {
+    return () => generatedDispatch({ type: "remove", atom: question });
   };
 
   return (
@@ -77,7 +81,8 @@ function TfQuestionsSetup(props: { inFlight: any }) {
               key={gArr[index].id}
               question={question}
               isSelected={false}
-              move={selectQuestion(question)}
+              add={selectQuestion(question)}
+              remove={removeGenerated(question)}
             />
           ))}
         </div>
@@ -90,7 +95,7 @@ function TfQuestionsSetup(props: { inFlight: any }) {
               key={sArr[index].id}
               question={question}
               isSelected={true}
-              move={removeQuestion(question)}
+              remove={removeSelected(question)}
             />
           ))}
         </div>
