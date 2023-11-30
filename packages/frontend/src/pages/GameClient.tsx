@@ -73,10 +73,17 @@ export function GameClient() {
           score: message.score,
         });
       }
+      if (message.action == "pubEnd") {
+        setState({
+          kind: "endGameState",
+          rank: message.rank,
+          correctQuestions: message.correctQuestions,
+          totalQuestions: message.totalQuestions,
+        });
+      }
     }
   }, [lastMessage]);
 
-  // @ts-ignore
   const send = useCallback((data: ClientMessage) => {
     if (data.action) innerSendMessage(JSON.stringify({ ...data, gameId }));
   }, []);
@@ -172,7 +179,6 @@ function Question(props: {
   send: (m: sendAnswer) => void;
   setState: (s: WaitState) => void;
 }) {
-  // @ts-ignore
   const { questionIndex, totalQuestions, noOptions } = props.state;
   const icons = [faCloud, faSun, faMeteor, faStar];
 
@@ -245,14 +251,15 @@ function Result(props: { state: ResultState }) {
 }
 
 function EndGame(props: { state: EndGameState }) {
-  // @ts-ignore
   const { rank, correctQuestions, totalQuestions } = props.state;
 
   return (
     <>
       <div className="end-game-client">
-        <h1>You are in the 1st Place!</h1>
-        <p>3 of 3 are correct</p>
+        <h1>You are no. {rank}!</h1>
+        <p>
+          {correctQuestions} of {totalQuestions} are correct
+        </p>
       </div>
     </>
   );

@@ -73,14 +73,13 @@ export function GameServer() {
   } = useWebSocket(socketUrl);
   const [events, setEvents] = useState([] as string[]);
 
-  // const questions = useAtomValue(questionsAtom);
-
   const [usernames, innerSetUsernames] = useState(new Map());
   const setUsernames = (k: string, v: string) =>
     innerSetUsernames(new Map(usernames.set(k, v)));
 
   const answers = useRef([] as sendAnswer[]);
   const scores = useRef(new Map());
+  const marks = useRef(new Map());
 
   const [qIndex, setQIndex] = useAtom(qIndexAtom);
   useEffect(() => {
@@ -126,6 +125,7 @@ export function GameServer() {
           answers={answers}
           setGlobalState={setState}
           scores={scores}
+          marks={marks}
           qIndex={qIndex}
         />
       )}
@@ -141,7 +141,12 @@ export function GameServer() {
         />
       )}
       {state.kind == "endGameState" && (
-        <Endgame usernames={usernames} scores={scores} />
+        <Endgame
+          usernames={usernames}
+          scores={scores}
+          marks={marks}
+          send={send}
+        />
       )}
       <button onClick={() => setState({ kind: "preGameState" })}>
         preGame
@@ -269,6 +274,7 @@ function Question(props: {
   answers: any;
   setGlobalState: (s: ScoreboardState) => void;
   scores: any;
+  marks: any;
   qIndex: number;
 }) {
   const [state, setState] = useState({
@@ -289,6 +295,7 @@ function Question(props: {
           setGlobalState={props.setGlobalState}
           answers={props.answers}
           scores={props.scores}
+          marks={props.marks}
           setState={props.setGlobalState}
           qIndex={props.qIndex}
         />
@@ -334,6 +341,7 @@ function QuestionOptions(props: {
   setGlobalState: (s: ScoreboardState) => void;
   answers: any;
   scores: any;
+  marks: any;
   setState: (s: ScoreboardState) => void;
   qIndex: number;
 }) {
@@ -349,10 +357,10 @@ function QuestionOptions(props: {
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
-        ...props.answers.current.map((obj: any) => obj.time)
+        ...props.answers.current.map((obj: any) => obj.time),
       );
       const max = Math.max(
-        ...props.answers.current.map((obj: any) => obj.time)
+        ...props.answers.current.map((obj: any) => obj.time),
       );
       const range = max - min + 1;
 
@@ -362,19 +370,21 @@ function QuestionOptions(props: {
       const currentScore = new Map();
 
       for (let answer of props.answers.current) {
-        const score =
-          answer.answer == currentQuestion.answer_index
-            ? calculateScore(answer.time)
-            : 0;
+        if (answer.answer !== currentQuestion.answer_index) return;
+        const score = calculateScore(answer.time);
         currentScore.set(answer.connectionId, score);
         props.scores.current.set(
           answer.connectionId,
-          (props.scores.current.get(answer.connectionId) ?? 0) + score
+          (props.scores.current.get(answer.connectionId) ?? 0) + score,
+        );
+        props.marks.current.set(
+          answer.connectionId,
+          (props.marks.current.get(answer.connectionId) ?? 0) + 1,
         );
       }
 
       const rankMap = new Map(
-        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
       );
 
       let i = 0;
@@ -491,7 +501,7 @@ function Scoreboard(props: {
   };
 
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
   );
 
   return (
@@ -522,10 +532,30 @@ function Scoreboard(props: {
   );
 }
 
-function Endgame(props: { scores: any; usernames: any }) {
+function Endgame(props: {
+  scores: any;
+  marks: any;
+  usernames: any;
+  send: (m: pubEnd) => void;
+}) {
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
   );
+  const totalQuestions = useAtomValue(questionsAtom).length;
+
+  useEffect(() => {
+    let i = 0;
+    rankMap.forEach((_totalScore, connId) => {
+      props.send({
+        action: "pubEnd",
+        connectionId: connId as string,
+        rank: i + 1,
+        correctQuestions: props.marks.current.get(connId) ?? 0,
+        totalQuestions,
+      });
+      i++;
+    });
+  }, []);
 
   const medals = ["G", "S", "B"];
   const medalWord = ["ra", "Ca", "val!"];
@@ -561,7 +591,10 @@ function Endgame(props: { scores: any; usernames: any }) {
                     </div>
                   </div>
                   <div className="score"> {`${score}`}</div>
-                  <div className="mark">7 out of 10</div>
+                  <div className="mark">
+                    {props.marks.current.get(connId) ?? 0} out of{" "}
+                    {totalQuestions}
+                  </div>
                 </div>
               </div>
             );

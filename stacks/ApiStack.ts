@@ -69,6 +69,7 @@ export function ApiStack({ stack }: StackContext) {
       $disconnect: "packages/api/src/disconnect.main",
       pubQuestion: "packages/api/src/pubQuestion.main",
       pubResult: "packages/api/src/pubResults.main",
+      pubEnd: "packages/api/src/pubEnd.main",
       sendAnswer: "packages/api/src/sendAnswer.main",
       sendUsername: "packages/api/src/sendUsername.main",
     },

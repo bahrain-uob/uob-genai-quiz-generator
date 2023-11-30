@@ -15,7 +15,7 @@ interface sendAnswer {
   answer: number;
 }
 
-type ServerMessage = pubQuestion | pubResult;
+type ServerMessage = pubQuestion | pubResult | pubEnd;
 
 interface pubQuestion {
   action: "pubQuestion";
@@ -31,4 +31,13 @@ interface pubResult {
   connectionId?: string;
   rank: number;
   score: number;
+}
+
+interface pubEnd {
+  action: "pubEnd";
+  gameId?: string;
+  connectionId?: string;
+  rank: number;
+  correctQuestions: number;
+  totalQuestions: number;
 }
