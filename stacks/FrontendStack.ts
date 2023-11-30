@@ -4,7 +4,7 @@ import { ApiStack } from "./ApiStack";
 import { AuthStack } from "./AuthStack";
 
 export function FrontendStack({ stack, app }: StackContext) {
-  const { api } = use(ApiStack);
+  const { api, socket } = use(ApiStack);
   const { auth } = use(AuthStack);
   const { materialBucket } = use(CoreStack);
 
