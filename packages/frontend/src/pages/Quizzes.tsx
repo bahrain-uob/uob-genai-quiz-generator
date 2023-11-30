@@ -1,16 +1,32 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Navrbar from "../components/Navbar";
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCircleInfo,
+  faDownload,
+  faList,
+  faPlay,
+  faRectangleList,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 import { API } from "aws-amplify";
-import { useEffect } from "react";
+import { useEffect, useState, cloneElement } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { Course, coursesAtom, navAtom, quizzesAtom } from "../lib/store";
+import {
+  Course,
+  FillBlank,
+  Mcq,
+  Tf,
+  coursesAtom,
+  navAtom,
+  quizzesAtom,
+} from "../lib/store";
 import { getUserId, isEqual } from "../lib/helpers";
 import { Storage } from "aws-amplify";
 import { useImmerAtom } from "jotai-immer";
 import { exportKahoot } from "../lib/export";
 import coolkid from "../assets/Cool Kids - Alone Time.svg";
+import Modal from "react-modal";
+import "../quiz.css";
 
 function Quizzes() {
   const [courses, setCourses] = useAtom(coursesAtom);
@@ -80,11 +96,47 @@ function Quizzes() {
     <>
       <Navrbar active="quizzes" />
       {courses.length > 0 ? (
-        <div className="top-quizzes">
-          <Link style={{ marginLeft: "auto" }} to="/createquiz">
-            <button className="generate-button">Generate Quiz</button>
-          </Link>
-        </div>
+        <>
+          <div className="top-quizzes">
+            <Link style={{ marginLeft: "auto" }} to="/createquiz">
+              <button className="generate-button">Generate Quiz</button>
+            </Link>
+          </div>
+          <div className="container">
+            {courses.map((course: Course) => (
+              <div key={course.id} className="course-quiz-container">
+                <h2
+                  className="underlined"
+                  onClick={() => {
+                    navigate(course.id, course.code, course.name);
+                  }}
+                >
+                  {`${course.code}  - ${course.name}`}
+                </h2>
+                {(quizzes[course.id] ?? []).length > 0 ? (
+                  <div className="quizzes-container">
+                    {(quizzes[course.id] ?? []).map((quiz: any) => (
+                      <Quiz
+                        onClick={() => exportQuiz(course.id, quiz.name)}
+                        key={`${course.id}${quiz.name}`}
+                        name={quiz.name}
+                        courseId={course.id}
+                        date={quiz.date}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <div>
+                      <img src={coolkid} alt="coolkid" width="300px" />
+                      <h4>Nothing to see here!</h4>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
       ) : (
         <div className="empty-courses" style={{ backgroundColor: "#f2e9e4" }}>
           <div className="empty-card">
@@ -111,40 +163,138 @@ function Quizzes() {
           </div>
         </div>
       )}
+    </>
+  );
+}
 
-      {courses.length > 0 && (
-        <div className="container">
-          {courses.map((course: Course) => (
-            <div key={course.id} className="course-quiz-container">
-              <h2
-                className="underlined"
-                onClick={() => {
-                  navigate(course.id, course.code, course.name);
-                }}
-              >
-                {`${course.code}  - ${course.name}`}
-              </h2>
-              {(quizzes[course.id] ?? []).length > 0 ? (
-                <div className="quizzes-container">
-                  {(quizzes[course.id] ?? []).map((quiz: any) => (
-                    <Quiz
-                      onClick={() => exportQuiz(course.id, quiz.name)}
-                      key={`${course.id}${quiz.name}`}
-                      name={quiz.name}
-                      date={quiz.date}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <>
-                  <div>
-                    <img src={coolkid} alt="coolkid" width="300px" />
-                    <h4>Nothing to see here!</h4>
-                  </div>
-                </>
-              )}
-            </div>
+const Dropdown = (props: { trigger: any; menu: any[] }) => {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+  return (
+    <div className="dropdown">
+      {cloneElement(props.trigger, {
+        onClick: handleOpen,
+      })}
+      {open ? (
+        <ul className="menu">
+          {props.menu.map((menuItem, index) => (
+            <li key={index} className="menu-item">
+              {cloneElement(menuItem, {
+                onClick: () => {
+                  menuItem.props.onClick();
+                  setOpen(false);
+                },
+              })}
+            </li>
           ))}
+        </ul>
+      ) : null}
+    </div>
+  );
+};
+
+function FillBlankQuestion(props: {
+  question: string;
+  answer: string;
+  list: string;
+}) {
+  return (
+    <>
+      {props.list == "rec" && (
+        <div className="quiz-question fill">
+          <Spirals />
+          <div className="spiral-4"></div>
+          <h4>{props.question}</h4>
+          <div className="answers-container">
+            <p className="correct-ans">{props.answer}</p>
+          </div>
+        </div>
+      )}
+
+      {props.list == "norm" && (
+        <div className="norm-question">
+          <h4>Q: {props.question}</h4>
+          <div className="answers-container">
+            <p>Answer: {String(props.answer)}</p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function McqQuestion(props: {
+  question: string;
+  choices: string[];
+  ans_index: number;
+  list: string;
+}) {
+  console.log("HEER");
+  console.log(props.ans_index);
+  return (
+    <>
+      {props.list == "rec" && (
+        <div className="quiz-question mcq">
+          <Spirals />
+          <div className="spiral-4"></div>
+          <h4>{props.question}</h4>
+          <div className="answers-container">
+            {props.choices.map((choice, index) => (
+              <p className={props.ans_index == index ? "correct-ans" : ""}>
+                {choice}
+              </p>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {props.list == "norm" && (
+        <div className="norm-question">
+          <h4>Q: {props.question}</h4>
+          <div className="answers-container">
+            {props.choices.map((choice, index) => (
+              <p>{`${index + 1}) ${choice}`}</p>
+            ))}
+            <p>
+              {`Answer:    
+              ${String(props.choices[props.ans_index + 1])}`}
+            </p>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function TfQuestion(props: {
+  question: string;
+  answer: boolean;
+  list: string;
+}) {
+  console.log(props);
+  return (
+    <>
+      {props.list == "rec" && (
+        <div className="quiz-question tf">
+          <Spirals />
+          <div className="spiral-4"></div>
+          <h4>{props.question}</h4>
+          <div className="answers-container">
+            <p className={props.answer == true ? "correct-ans" : ""}>True</p>
+            <p className={props.answer == false ? "correct-ans" : ""}>False</p>
+          </div>
+        </div>
+      )}
+      {props.list == "norm" && (
+        <div className="norm-question">
+          <h4>Q: {props.question}</h4>
+          <div className="answers-container">
+            <p>A) True</p>
+            <p>B) False</p>
+            <p>Answer: {String(props.answer)}</p>
+          </div>
         </div>
       )}
     </>
@@ -161,27 +311,143 @@ function Spirals() {
   );
 }
 
-function Quiz(props: { name: string; date: string; onClick: any }) {
+function Quiz(props: {
+  name: string;
+  courseId: string;
+  date: string;
+  onClick: any;
+}) {
+  const [modal, setModal] = useState(false);
+  const [checked, setChecked] = useState("norm");
+  const [quiz, setQuiz] = useState(null as any);
+
+  useEffect(() => {
+    const fn = async () => {
+      const userId = await getUserId();
+      const key = `${userId}/${props.courseId}/quizzes/${props.name}.json`;
+      const response = await Storage.get(key, { download: true });
+      const fetchedQuiz = JSON.parse(await response.Body!.text());
+      console.log(fetchedQuiz);
+      setQuiz(fetchedQuiz);
+    };
+    fn();
+  }, []);
+
+  if (!quiz) {
+    return <></>;
+  }
+
   return (
-    <div onClick={props.onClick} className="quiz-item">
-      <Spirals />
-      <div className="lines"></div>
-      <p className="quiz-name">{props.name}</p>
-      <div className="information">
-        <FontAwesomeIcon
-          className="info-icon"
-          icon={faCircleInfo}
-          size="lg"
-          style={{ color: "white" }}
-        />
-        <div className="contents">
-          <p>Generated on {props.date}</p>
-          <span>Click for more details</span>
+    <>
+      <div className="quiz-item" onClick={() => setModal(true)}>
+        <Spirals />
+        <div className="lines"></div>
+        <p className="quiz-name">{props.name}</p>
+        <div className="information">
+          <FontAwesomeIcon
+            className="info-icon"
+            icon={faCircleInfo}
+            size="lg"
+            style={{ color: "white" }}
+          />
+          <div className="contents">
+            <p>Generated on {props.date}</p>
+            <span onClick={() => setModal(true)}>Click to view quiz</span>
+          </div>
         </div>
       </div>
-    </div>
+
+      <Modal
+        isOpen={modal}
+        onRequestClose={() => setModal(false)}
+        style={bg}
+        ariaHideApp={false}
+      >
+        <div className="quiz-header">
+          <div className="top-box">
+            <div className="close" onClick={() => setModal(false)}>
+              <p>close</p>
+            </div>
+            <h1 className="quiz-name">{quiz.name}</h1>
+          </div>
+          <div className="actions-menu">
+            <button className="play-caraval">
+              <FontAwesomeIcon icon={faPlay} /> Play Caraval
+            </button>
+            <Dropdown
+              trigger={
+                <button>
+                  <FontAwesomeIcon
+                    icon={faDownload}
+                    className="download-icon"
+                    size="lg"
+                  />
+                </button>
+              }
+              menu={[
+                <button onClick={props.onClick}>Export as Moodle</button>,
+                <button onClick={props.onClick}>Export as PDF</button>,
+              ]}
+            />
+          </div>
+        </div>
+        <div className="list-options">
+          <FontAwesomeIcon
+            onClick={() => setChecked("rec")}
+            icon={faRectangleList}
+            size="lg"
+            className={`rec-list ${checked == "rec" ? "checked" : ""}`}
+          />
+          <FontAwesomeIcon
+            onClick={() => setChecked("norm")}
+            icon={faList}
+            size="lg"
+            className={`norm-list ${checked == "norm" ? "checked" : ""}`}
+          />
+        </div>
+        <div className={checked == "norm" ? "" : "quiz-questions"}>
+          <div className={checked == "norm" ? "" : "quiz-questions type"}>
+            {checked == "rec" && <h1>True/False</h1>}
+            {quiz.TfArr.map((question: Tf) => (
+              <TfQuestion
+                question={question.question}
+                answer={question.answer}
+                list={checked}
+              />
+            ))}
+          </div>
+          <div className={checked == "norm" ? "" : "quiz-questions type"}>
+            {checked == "rec" && <h1>MCQ</h1>}
+            {quiz.mcqArr.map((question: Mcq) => (
+              <McqQuestion
+                question={question.question}
+                choices={question.choices}
+                ans_index={question.answer_index}
+                list={checked}
+              />
+            ))}
+          </div>
+          <div className={checked == "norm" ? "" : "quiz-questions type"}>
+            {checked == "rec" && <h1>Fill-in Blank</h1>}
+            {quiz.fibArr.map((question: FillBlank) => (
+              <FillBlankQuestion
+                question={question.question}
+                answer={question.answer}
+                list={checked}
+              />
+            ))}
+          </div>
+        </div>
+      </Modal>
+    </>
   );
 }
-
+const bg = {
+  content: {
+    background: "white",
+    borderRadius: "15px",
+    border: "none",
+  },
+};
 export { Spirals };
 export default Quizzes;

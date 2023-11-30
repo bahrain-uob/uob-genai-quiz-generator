@@ -11,7 +11,7 @@ OUTPUT_BUCKET = os.environ["OUTPUT_BUCKET"]
 def handler(event, context):
     text = ""
     bucket_name = event["Records"][0]["s3"]["bucket"]["name"]
-    object_key = event["Records"][0]["s3"]["object"]["key"]
+    object_key = event["Records"][0]["s3"]["object"]["key"].replace("+", " ")
 
     try:
         response = s3.get_object(Bucket=bucket_name, Key=object_key)

@@ -1,10 +1,22 @@
-import { Bucket, StackContext, use } from "sst/constructs";
-import { DBStack } from "./DBStack";
+import { Bucket, StackContext, Table } from "sst/constructs";
 
-export function FunctionStack({ stack }: StackContext) {
-  const { materialBucket } = use(DBStack);
-  const materialText = new Bucket(stack, "Material-Text");
+export function CoreStack({ stack }: StackContext) {
+  const coursesTable = new Table(stack, "Courses", {
+    fields: {
+      user_id: "string",
+      course_id: "string",
+      course_code: "string",
+      course_name: "string",
+    },
+    primaryIndex: { partitionKey: "user_id", sortKey: "course_id" },
+  });
 
+  // stores the material uploaded by the user
+  const materialBucket = new Bucket(stack, "MaterialBucket");
+  // stores the text version of the file after processing it
+  const materialText = new Bucket(stack, "MaterialText");
+
+  // proccess each file uploaded to text format
   materialBucket.addNotifications(stack, {
     pdf: {
       function: {
@@ -91,7 +103,21 @@ export function FunctionStack({ stack }: StackContext) {
       filters: [{ suffix: ".jpeg" }],
     },
   });
+
   materialText.addNotifications(stack, {
+    // generate summary after material is processed to text
+    summarize: {
+      function: {
+        handler: "packages/functions/src/summarize_text.summarize",
+        runtime: "python3.11",
+        permissions: ["sagemaker", "s3"],
+        environment: {
+          MATERIAL_BUCKET: materialBucket.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".txt" }],
+    },
     json: {
       function: {
         handler: "packages/functions/src/process_json.extract_transcript",
@@ -102,18 +128,6 @@ export function FunctionStack({ stack }: StackContext) {
       filters: [{ suffix: ".json" }],
     },
   });
-  // This is an example of creating notification, modify for your use
-  //
-  // materialBucket.addNotifications(stack, {
-  //   notification1: {
-  //     function: "packages/functions/src/pdf.main",
-  //     events: ["object_created"],
-  //     filters: [{ suffix: ".pdf" }],
-  //   },
-  //   notification2: {
-  //     function: "packages/functions/src/pptx.main",
-  //     events: ["object_created"],
-  //     filters: [{ suffix: ".txt" }],
-  //   },
-  // });
+
+  return { materialText, materialBucket, coursesTable };
 }

@@ -1,39 +1,55 @@
-import { useState } from "react";
 import { PrimitiveAtom, atom, useAtom, useAtomValue } from "jotai";
 import { FillBlank, quizAtom } from "../lib/store";
 import { focusAtom } from "jotai-optics";
 import FillBlankQuestionArea from "./FillBlankQuestionArea";
 import { splitAtom } from "jotai/utils";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
+import { API } from "aws-amplify";
+import { useEffect, useState } from "react";
 
-const FillBlanksAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("fillBlankArr"),
-);
+const FillBlanksAtom = focusAtom(quizAtom, (optic) => optic.prop("fibArr"));
 const FillBlanksAtomsAtom = splitAtom(FillBlanksAtom);
-const generatedAtom = atom([
-  {
-    id: crypto.randomUUID(),
-    question: "S3 is ",
-    answer: "Simple Storage Service",
-  },
-  {
-    id: crypto.randomUUID(),
-    question: "EC2 is Elastic ",
-    answer: "Cloud Compute",
-  },
-  {
-    id: crypto.randomUUID(),
-    question: "VPC is ",
-    answer: "Virtual Private Cloud",
-  },
-] as FillBlank[]);
+const generatedAtom = atom([] as FillBlank[]);
 const generatedAtomsAtom = splitAtom(generatedAtom);
 
-function FillBlankQuestionsSetup() {
+const courseIdAtom = focusAtom(quizAtom, (optic) => optic.prop("courseId"));
+const materialsAtom = focusAtom(quizAtom, (optic) => optic.prop("materials"));
+const noQuestionAtom = focusAtom(quizAtom, (optic) => optic.prop("mcq"));
+
+function FillBlankQuestionsSetup(props: { inFlight: any }) {
   const [generated, generatedDispatch] = useAtom(generatedAtomsAtom);
   const [selected, selectedDispatch] = useAtom(FillBlanksAtomsAtom);
   const gArr = useAtomValue(generatedAtom);
   const sArr = useAtomValue(FillBlanksAtom);
+
+  const courseId = useAtomValue(courseIdAtom);
+  const materials = useAtomValue(materialsAtom);
+  const no_questions = useAtomValue(noQuestionAtom);
+  const [maybeGen, setMaybeGen] = useState({});
+
+  // generating question using AI, MAGIC
+  useEffect(() => {
+    if (props.inFlight.current) return;
+    if (gArr.length + sArr.length < no_questions) {
+      props.inFlight.current = true;
+      (async () => {
+        try {
+          const question = await API.post("api", "/fib", {
+            body: {
+              materials: materials,
+              course_id: courseId,
+            },
+          });
+          generatedDispatch({
+            type: "insert",
+            value: { id: crypto.randomUUID(), ...question },
+          });
+        } catch {}
+        props.inFlight.current = false;
+        setMaybeGen({});
+      })();
+    }
+  }, [maybeGen, gArr, sArr]);
 
   const [parent] = useAutoAnimate();
 

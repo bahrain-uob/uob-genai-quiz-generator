@@ -28,14 +28,12 @@ a {
   width: 400px;
   height: 60px;
   border: 3px solid white;
-  /* font-weight: 10px; */
   border-bottom-right-radius: 50px;
   border-top-right-radius: 50px;
 }
 
 /* user homepage */
 .homepage-container {
-  /* background-color: #4a4e699c; */
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -44,16 +42,14 @@ a {
 .homepage-container h2 {
   text-align: center;
   line-height: 40px;
-  margin-top: 10rem;
+  margin-top: 5rem;
   color: #ca867a;
   font-weight: 600;
   background-color: white;
   width: 20em;
   align-self: center;
   border-radius: 8px;
-  /* border: 2px solid #4a4e69; */
   font-size: large;
-  /* box-shadow: 2px 2px 9px #8e8e8e; */
   padding: 10px;
   font-size: x-large;
 }
@@ -82,7 +78,6 @@ a {
   margin-bottom: 40px;
 }
 .access-item {
-  flex-basis: 33.3333%;
   background-color: rgb(105, 110, 142);
   box-shadow: 2px 2px 9px #000000b8;
   border-radius: 6px;
@@ -114,21 +109,37 @@ a {
 .select-container label {
   margin-bottom: 10px;
   font-size: 1rem;
+  color: #4a4e69;
 }
 .select-container select {
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 15px;
   font-size: 14px;
+  border: none;
+  box-shadow: 1px 2px 5px #c3c3c3;
+  width: 20rem;
+  color: #4a4e69;
+  cursor: pointer;
+  appearance: none;
 }
-.select-container option {
+
+select:focus {
+  outline: none;
+}
+
+option {
   padding: 20px;
   text-align: center;
+  cursor: pointer;
+  color: #22223b;
+  padding: 80px;
 }
-.select-container select:focus {
-  border: 2px solid #4a4e69a4;
+
+.select-container option:focus {
+  background: #4a4e69;
 }
+
 .background-carousel {
-  margin-top: 2em;
   margin-bottom: 26em;
   position: relative;
 }
@@ -427,7 +438,6 @@ h2 {
 }
 .create h4 {
   color: #4a4e69;
-  /* color: #6b6b6b; */
   font-weight: bolder;
   font-size: larger;
 }
@@ -444,12 +454,20 @@ h2 {
   justify-content: center;
   color: #4a4e69e5;
   margin-bottom: 40px;
+  letter-spacing: 0px;
 }
 .modal-content {
   text-align: center;
 }
 .modal-content button {
   align-self: center;
+  border-radius: 10px;
+  background-color: #5c617f;
+  width: 10rem;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px #c9c9c9;
+  margin: 1.5rem auto 0 auto;
+  color: white;
 }
 
 /* end of courses page */
@@ -514,7 +532,6 @@ input[type="text"] {
   border-radius: 50%;
   background: #d9d9d9;
   margin-bottom: 6px;
-
   box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.541);
 }
 
@@ -575,19 +592,28 @@ input[type="checkbox"] {
   margin-top: 10rem;
 }
 .setup-quiz {
-  padding: 50px;
+  padding: 20px;
   display: flex;
   justify-content: center;
 }
 
+.amplify-alert[data-variation="warning"] {
+  background-color: #ffa6008a;
+}
+
 .questions-setup {
-  padding: 50px;
+  padding: 10px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
 }
+
+.questions-setup h3 {
+  letter-spacing: 0px;
+}
+
 .questions {
   display: flex;
   flex-direction: row;
@@ -683,7 +709,7 @@ textarea:focus {
 .setup-quiz h3,
 .questions-setup h3 {
   font-size: 1.8rem;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
 }
 .setup-quiz input[type="text"],
 input[type="number"] {
@@ -921,7 +947,6 @@ input[type="number"] {
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
   width: 300px;
-  /* margin-left:6px; */
 }
 .top-materials {
   margin-top: 1rem;
@@ -953,47 +978,107 @@ input[type="number"] {
 .cloud-icon {
   padding-top: 0.6em;
 }
-/* .upload-button {
-  margin-left: auto;
-  margin-right: 10rem;
-} */
+
 .materials table {
-  /* margin-top: 100px; */
   align-self: center;
   margin: auto;
   width: 100%;
   max-width: 100%;
   table-layout: fixed;
   text-align: center;
-  letter-spacing: 1px;
   border-collapse: collapse;
-  font-weight: lighter;
+  font-weight: 300;
+}
+.materials .course-content-table {
+  margin-top: 5rem;
+  width: 95%;
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+}
+
+.materials .course-content-table .td {
+  border-bottom: 5px solid white;
+  background-color: #f2e9e4d4;
+  transition: 0.5s;
+  font-weight: normal;
+  color: #4a4e69;
 }
 
 .materials tr {
   border: none;
   padding: 20px;
+  margin-bottom: 10px;
 }
 
 thead th {
   padding: 10px;
   font-weight: normal;
+  color: #22223b;
 }
 
 .materials td {
-  background-color: #f2e9e4;
+  background: #f2e9e4;
   border: none;
-  padding: 20px;
+  padding: 20px 6px;
   border-bottom: 1px solid #0000007c;
 }
 
 .materials {
-  /* margin-top: 100px; */
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
+
+details {
+  border-radius: 4px;
+  padding: 0.5em 2em 0;
+  cursor: pointer;
+}
+
+details button {
+  background: #606584;
+  color: white;
+  padding: 0.75em 1.6em;
+  font-size: small;
+  border: none;
+  margin: 0.5rem 0 0 1rem;
+  border-radius: 7px;
+  cursor: pointer;
+  animation-name: slideToRight;
+  animation-duration: 1s;
+  box-shadow: 1px 1px 2px #8e8e8e;
+  transform: scale(0.95);
+  transition: box-shadow 0.5s, transform 0.5s;
+  &:hover {
+    transform: scale(1);
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    transform: translateY(1px);
+    transition: transform 0.5s;
+  }
+}
+
+@keyframes slideToRight {
+  from {
+    margin-left: 20%;
+    width: auto;
+  }
+  to {
+    margin-right: auto;
+    width: auto;
+  }
+}
+
+summary {
+  margin: -0.5em -0.5em 0;
+  padding: 0.5em;
+}
+
+details[open] {
+  padding: 0.5em 2em 0;
+}
+
 /* end of materials page */
 /* Quiz Generation page */
 .courses-table {
@@ -1039,7 +1124,7 @@ thead th {
   justify-content: center;
   flex-direction: column;
   padding: 2rem;
-  margin-top: 5em;
+  margin-top: 1em;
   gap: 60px;
 }
 .quizzes-container {
@@ -1064,21 +1149,20 @@ thead th {
   color: #4a4e69;
   background-color: #f2e9e4;
   text-align: center;
-  width: 60rem;
+  width: 90%;
 }
 .course-quiz-container h2 {
   cursor: pointer;
 }
 
 .generate-button {
-  background-color: #4a4e69;
+  background-color: #575b78;
   color: white;
-  padding: 15px;
+  padding: 10px 15px;
   border-radius: 10px;
   border: none;
   cursor: pointer;
-  margin-left: auto;
-  margin-right: 10rem;
+  margin-right: 2rem;
   margin-top: 2.5rem;
   font-size: small;
   display: inline-block;
@@ -1089,7 +1173,7 @@ thead th {
   content: "»";
   position: absolute;
   opacity: 0;
-  top: 14px;
+  top: 7px;
   right: -20px;
   transition: 0.5s;
   font-size: medium;
@@ -1104,22 +1188,12 @@ thead th {
   right: 10px;
 }
 
-/* .generate-button-2 {
-  background-color: #4a4e69;
-  color: white;
-  padding: 15px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  margin: auto;
-} */
 .quiz-item {
   text-align: center;
   font-weight: bold;
   color: #4a4e69;
   border-radius: 10px;
   box-shadow: 2px 2px 3px #c3c3c3;
-  /* padding: 20px; */
   position: relative;
   flex-basis: 23.3333%;
   width: 15rem;

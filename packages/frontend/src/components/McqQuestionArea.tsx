@@ -58,17 +58,18 @@ function QuestionArea(props: {
               }}
             >
               <label style={{ fontSize: "medium" }}>{index + 1})</label>
-              <input
+              <textarea
+                rows={2}
+                cols={35}
                 style={{
                   backgroundColor:
                     question.answer_index === index
                       ? "rgba(77, 187, 67, 0.46)"
                       : "",
                 }}
-                type="text"
                 defaultValue={choice}
                 onChange={(e) => handleChoiceChange(e, index)}
-              />
+              ></textarea>
             </div>
           ))}
 

@@ -1,12 +1,10 @@
 import { Api, StackContext, Table, WebSocketApi, use } from "sst/constructs";
-import { CacheHeaderBehavior, CachePolicy } from "aws-cdk-lib/aws-cloudfront";
-import { Duration } from "aws-cdk-lib/core";
-import { DBStack } from "./DBStack";
 import { AuthStack } from "./AuthStack";
+import { CoreStack } from "./CoreStack";
 
 export function ApiStack({ stack }: StackContext) {
   const { auth } = use(AuthStack);
-  const { materialBucket, quiz_bucket, courses_table } = use(DBStack);
+  const { coursesTable, materialText } = use(CoreStack);
 
   // Create the HTTP API
   const api = new Api(stack, "Api", {
@@ -22,12 +20,31 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       authorizer: "jwt",
       function: {
-        bind: [materialBucket, quiz_bucket, courses_table],
+        runtime: "python3.11",
+        permissions: ["sagemaker", "s3"],
+        environment: {
+          TEXT_BUCKET: materialText.bucketName,
+        },
       },
     },
     routes: {
-      "GET /courses": "packages/api/src/courses.get",
-      "POST /courses": "packages/api/src/courses.post",
+      "POST /mcq": "packages/api/src/questionsGen.mcq",
+      "POST /tf": "packages/api/src/questionsGen.tf",
+      "POST /fib": "packages/api/src/questionsGen.fib",
+      "GET /courses": {
+        function: {
+          handler: "packages/api/src/courses.get",
+          runtime: "nodejs18.x",
+          bind: [coursesTable],
+        },
+      },
+      "POST /courses": {
+        function: {
+          handler: "packages/api/src/courses.post",
+          runtime: "nodejs18.x",
+          bind: [coursesTable],
+        },
+      },
     },
   });
 
@@ -57,22 +74,5 @@ export function ApiStack({ stack }: StackContext) {
     },
   });
 
-  stack.addOutputs({
-    socketUrl: socket.url,
-  });
-
-  // cache policy to use with cloudfront as reverse proxy to avoid cors
-  // https://dev.to/larswww/real-world-serverless-part-3-cloudfront-reverse-proxy-no-cors-cgj
-  const apiCachePolicy = new CachePolicy(stack, "CachePolicy", {
-    minTtl: Duration.seconds(0), // no cache by default unless backend decides otherwise
-    defaultTtl: Duration.seconds(0),
-    headerBehavior: CacheHeaderBehavior.allowList(
-      "Accept",
-      "Authorization",
-      "Content-Type",
-      "Referer",
-    ),
-  });
-
-  return { api, apiCachePolicy, socket };
+  return { api, socket };
 }
