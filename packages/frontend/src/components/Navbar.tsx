@@ -1,5 +1,6 @@
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import Logo from "../assets/Logo.svg";
+import { clearQuiz } from "../lib/helpers";
 
 function Navbar(props: { active: string }) {
   const { signOut } = useAuthenticator((context: { signOut: any }) => [
@@ -30,6 +31,7 @@ function Navbar(props: { active: string }) {
             </a>
             <a
               href="/createquiz"
+              onClick={clearQuiz}
               className={props.active == "createquiz" ? "active" : ""}
             >
               <p>CREATE QUIZ</p>

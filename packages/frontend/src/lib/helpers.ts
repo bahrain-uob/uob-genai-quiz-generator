@@ -9,3 +9,8 @@ export const getUserId = async (setter?: any) => {
 export const isEqual = <T>(val: T, other: T) => {
   return JSON.stringify(val) === JSON.stringify(other);
 };
+
+export const clearQuiz = () => {
+  localStorage.removeItem("quiz");
+  localStorage.removeItem("stage");
+};
