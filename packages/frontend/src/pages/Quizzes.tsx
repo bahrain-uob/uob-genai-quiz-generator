@@ -20,7 +20,7 @@ import {
   navAtom,
   quizzesAtom,
 } from "../lib/store";
-import { getUserId, isEqual } from "../lib/helpers";
+import { clearQuiz, getUserId, isEqual } from "../lib/helpers";
 import { Storage } from "aws-amplify";
 import { useImmerAtom } from "jotai-immer";
 import { exportKahoot } from "../lib/export";
@@ -99,7 +99,9 @@ function Quizzes() {
         <>
           <div className="top-quizzes">
             <Link style={{ marginLeft: "auto" }} to="/createquiz">
-              <button className="generate-button">Generate Quiz</button>
+              <button onClick={clearQuiz} className="generate-button">
+                Generate Quiz
+              </button>
             </Link>
           </div>
           <div className="container">
