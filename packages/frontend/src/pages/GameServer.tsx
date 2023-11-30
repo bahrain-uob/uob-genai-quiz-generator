@@ -234,7 +234,7 @@ function Register(props: {
           <div className="header-text">Join by scanning the QR</div>
           <div className="QR">
             <QRCodeSVG
-              style={{ width: "77px", height: "77px", zIndex: "1" }}
+              style={{ width: "100px", height: "100px", zIndex: "1" }}
               value={`https://educraft.com/join?gameId=${gameId}`}
             />
           </div>
@@ -357,10 +357,10 @@ function QuestionOptions(props: {
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
-        ...props.answers.current.map((obj: any) => obj.time),
+        ...props.answers.current.map((obj: any) => obj.time)
       );
       const max = Math.max(
-        ...props.answers.current.map((obj: any) => obj.time),
+        ...props.answers.current.map((obj: any) => obj.time)
       );
       const range = max - min + 1;
 
@@ -375,16 +375,16 @@ function QuestionOptions(props: {
         currentScore.set(answer.connectionId, score);
         props.scores.current.set(
           answer.connectionId,
-          (props.scores.current.get(answer.connectionId) ?? 0) + score,
+          (props.scores.current.get(answer.connectionId) ?? 0) + score
         );
         props.marks.current.set(
           answer.connectionId,
-          (props.marks.current.get(answer.connectionId) ?? 0) + 1,
+          (props.marks.current.get(answer.connectionId) ?? 0) + 1
         );
       }
 
       const rankMap = new Map(
-        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
       );
 
       let i = 0;
@@ -501,7 +501,7 @@ function Scoreboard(props: {
   };
 
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
   );
 
   return (
@@ -539,7 +539,7 @@ function Endgame(props: {
   send: (m: pubEnd) => void;
 }) {
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
   );
   const totalQuestions = useAtomValue(questionsAtom).length;
 

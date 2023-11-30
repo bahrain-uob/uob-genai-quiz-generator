@@ -24,7 +24,7 @@
 }
 .register-caraval .header {
   background-color: #f2e9e4;
-  height: 100px;
+  height: 150px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,6 +36,7 @@
   box-shadow: 2px 2px 2px #c3c3c3;
   padding: 25px;
   z-index: 1;
+  font-size: larger;
 }
 
 .register-caraval .body-title h1 {
@@ -46,10 +47,7 @@
   text-shadow: 2px 2px 2px rgba(69, 69, 69, 0.619);
   margin-top: -20px;
 }
-.QR {
-  width: 80px;
-  height: 80px;
-}
+
 .register-caraval .body {
   padding: 0px;
   margin: 0px;
