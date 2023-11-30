@@ -104,17 +104,18 @@ function Questions(props: { type: string; stepNo: number }) {
                   <label style={{ fontSize: "medium", paddingTop: "12px" }}>
                     {index + 1})
                   </label>
-                  <input
+                  <div
+                    className="choice-area review"
                     style={{
+                      height: "auto",
                       backgroundColor:
                         question.answer_index === index
                           ? "rgba(77, 187, 67, 0.46)"
                           : "",
                     }}
-                    type="text"
-                    value={choice}
-                    disabled
-                  />
+                  >
+                    <p style={{ lineHeight: "1rem" }}>{choice}</p>
+                  </div>
                 </div>
               ))}
             </div>
