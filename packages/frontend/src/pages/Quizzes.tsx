@@ -78,7 +78,7 @@ function Quizzes() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -301,23 +301,27 @@ function Spirals() {
 function Quiz(props: { name: string; date: string; onClick: any }) {
   const [modal, setModal] = useState(false);
   const [checked, setChecked] = useState("norm");
+
   return (
-    <div className="quiz-item" onClick={() => setModal(true)}>
-      <Spirals />
-      <div className="lines"></div>
-      <p className="quiz-name">{props.name}</p>
-      <div className="information">
-        <FontAwesomeIcon
-          className="info-icon"
-          icon={faCircleInfo}
-          size="lg"
-          style={{ color: "white" }}
-        />
-        <div className="contents">
-          <p>Generated on {props.date}</p>
-          <span onClick={() => setModal(true)}>Click to view quiz</span>
+    <>
+      <div className="quiz-item" onClick={() => setModal(true)}>
+        <Spirals />
+        <div className="lines"></div>
+        <p className="quiz-name">{props.name}</p>
+        <div className="information">
+          <FontAwesomeIcon
+            className="info-icon"
+            icon={faCircleInfo}
+            size="lg"
+            style={{ color: "white" }}
+          />
+          <div className="contents">
+            <p>Generated on {props.date}</p>
+            <span onClick={() => setModal(true)}>Click to view quiz</span>
+          </div>
         </div>
       </div>
+
       <Modal
         isOpen={modal}
         onRequestClose={() => setModal(false)}
@@ -394,7 +398,7 @@ function Quiz(props: { name: string; date: string; onClick: any }) {
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   );
 }
 const bg = {
