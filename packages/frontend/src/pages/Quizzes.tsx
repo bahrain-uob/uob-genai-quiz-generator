@@ -11,7 +11,15 @@ import { Link, useNavigate } from "react-router-dom";
 import { API } from "aws-amplify";
 import { useEffect, useState, cloneElement } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { Course, coursesAtom, navAtom, quizzesAtom } from "../lib/store";
+import {
+  Course,
+  FillBlank,
+  Mcq,
+  Tf,
+  coursesAtom,
+  navAtom,
+  quizzesAtom,
+} from "../lib/store";
 import { getUserId, isEqual } from "../lib/helpers";
 import { Storage } from "aws-amplify";
 import { useImmerAtom } from "jotai-immer";
@@ -78,7 +86,7 @@ function Quizzes() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -112,6 +120,7 @@ function Quizzes() {
                         onClick={() => exportQuiz(course.id, quiz.name)}
                         key={`${course.id}${quiz.name}`}
                         name={quiz.name}
+                        courseId={course.id}
                         date={quiz.date}
                       />
                     ))}
@@ -222,6 +231,8 @@ function McqQuestion(props: {
   ans_index: number;
   list: string;
 }) {
+  console.log("HEER");
+  console.log(props.ans_index);
   return (
     <>
       {props.list == "rec" && (
@@ -262,6 +273,7 @@ function TfQuestion(props: {
   answer: boolean;
   list: string;
 }) {
+  console.log(props);
   return (
     <>
       {props.list == "rec" && (
@@ -288,6 +300,7 @@ function TfQuestion(props: {
     </>
   );
 }
+
 function Spirals() {
   return (
     <>
@@ -298,26 +311,52 @@ function Spirals() {
   );
 }
 
-function Quiz(props: { name: string; date: string; onClick: any }) {
+function Quiz(props: {
+  name: string;
+  courseId: string;
+  date: string;
+  onClick: any;
+}) {
   const [modal, setModal] = useState(false);
   const [checked, setChecked] = useState("norm");
+  const [quiz, setQuiz] = useState(null as any);
+
+  useEffect(() => {
+    const fn = async () => {
+      const userId = await getUserId();
+      const key = `${userId}/${props.courseId}/quizzes/${props.name}.json`;
+      const response = await Storage.get(key, { download: true });
+      const fetchedQuiz = JSON.parse(await response.Body!.text());
+      console.log(fetchedQuiz);
+      setQuiz(fetchedQuiz);
+    };
+    fn();
+  }, []);
+
+  if (!quiz) {
+    return <></>;
+  }
+
   return (
-    <div className="quiz-item" onClick={() => setModal(true)}>
-      <Spirals />
-      <div className="lines"></div>
-      <p className="quiz-name">{props.name}</p>
-      <div className="information">
-        <FontAwesomeIcon
-          className="info-icon"
-          icon={faCircleInfo}
-          size="lg"
-          style={{ color: "white" }}
-        />
-        <div className="contents">
-          <p>Generated on {props.date}</p>
-          <span onClick={() => setModal(true)}>Click to view quiz</span>
+    <>
+      <div className="quiz-item" onClick={() => setModal(true)}>
+        <Spirals />
+        <div className="lines"></div>
+        <p className="quiz-name">{props.name}</p>
+        <div className="information">
+          <FontAwesomeIcon
+            className="info-icon"
+            icon={faCircleInfo}
+            size="lg"
+            style={{ color: "white" }}
+          />
+          <div className="contents">
+            <p>Generated on {props.date}</p>
+            <span onClick={() => setModal(true)}>Click to view quiz</span>
+          </div>
         </div>
       </div>
+
       <Modal
         isOpen={modal}
         onRequestClose={() => setModal(false)}
@@ -329,7 +368,7 @@ function Quiz(props: { name: string; date: string; onClick: any }) {
             <div className="close" onClick={() => setModal(false)}>
               <p>close</p>
             </div>
-            <h1 className="quiz-name">Quiz name</h1>
+            <h1 className="quiz-name">{quiz.name}</h1>
           </div>
           <div className="actions-menu">
             <button className="play-caraval">
@@ -369,32 +408,38 @@ function Quiz(props: { name: string; date: string; onClick: any }) {
         <div className={checked == "norm" ? "" : "quiz-questions"}>
           <div className={checked == "norm" ? "" : "quiz-questions type"}>
             {checked == "rec" && <h1>True/False</h1>}
-            <TfQuestion
-              question="Updates made to the source DB are asynchronously copied to the read replica"
-              answer={true}
-              list={checked}
-            />
+            {quiz.TfArr.map((question: Tf) => (
+              <TfQuestion
+                question={question.question}
+                answer={question.answer}
+                list={checked}
+              />
+            ))}
           </div>
           <div className={checked == "norm" ? "" : "quiz-questions type"}>
             {checked == "rec" && <h1>MCQ</h1>}
-            <McqQuestion
-              question="How many types of cloud computing are there?"
-              choices={["2", "3", "4", "5"]}
-              ans_index={1}
-              list={checked}
-            />
+            {quiz.mcqArr.map((question: Mcq) => (
+              <McqQuestion
+                question={question.question}
+                choices={question.choices}
+                ans_index={question.answer_index}
+                list={checked}
+              />
+            ))}
           </div>
           <div className={checked == "norm" ? "" : "quiz-questions type"}>
             {checked == "rec" && <h1>Fill-in Blank</h1>}
-            <FillBlankQuestion
-              question="____ are used to grant permissions to your IAM Users to access AWS resources within your own or different account."
-              answer="IAM roles"
-              list={checked}
-            />
+            {quiz.fibArr.map((question: FillBlank) => (
+              <FillBlankQuestion
+                question={question.question}
+                answer={question.answer}
+                list={checked}
+              />
+            ))}
           </div>
         </div>
       </Modal>
-    </div>
+    </>
   );
 }
 const bg = {
