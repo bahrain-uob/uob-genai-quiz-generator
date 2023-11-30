@@ -610,6 +610,16 @@ input[type="checkbox"] {
   align-items: center;
 }
 
+.questions-setup .selected .selected-length {
+  color: white;
+  background: #606585;
+  border-radius: 50%;
+  padding: 5px 10px;
+  margin-left: 10px;
+  font-size: small;
+  transition: 1s;
+}
+
 .loading-state {
   display: flex;
   justify-content: center;

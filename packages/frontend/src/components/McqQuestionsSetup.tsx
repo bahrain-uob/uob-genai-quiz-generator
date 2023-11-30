@@ -93,7 +93,10 @@ function McqQuestionsSetup(props: { inFlight: any }) {
         </div>
 
         <div ref={parent} className="selected">
-          <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
+          <h4 style={{ textAlign: "center" }}>
+            Selected Questions
+            <span className="selected-length">{selected.length}</span>
+          </h4>
 
           {selected.map((question, index) => (
             <QuestionArea
