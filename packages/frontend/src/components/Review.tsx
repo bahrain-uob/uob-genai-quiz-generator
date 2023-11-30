@@ -89,8 +89,8 @@ function Questions(props: { type: string; stepNo: number }) {
         <div className="form-container">
           {mcqQuestions.map((question: Mcq) => (
             <div className="question-container review">
-              <div className="question-area">
-                <p>{question.question}</p>
+              <div className="question-area" style={{ height: "auto" }}>
+                <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
 
               {question.choices.map((choice: string, index: number) => (
@@ -126,8 +126,8 @@ function Questions(props: { type: string; stepNo: number }) {
         <div className="form-container">
           {fillBlankQuestions.map((question: FillBlank) => (
             <div className="question-container review">
-              <div className="question-area">
-                <p>{question.question}</p>
+              <div className="question-area" style={{ height: "auto" }}>
+                <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
 
               <label>Answer Key:</label>
@@ -149,8 +149,8 @@ function Questions(props: { type: string; stepNo: number }) {
         <div className="form-container">
           {tfQuestions.map((question: Tf) => (
             <div className="question-container review">
-              <div className="question-area">
-                <p>{question.question}</p>
+              <div className="question-area" style={{ height: "auto" }}>
+                <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
               <label>Answer Key:</label>
               <input
