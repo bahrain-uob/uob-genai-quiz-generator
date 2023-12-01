@@ -5,7 +5,7 @@ import {
   faStar,
   faSun,
 } from "@fortawesome/free-solid-svg-icons";
-import { Mcq } from "../lib/store";
+import { caravalAtom } from "../lib/store";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useCallback, useEffect, useRef } from "react";
@@ -25,9 +25,6 @@ interface RegisterState {
 
 interface QuestionState {
   kind: "questionState";
-  // questionIndex: number;
-  // noOptions: number;
-  // answer: number;
 }
 
 interface ScoreboardState {
@@ -46,18 +43,6 @@ type ServerState =
   | EndGameState;
 
 const qIndexAtom = atom(0);
-const questionsAtom = atom([
-  {
-    question: "can you clone kahoot in a weekend?",
-    choices: ["yes", "no", "maybe", "idk"],
-    answer_index: 0,
-  },
-  {
-    question: "whats 9 + 10",
-    choices: ["21", "19", "12", "3"],
-    answer_index: 0,
-  },
-] as Mcq[]);
 
 const gameId = crypto.randomUUID();
 const gameUrl = `${import.meta.env.VITE_APP_SOCKET_URL}?gameId=${gameId}`;
@@ -309,8 +294,7 @@ function QuestionOnly(props: {
   setState: (s: QuestionOptionsState) => void;
   qIndex: number;
 }) {
-  // const qIndex = useAtomValue(qIndexAtom);
-  const questions = useAtomValue(questionsAtom);
+  const questions = useAtomValue(caravalAtom);
   const currentQuestion = questions[props.qIndex];
 
   const [timer, setTimer] = useState(1);
@@ -349,18 +333,17 @@ function QuestionOptions(props: {
     props.setState({ kind: "scoreboardState" });
     props.answers.current = [];
   };
-  // const qIndex = useAtomValue(qIndexAtom);
-  const questions = useAtomValue(questionsAtom);
+  const questions = useAtomValue(caravalAtom);
   const currentQuestion = questions[props.qIndex];
 
-  const [timer, setTimer] = useState(15);
+  const [timer, setTimer] = useState(5);
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
-        ...props.answers.current.map((obj: any) => obj.time)
+        ...props.answers.current.map((obj: any) => obj.time),
       );
       const max = Math.max(
-        ...props.answers.current.map((obj: any) => obj.time)
+        ...props.answers.current.map((obj: any) => obj.time),
       );
       const range = max - min + 1;
 
@@ -370,21 +353,22 @@ function QuestionOptions(props: {
       const currentScore = new Map();
 
       for (let answer of props.answers.current) {
-        if (answer.answer !== currentQuestion.answer_index) return;
-        const score = calculateScore(answer.time);
+        const correct = answer.answer == currentQuestion.answer_index;
+        const score = correct ? calculateScore(answer.time) : 0;
         currentScore.set(answer.connectionId, score);
         props.scores.current.set(
           answer.connectionId,
-          (props.scores.current.get(answer.connectionId) ?? 0) + score
+          (props.scores.current.get(answer.connectionId) ?? 0) + score,
         );
         props.marks.current.set(
           answer.connectionId,
-          (props.marks.current.get(answer.connectionId) ?? 0) + 1
+          (props.marks.current.get(answer.connectionId) ?? 0) +
+            (correct ? 1 : 0),
         );
       }
 
       const rankMap = new Map(
-        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
       );
 
       let i = 0;
@@ -489,7 +473,7 @@ function Scoreboard(props: {
   qIndex: number;
   setQIndex: any;
 }) {
-  const questions = useAtomValue(questionsAtom);
+  const questions = useAtomValue(caravalAtom);
 
   const nextQuestion = () => {
     if (questions.length == props.qIndex + 1) {
@@ -501,7 +485,7 @@ function Scoreboard(props: {
   };
 
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
   );
 
   return (
@@ -539,9 +523,9 @@ function Endgame(props: {
   send: (m: pubEnd) => void;
 }) {
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
   );
-  const totalQuestions = useAtomValue(questionsAtom).length;
+  const totalQuestions = useAtomValue(caravalAtom).length;
 
   useEffect(() => {
     let i = 0;
