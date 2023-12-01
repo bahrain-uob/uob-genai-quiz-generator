@@ -5,7 +5,7 @@ import {
   faStar,
   faSun,
 } from "@fortawesome/free-solid-svg-icons";
-import { caravalAtom } from "../lib/store";
+import { caravalAtom, caravalQuestion } from "../lib/store";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useCallback, useEffect, useRef } from "react";
@@ -50,6 +50,7 @@ const socketUrl = `${gameUrl}&master=true`;
 
 export function GameServer() {
   const [state, setState] = useState({ kind: "preGameState" } as ServerState);
+  const questions = useAtomValue(caravalAtom);
 
   const {
     sendMessage: innerSendMessage,
@@ -73,6 +74,7 @@ export function GameServer() {
       console.log(message);
       if (message.action == "sendUsername") {
         setUsernames(message.connectionId!, message.username);
+        scores.current.set(message.connectionId!, 0);
         setEvents([`${message.username} joined!`, ...events]);
       }
       if (message.action == "sendAnswer") {
@@ -112,6 +114,7 @@ export function GameServer() {
           scores={scores}
           marks={marks}
           qIndex={qIndex}
+          questions={questions}
         />
       )}
       {state.kind == "scoreboardState" && (
@@ -123,6 +126,7 @@ export function GameServer() {
           send={send}
           setQIndex={setQIndex}
           qIndex={qIndex}
+          questions={questions}
         />
       )}
       {state.kind == "endGameState" && (
@@ -261,6 +265,7 @@ function Question(props: {
   scores: any;
   marks: any;
   qIndex: number;
+  questions: caravalQuestion[];
 }) {
   const [state, setState] = useState({
     kind: "questionOnlyState",
@@ -272,6 +277,7 @@ function Question(props: {
           send={props.send}
           setState={setState}
           qIndex={props.qIndex}
+          questions={props.questions}
         />
       )}
       {state.kind == "questionOptionsState" && (
@@ -283,6 +289,7 @@ function Question(props: {
           marks={props.marks}
           setState={props.setGlobalState}
           qIndex={props.qIndex}
+          questions={props.questions}
         />
       )}
     </div>
@@ -293,9 +300,9 @@ function QuestionOnly(props: {
   send: (m: pubQuestion) => void;
   setState: (s: QuestionOptionsState) => void;
   qIndex: number;
+  questions: caravalQuestion[];
 }) {
-  const questions = useAtomValue(caravalAtom);
-  const currentQuestion = questions[props.qIndex];
+  const currentQuestion = props.questions[props.qIndex];
 
   const [timer, setTimer] = useState(1);
   useEffect(() => {
@@ -305,7 +312,7 @@ function QuestionOnly(props: {
         action: "pubQuestion",
         noOptions: currentQuestion.choices.length,
         questionIndex: props.qIndex,
-        totalQuestions: questions.length,
+        totalQuestions: props.questions.length,
       });
     }
     timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
@@ -328,13 +335,13 @@ function QuestionOptions(props: {
   marks: any;
   setState: (s: ScoreboardState) => void;
   qIndex: number;
+  questions: caravalQuestion[];
 }) {
   const next = () => {
     props.setState({ kind: "scoreboardState" });
     props.answers.current = [];
   };
-  const questions = useAtomValue(caravalAtom);
-  const currentQuestion = questions[props.qIndex];
+  const currentQuestion = props.questions[props.qIndex];
 
   const [timer, setTimer] = useState(5);
   useEffect(() => {
@@ -381,8 +388,12 @@ function QuestionOptions(props: {
         });
         i++;
       });
+
+      props.answers.current = [];
     }
-    timer > 0 && setTimeout(() => setTimer(timer - 1), 1000);
+
+    const skipTime = props.answers.current.length == props.scores.current.size;
+    timer > 0 && setTimeout(() => setTimer(skipTime ? 0 : timer - 1), 1000);
   }, [timer]);
 
   const icons = [faCloud, faSun, faMeteor, faStar];
@@ -472,11 +483,10 @@ function Scoreboard(props: {
   send: (m: pubQuestion) => void;
   qIndex: number;
   setQIndex: any;
+  questions: caravalQuestion[];
 }) {
-  const questions = useAtomValue(caravalAtom);
-
   const nextQuestion = () => {
-    if (questions.length == props.qIndex + 1) {
+    if (props.questions.length == props.qIndex + 1) {
       props.setState({ kind: "endGameState" });
     } else {
       props.setQIndex(props.qIndex + 1);

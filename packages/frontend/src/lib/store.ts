@@ -56,7 +56,7 @@ export const quizAtom = atomWithStorage("quiz", {
 
 export const stageAtom = atomWithStorage("stage", 0);
 
-type caravalQuestion = Omit<Mcq, "id">;
+export type caravalQuestion = Omit<Mcq, "id">;
 export const caravalAtom = atomWithStorage(
   "caravalQuestions",
   [] as caravalQuestion[],
