@@ -32,16 +32,6 @@ function QuizSetupForm() {
 
         <div className="input-container">
           <StepperField
-            label="Number of Versions"
-            min={1}
-            max={3}
-            value={quiz.versions}
-            name="versions"
-          />
-        </div>
-
-        <div className="input-container">
-          <StepperField
             min={0}
             max={50}
             value={quiz.mcq}
