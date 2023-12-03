@@ -23,7 +23,6 @@
     "jotai": "^2.5.0",
     "jotai-immer": "^0.2.0",
     "jotai-optics": "^0.3.1",
-    "jspdf": "^2.5.1",
     "optics-ts": "^2.4.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

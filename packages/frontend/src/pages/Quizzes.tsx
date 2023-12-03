@@ -27,7 +27,6 @@ import { exportKahoot } from "../lib/export";
 import coolkid from "../assets/Cool Kids - Alone Time.svg";
 import Modal from "react-modal";
 import "../quiz.css";
-import JsPDF from "jspdf";
 import { exportMoodle } from "../lib/export";
 
 function Quizzes() {
@@ -320,17 +319,6 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
     fn();
   }, []);
 
-  const exportPDF = () => {
-    const pdf = new JsPDF("portrait", "pt", "a4");
-    pdf
-      .html(document.querySelector("#export-pdf") as HTMLElement, {
-        autoPaging: "text",
-      })
-      .then(() => {
-        pdf.save("quiz.pdf");
-      });
-  };
-
   if (!quiz) {
     return <></>;
   }
@@ -386,7 +374,6 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
                 <button onClick={() => exportKahoot(quiz)}>
                   Export to Kahoot
                 </button>,
-                <button onClick={exportPDF}>Export as PDF</button>,
                 <button onClick={() => exportMoodle(quiz)}>
                   Export to Moodle
                 </button>,
@@ -408,10 +395,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
             className={`norm-list ${checked == "norm" ? "checked" : ""}`}
           />
         </div>
-        <div
-          className={checked == "norm" ? "" : "quiz-questions"}
-          id="export-pdf"
-        >
+        <div className={checked == "norm" ? "" : "quiz-questions"}>
           <div className={checked == "norm" ? "" : "quiz-questions type"}>
             {checked == "rec" && <h1>True/False</h1>}
             {quiz.TfArr.map((question: Tf) => (
