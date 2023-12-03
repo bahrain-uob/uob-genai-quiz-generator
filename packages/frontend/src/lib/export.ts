@@ -1,5 +1,5 @@
 import Excel from "exceljs";
-import { Mcq } from "./store";
+import { FillBlank, Mcq, Tf } from "./store";
 
 export const exportKahoot = async (quiz: any) => {
   // start from cell 9
@@ -33,23 +33,8 @@ export const exportKahoot = async (quiz: any) => {
   downloadBlob(new Blob([buffer]), `${quiz.name}-kahoot.xlsx`);
 };
 
-const downloadBlob = (blob: Blob, filename: string) => {
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename || "download";
-  const clickHandler = () => {
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-      a.removeEventListener("click", clickHandler);
-    }, 150);
-  };
-  a.addEventListener("click", clickHandler, false);
-  a.click();
-  return a;
-};
-export const convertXML = (data) => {
-  const quiz = data;
+export const exportMoodle = (quiz: any) => {
+  console.log(quiz);
   let xml = "<quiz>\n";
   xml += '  <question type="category">\n';
   xml += "    <category>\n";
@@ -82,7 +67,7 @@ export const convertXML = (data) => {
   });
 
   // Convert TfArr
-  quiz.TfArr.forEach((tf) => {
+  quiz.TfArr.forEach((tf: Tf) => {
     xml += '  <question type="truefalse">\n';
     xml += "    <name>\n";
     xml += `      <text><![CDATA[question]]></text>\n`;
@@ -102,7 +87,7 @@ export const convertXML = (data) => {
   });
 
   // Convert fibArr
-  quiz.fibArr.forEach((fib) => {
+  quiz.fibArr.forEach((fib: FillBlank) => {
     xml += '  <question type="shortanswer">\n';
     xml += "    <name>\n";
     xml += `      <text><![CDATA[question]]></text>\n`;
@@ -119,5 +104,22 @@ export const convertXML = (data) => {
   });
 
   xml += "</quiz>";
-  return xml;
+
+  downloadBlob(new Blob([xml]), `${quiz.name}.xml`);
+};
+
+const downloadBlob = (blob: Blob, filename: string) => {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename || "download";
+  const clickHandler = () => {
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+      a.removeEventListener("click", clickHandler);
+    }, 150);
+  };
+  a.addEventListener("click", clickHandler, false);
+  a.click();
+  return a;
 };
