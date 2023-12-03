@@ -338,7 +338,7 @@ function Quiz(props: {
   const exportPDF = () => {
     const pdf = new JsPDF("portrait", "pt", "a4");
     pdf
-      .html(document.querySelector(".export-pdf") as HTMLElement, {
+      .html(document.querySelector("#export-pdf") as HTMLElement, {
         autoPaging: "text",
       })
       .then(() => {
@@ -418,7 +418,10 @@ function Quiz(props: {
             className={`norm-list ${checked == "norm" ? "checked" : ""}`}
           />
         </div>
-        <div className={checked == "norm" ? "export-pdf" : "quiz-questions"}>
+        <div
+          className={checked == "norm" ? "" : "quiz-questions"}
+          id="export-pdf"
+        >
           <div className={checked == "norm" ? "" : "quiz-questions type"}>
             {checked == "rec" && <h1>True/False</h1>}
             {quiz.TfArr.map((question: Tf) => (
