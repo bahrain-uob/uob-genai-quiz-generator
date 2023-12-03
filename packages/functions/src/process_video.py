@@ -1,12 +1,13 @@
 import boto3
 import os
 import uuid
+import urllib
 
 
 def lambda_handler(event, context):
     record = event["Records"][0]
     s3bucket = record["s3"]["bucket"]["name"]
-    s3object = record["s3"]["object"]["key"].replace("+", " ")
+    s3object = urllib.parse.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
 
     s3Path = "s3://" + s3bucket + "/" + s3object
     jobName = str(uuid.uuid4())

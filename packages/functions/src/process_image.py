@@ -1,6 +1,7 @@
 import boto3
 import os
 import time
+import urllib
 
 OUTPUT_BUCKET = os.environ["OUTPUT_BUCKET"]
 
@@ -8,7 +9,7 @@ OUTPUT_BUCKET = os.environ["OUTPUT_BUCKET"]
 def lambda_handler(event, context):
     # Specify the S3 bucket and object key for the input document
     bucket = event["Records"][0]["s3"]["bucket"]["name"]
-    key = event["Records"][0]["s3"]["object"]["key"].replace("+", " ")
+    key = urllib.parse.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
 
     # Create an Amazon Textract client
     textract = boto3.client("textract")
