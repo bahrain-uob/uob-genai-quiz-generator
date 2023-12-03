@@ -33,20 +33,20 @@ function QuizSetupForm() {
         <div className="input-container">
           <StepperField
             min={0}
-            max={50}
-            value={quiz.mcq}
-            label="Number of MCQ"
-            name="mcq"
+            max={10}
+            value={quiz.tf}
+            label="Number of T/F"
+            name="tf"
           />
         </div>
 
         <div className="input-container">
           <StepperField
             min={0}
-            max={10}
-            value={quiz.tf}
-            label="Number of T/F"
-            name="tf"
+            max={50}
+            value={quiz.mcq}
+            label="Number of MCQ"
+            name="mcq"
           />
         </div>
 

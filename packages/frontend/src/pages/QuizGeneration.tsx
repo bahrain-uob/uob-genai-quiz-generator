@@ -37,8 +37,8 @@ function Quizzes() {
     <CoursesTable />,
     <MaterialsTable courseId={courseId} isSelecting={true} />,
     <QuizSetupForm />,
-    quiz["mcq"] > 0 && <McqQuestionsSetup inFlight={inFlight} />,
     quiz["tf"] > 0 && <TfQuestionsSetup inFlight={inFlight} />,
+    quiz["mcq"] > 0 && <McqQuestionsSetup inFlight={inFlight} />,
     quiz["fillBlank"] > 0 && <FillBlankQuestionsSetup inFlight={inFlight} />,
     <Review stepNo={7} />,
   ].filter((e) => e !== false) as JSX.Element[];
@@ -121,7 +121,7 @@ function Quizzes() {
 }
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials")
+  optic.prop("materials"),
 );
 
 function CoursesTable() {
