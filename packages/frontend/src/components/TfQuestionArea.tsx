@@ -49,6 +49,7 @@ function QuestionArea(props: {
             rows={2}
             cols={35}
             defaultValue={question.question}
+            placeholder="Question here.."
             onChange={(e) => handleQuestionChange(e)}
           ></textarea>
 

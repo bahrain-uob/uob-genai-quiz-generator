@@ -61,6 +61,7 @@ function QuestionArea(props: {
             cols={35}
             defaultValue={question.question}
             onChange={(e) => handleQuestionChange(e)}
+            placeholder="Question here.."
           ></textarea>
 
           {question.choices.map((choice: string, index: number) => (
@@ -82,6 +83,7 @@ function QuestionArea(props: {
                       : "",
                 }}
                 defaultValue={choice}
+                placeholder="choice here.."
                 onChange={(e) => handleChoiceChange(e, index)}
               ></textarea>
             </div>
