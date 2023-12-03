@@ -23,10 +23,11 @@ import {
 import { clearQuiz, getUserId, isEqual } from "../lib/helpers";
 import { Storage } from "aws-amplify";
 import { useImmerAtom } from "jotai-immer";
-import { exportKahoot } from "../lib/export";
+import { exportKahoot, exportMarkdown } from "../lib/export";
 import coolkid from "../assets/Cool Kids - Alone Time.svg";
 import Modal from "react-modal";
 import "../quiz.css";
+import { exportMoodle } from "../lib/export";
 
 function Quizzes() {
   const [courses, setCourses] = useAtom(coursesAtom);
@@ -70,17 +71,6 @@ function Quizzes() {
     }
   };
 
-  const exportQuiz = async (courseId: string, name: string) => {
-    const userId = await getUserId();
-    const key = `${userId}/${courseId}/quizzes/${name}.json`;
-    const result = await Storage.get(key, {
-      download: true,
-      cacheControl: "no-cache",
-    });
-    const quizFile = JSON.parse(await result.Body!.text());
-    exportKahoot(quizFile);
-  };
-
   const navigation = useNavigate();
   const setNav = useSetAtom(navAtom);
   function navigate(
@@ -119,7 +109,6 @@ function Quizzes() {
                   <div className="quizzes-container">
                     {(quizzes[course.id] ?? []).map((quiz: any) => (
                       <Quiz
-                        onClick={() => exportQuiz(course.id, quiz.name)}
                         key={`${course.id}${quiz.name}`}
                         name={quiz.name}
                         courseId={course.id}
@@ -313,12 +302,7 @@ function Spirals() {
   );
 }
 
-function Quiz(props: {
-  name: string;
-  courseId: string;
-  date: string;
-  onClick: any;
-}) {
+function Quiz(props: { name: string; courseId: string; date: string }) {
   const [modal, setModal] = useState(false);
   const [checked, setChecked] = useState("norm");
   const [quiz, setQuiz] = useState(null as any);
@@ -387,8 +371,15 @@ function Quiz(props: {
                 </button>
               }
               menu={[
-                <button onClick={props.onClick}>Export as Moodle</button>,
-                <button onClick={props.onClick}>Export as PDF</button>,
+                <button onClick={() => exportKahoot(quiz)}>
+                  Export to Kahoot
+                </button>,
+                <button onClick={() => exportMarkdown(quiz)}>
+                  Export to Text
+                </button>,
+                <button onClick={() => exportMoodle(quiz)}>
+                  Export to Moodle
+                </button>,
               ]}
             />
           </div>
