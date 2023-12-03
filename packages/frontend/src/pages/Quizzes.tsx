@@ -86,7 +86,7 @@ function Quizzes() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string,
+    course_name: string
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -261,7 +261,7 @@ function McqQuestion(props: {
             ))}
             <p>
               {`Answer:    
-              ${String(props.choices[props.ans_index + 1])}`}
+              ${String(props.choices[props.ans_index])}`}
             </p>
           </div>
         </div>
