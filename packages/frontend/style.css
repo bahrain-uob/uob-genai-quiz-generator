@@ -602,12 +602,16 @@ input[type="checkbox"] {
 }
 
 .questions-setup {
-  padding: 10px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   flex-wrap: wrap;
   align-items: center;
+}
+
+.selected,
+.generated {
+  width: 37rem;
 }
 
 .questions-setup .selected .selected-length {
@@ -637,6 +641,11 @@ input[type="checkbox"] {
     transform: translateY(1px);
     transition: transform 0.5s;
   }
+}
+
+.choice-radio {
+  width: 17px;
+  border: 1px solid #606585;
 }
 
 .loading-state {
@@ -687,6 +696,7 @@ input[type="checkbox"] {
   justify-content: space-evenly;
   align-items: flex-start;
   gap: 60px;
+  width: 100%;
 }
 
 .question-container {
@@ -700,7 +710,7 @@ input[type="checkbox"] {
   border-radius: 3px;
   box-shadow: 1px 1px 3px #00000077;
   font-size: 0.9rem;
-  width: 20rem;
+  width: 100%;
   @media (max-width: 768px) {
     width: 20em;
   }

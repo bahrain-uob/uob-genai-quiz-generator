@@ -26,7 +26,7 @@ function QuestionArea(props: {
       <div className="question-container">
         <form onSubmit={(e) => e.preventDefault()}>
           <div
-            style={{ display: "flex", justifyContent: "center", gap: "5px" }}
+            style={{ display: "flex", justifyContent: "center", gap: "15px" }}
           >
             <FontAwesomeIcon
               icon={faMinusCircle}
