@@ -34,7 +34,6 @@ export const exportKahoot = async (quiz: any) => {
 };
 
 export const exportMoodle = (quiz: any) => {
-  console.log(quiz);
   let xml = "<quiz>\n";
   xml += '  <question type="category">\n';
   xml += "    <category>\n";
@@ -106,6 +105,46 @@ export const exportMoodle = (quiz: any) => {
   xml += "</quiz>";
 
   downloadBlob(new Blob([xml]), `${quiz.name}.xml`);
+};
+
+export const exportMarkdown = (quiz: any) => {
+  let question_number = 1;
+  let md = `# ${quiz.name}\n\n`;
+  const letter = ["a", "b", "c", "d"];
+
+  // Convert TfArr
+  md += "### True or False\n\n";
+  quiz.TfArr.forEach((q: Tf) => {
+    md += `${question_number}. **${q.question}**\n\n`;
+    md += `    Answer:  **${q.answer}**\n\n`;
+    question_number++;
+  });
+  md += "---\n";
+
+  // Convert mcqArr
+  md += "### Multiple Choices\n\n";
+  quiz.mcqArr.forEach((q: Mcq) => {
+    md += `${question_number}. **${q.question}**\n\n`;
+
+    q.choices.forEach((choice, index) => {
+      md += `    - ${letter[index]}) ${choice}\n`;
+    });
+
+    md += `  - Answer: **(${letter[q.answer_index]})**\n\n`;
+    question_number++;
+  });
+  md += "---\n";
+
+  // Convert fibArr
+  md += "### Fill in the Blank\n\n";
+  quiz.fibArr.forEach((q: FillBlank) => {
+    md += `${question_number}. **${q.question}**\n\n`;
+    md += `    Answer:  **${q.answer}**\n\n`;
+    question_number++;
+  });
+  md += "---\n";
+
+  downloadBlob(new Blob([md]), `${quiz.name}.txt`);
 };
 
 const downloadBlob = (blob: Blob, filename: string) => {

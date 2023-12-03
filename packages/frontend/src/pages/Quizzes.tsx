@@ -23,7 +23,7 @@ import {
 import { clearQuiz, getUserId, isEqual } from "../lib/helpers";
 import { Storage } from "aws-amplify";
 import { useImmerAtom } from "jotai-immer";
-import { exportKahoot } from "../lib/export";
+import { exportKahoot, exportMarkdown } from "../lib/export";
 import coolkid from "../assets/Cool Kids - Alone Time.svg";
 import Modal from "react-modal";
 import "../quiz.css";
@@ -373,6 +373,9 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
               menu={[
                 <button onClick={() => exportKahoot(quiz)}>
                   Export to Kahoot
+                </button>,
+                <button onClick={() => exportMarkdown(quiz)}>
+                  Export to Text
                 </button>,
                 <button onClick={() => exportMoodle(quiz)}>
                   Export to Moodle
