@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import caraval from "../assets/Caraval-comp.svg";
 import Confetti from "react-confetti";
 import "../caraval.css";
+import Modal from "react-modal";
 
 interface PreGameState {
   kind: "preGameState";
@@ -202,6 +203,9 @@ function Register(props: {
   const start = () => {
     props.setState({ kind: "questionState" });
   };
+
+  const [modal, setModal] = useState(false);
+
   return (
     <>
       <div className="register-caraval">
@@ -220,19 +224,35 @@ function Register(props: {
           </ul>
         </div>
         <div className="header">
-          <div className="header-text">Join by scanning the QR</div>
-          <div className="QR">
+          <div className={`header-text ${modal ? "modal" : ""}`}>
+            Join by scanning the QR
+          </div>
+          <div
+            title="CLICK ME!"
+            className={`QR ${modal ? "modal" : ""}`}
+            onClick={() => setModal(true)}
+          >
             <QRCodeSVG
-              style={{ width: "100px", height: "100px", zIndex: "1" }}
+              style={{
+                width: "100px",
+                height: "100px",
+                cursor: "pointer",
+              }}
               value={`${window.location.origin}/join?gameId=${gameId}`}
             />
           </div>
         </div>
         <div className="body">
-          <button onClick={start} className="start-button">
-            Start
-          </button>
-          <div className="body-title">
+          <div
+            className={`start-wrapper ${modal ? "modal" : ""}`}
+            onClick={start}
+          >
+            <div className="start-game">
+              <a>start</a>
+            </div>
+          </div>
+
+          <div className={`body-title ${modal ? "modal" : ""}`}>
             <h1>Caraval!</h1>
           </div>
           <div className="names-container">
@@ -244,9 +264,44 @@ function Register(props: {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={modal}
+        onRequestClose={() => setModal(false)}
+        contentLabel="QR modal"
+        style={bg}
+      >
+        <div className="close-QR" onClick={() => setModal(false)}>
+          <p>close</p>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: "5%",
+          }}
+        >
+          <QRCodeSVG
+            style={{
+              width: "450px",
+              height: "450px",
+              cursor: "pointer",
+            }}
+            value={`${window.location.origin}/join?gameId=${gameId}`}
+          />
+        </div>
+      </Modal>
     </>
   );
 }
+
+const bg = {
+  content: {
+    background: "#f2e9e4",
+    borderRadius: "15px",
+    border: "none",
+  },
+};
 
 interface QuestionOnlyState {
   kind: "questionOnlyState";
@@ -347,15 +402,15 @@ function QuestionOptions(props: {
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
-        ...props.answers.current.map((obj: any) => obj.time),
+        ...props.answers.current.map((obj: any) => obj.time)
       );
       const max = Math.max(
         ...props.answers.current
           .filter(
             (answer: sendAnswer) =>
-              answer.answer == currentQuestion.answer_index,
+              answer.answer == currentQuestion.answer_index
           )
-          .map((obj: sendAnswer) => obj.time),
+          .map((obj: sendAnswer) => obj.time)
       );
       const range = max - min + 1;
 
@@ -370,17 +425,17 @@ function QuestionOptions(props: {
         currentScore.set(answer.connectionId, score);
         props.scores.current.set(
           answer.connectionId,
-          (props.scores.current.get(answer.connectionId) ?? 0) + score,
+          (props.scores.current.get(answer.connectionId) ?? 0) + score
         );
         props.marks.current.set(
           answer.connectionId,
           (props.marks.current.get(answer.connectionId) ?? 0) +
-            (correct ? 1 : 0),
+            (correct ? 1 : 0)
         );
       }
 
       const rankMap = new Map(
-        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
       );
 
       let i = 0;
@@ -498,7 +553,7 @@ function Scoreboard(props: {
   };
 
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
   );
 
   return (
@@ -536,7 +591,7 @@ function Endgame(props: {
   send: (m: pubEnd) => void;
 }) {
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
   );
   const totalQuestions = useAtomValue(caravalAtom).length;
 
@@ -564,13 +619,12 @@ function Endgame(props: {
           colors={["#f44336", "#9c27b0", "#3f51b5"]}
           wind={0.03}
           gravity={0.1}
-          width={window.innerWidth - 20}
+          width={window.innerWidth - 30}
         />
 
         <div className="firework"></div>
         <div className="firework"></div>
         <div className="firework"></div>
-        {/* <div className="header">Podium</div> */}
         <div className="ranks">
           {[...rankMap].slice(0, 3).map(([connId, score], index) => {
             return (
