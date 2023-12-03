@@ -378,7 +378,6 @@
   text-align: center;
 }
 .options {
-  background: white;
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
@@ -526,7 +525,9 @@
   box-shadow: -1px 1px 1rem #000000a8;
 
   transform: scale(0.999);
-  transition: box-shadow 0.5s, transform 0.5s;
+  transition:
+    box-shadow 0.5s,
+    transform 0.5s;
   &:hover {
     transform: scale(1);
     box-shadow: -1px 1px 3rem #000000a8;
@@ -672,12 +673,8 @@ span {
     radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 100% 0%,
     radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 100% 100%,
     radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 0% 100%,
-    */ radial-gradient(
-        circle,
-        var(--color1) var(--particleSize),
-        #0000 0
-      )
-      50% 0%,
+    */
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 50% 0%,
     radial-gradient(circle, var(--color2) var(--particleSize), #0000 0) 100% 50%,
     radial-gradient(circle, var(--color3) var(--particleSize), #0000 0) 50% 100%,
     radial-gradient(circle, var(--color4) var(--particleSize), #0000 0) 0% 50%,

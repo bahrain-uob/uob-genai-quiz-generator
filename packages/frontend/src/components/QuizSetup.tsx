@@ -71,6 +71,7 @@ function StepperField(props: {
   max: number;
 }) {
   const [quiz, setQuiz] = useAtom(quizAtom);
+  // @ts-ignore
   const value = quiz[props.name];
 
   const clamp = (val: number) => {

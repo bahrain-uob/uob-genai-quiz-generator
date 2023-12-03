@@ -160,7 +160,7 @@ export function GameServer() {
         <div style={{ margin: "10px" }}>
           <QRCodeSVG
             style={{ margin: "50px" }}
-            value={`https://educraft.com/join?gameId=${gameId}`}
+            value={`${window.location.origin}/join?gameId=${gameId}`}
           />
           <p>{gameId}</p>
         </div>
@@ -224,7 +224,7 @@ function Register(props: {
           <div className="QR">
             <QRCodeSVG
               style={{ width: "100px", height: "100px", zIndex: "1" }}
-              value={`https://educraft.com/join?gameId=${gameId}`}
+              value={`${window.location.origin}/join?gameId=${gameId}`}
             />
           </div>
         </div>
@@ -304,7 +304,7 @@ function QuestionOnly(props: {
 }) {
   const currentQuestion = props.questions[props.qIndex];
 
-  const [timer, setTimer] = useState(1);
+  const [timer, setTimer] = useState(5);
   useEffect(() => {
     if (timer <= 0) {
       props.setState({ kind: "questionOptionsState" });
@@ -343,14 +343,19 @@ function QuestionOptions(props: {
   };
   const currentQuestion = props.questions[props.qIndex];
 
-  const [timer, setTimer] = useState(5);
+  const [timer, setTimer] = useState(10);
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
         ...props.answers.current.map((obj: any) => obj.time),
       );
       const max = Math.max(
-        ...props.answers.current.map((obj: any) => obj.time),
+        ...props.answers.current
+          .filter(
+            (answer: sendAnswer) =>
+              answer.answer == currentQuestion.answer_index,
+          )
+          .map((obj: sendAnswer) => obj.time),
       );
       const range = max - min + 1;
 
@@ -388,8 +393,6 @@ function QuestionOptions(props: {
         });
         i++;
       });
-
-      props.answers.current = [];
     }
 
     const skipTime = props.answers.current.length == props.scores.current.size;
