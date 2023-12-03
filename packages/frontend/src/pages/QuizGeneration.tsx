@@ -45,6 +45,41 @@ function Quizzes() {
 
   pages[pages.length - 1] = <Review stepNo={pages.length - 1} />;
 
+  const handleNext = () => {
+    const currentPage = pages[stepNo].type;
+
+    if (currentPage === CoursesTable && quiz.courseId == "") {
+      setErrorMsg("Please select a course");
+    } else if (currentPage === MaterialsTable && quiz.materials.length < 1) {
+      setErrorMsg("Please select at least 1 material");
+    } else if (currentPage === QuizSetupForm && quiz.name == "") {
+      setErrorMsg("Please enter a vaild quiz name");
+    } else if (
+      currentPage === QuizSetupForm &&
+      quiz.tf + quiz.mcq + quiz.fillBlank < 3
+    ) {
+      setErrorMsg("The quiz should at least have 3 questions");
+    } else if (
+      currentPage === TfQuestionsSetup &&
+      quiz["TfArr"].length !== quiz["tf"]
+    ) {
+      setErrorMsg(`Please select exactly ${quiz.tf} question(s)`);
+    } else if (
+      currentPage === McqQuestionsSetup &&
+      quiz["mcqArr"].length !== quiz["mcq"]
+    ) {
+      setErrorMsg(`Please select exactly ${quiz.mcq} question(s)`);
+    } else if (
+      currentPage === FillBlankQuestionsSetup &&
+      quiz["fibArr"].length !== quiz["fillBlank"]
+    ) {
+      setErrorMsg(`Please select exactly ${quiz.fillBlank} question(s)`);
+    } else {
+      setStepNo(stepNo + 1);
+      setErrorMsg("");
+    }
+  };
+
   const [errorMsg, setErrorMsg] = useState("");
   return (
     <>
@@ -53,33 +88,14 @@ function Quizzes() {
       <StepProgressBar stepNo={stepNo == pages.length - 1 ? 6 : stepNo} />
       <div className="step-container">
         {pages[stepNo]}
-        {pages[stepNo].type === TfQuestionsSetup &&
-          quiz["TfArr"].length !== quiz["tf"] &&
-          errorMsg == "tf" && (
-            <Alert variation="error">
-              Please select exactly {quiz["tf"]} question(s)
-            </Alert>
-          )}
-        {pages[stepNo].type === McqQuestionsSetup &&
-          quiz["mcqArr"].length !== quiz["mcq"] &&
-          errorMsg == "mcq" && (
-            <Alert variation="warning">
-              Please select exactly {quiz["mcq"]} question(s)
-            </Alert>
-          )}
-        {pages[stepNo].type === FillBlankQuestionsSetup &&
-          quiz["fibArr"].length !== quiz["fillBlank"] &&
-          errorMsg == "fillBlank" && (
-            <Alert variation="error">
-              Please select exactly {quiz["fillBlank"]} question(s)
-            </Alert>
-          )}
+        {errorMsg != "" && <Alert variation="warning">{errorMsg}</Alert>}
       </div>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {stepNo > 0 && (
           <button
             className="previous"
             onClick={() => {
+              setErrorMsg("");
               setStepNo(stepNo - 1);
             }}
           >
@@ -87,27 +103,7 @@ function Quizzes() {
           </button>
         )}
         {stepNo < pages.length - 1 ? (
-          <button
-            className="next"
-            onClick={() => {
-              if (
-                pages[stepNo].type === TfQuestionsSetup &&
-                quiz["TfArr"].length !== quiz["tf"]
-              )
-                setErrorMsg("tf");
-              else if (
-                pages[stepNo].type === McqQuestionsSetup &&
-                quiz["mcqArr"].length !== quiz["mcq"]
-              )
-                setErrorMsg("mcq");
-              else if (
-                pages[stepNo].type === FillBlankQuestionsSetup &&
-                quiz["fibArr"].length !== quiz["fillBlank"]
-              )
-                setErrorMsg("fillBlank");
-              else setStepNo(stepNo + 1);
-            }}
-          >
+          <button className="next" onClick={handleNext}>
             Next
           </button>
         ) : (
