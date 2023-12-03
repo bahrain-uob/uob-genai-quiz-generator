@@ -10,6 +10,8 @@ import { focusAtom } from "jotai-optics";
 import { useAtom } from "jotai";
 import emptymaterials from "../assets/Cool Kids - Bust-comp.svg";
 import koala from "../assets/Sweet Koala-comp.svg";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
   optic.prop("materials")
@@ -63,6 +65,7 @@ function MaterialsTable({
       draft[courseId].splice(index, 1);
     });
 
+    toast("Successfully deleted", { type: "success" });
     const userId = await getUserId();
     const key = `${userId}/${courseId}/materials/${fileName}`;
     await Storage.remove(key);
@@ -72,8 +75,25 @@ function MaterialsTable({
     const name = materials[courseId][index].key;
     const userId = await getUserId();
     const key = `${userId}/${courseId}/materials/${name}`;
+    toast("Download is in progress", { type: "info" });
     const result = await Storage.get(key, { download: true });
     downloadBlob(result.Body, name);
+  };
+
+  const downloadSummary = async (index: number) => {
+    const name = materials[courseId][index].key + ".summary";
+    const userId = await getUserId();
+    const key = `${userId}/${courseId}/summaries/${name}`;
+    try {
+      const result = await Storage.get(key, {
+        download: true,
+      });
+      downloadBlob(result.Body, name + ".txt");
+    } catch (err) {
+      toast("This might take a while, try again later", {
+        type: "error",
+      });
+    }
   };
 
   const downloadBlob = (blob: any, filename: string) => {
@@ -154,7 +174,11 @@ function MaterialsTable({
               >
                 {isSelecting && (
                   <td>
-                    <input type="checkbox" id={material.key} />
+                    <input
+                      type="checkbox"
+                      id={material.key}
+                      onClick={() => selectMaterial(material.key)}
+                    />
                   </td>
                 )}
                 <td
@@ -169,18 +193,7 @@ function MaterialsTable({
                     <>
                       <details style={{ textAlign: "left" }}>
                         <summary>{material.key}</summary>
-                        <button
-                          onClick={async () => {
-                            const name =
-                              materials[courseId][index].key + ".summary";
-                            const userId = await getUserId();
-                            const key = `${userId}/${courseId}/summaries/${name}`;
-                            const result = await Storage.get(key, {
-                              download: true,
-                            });
-                            downloadBlob(result.Body, name + ".txt");
-                          }}
-                        >
+                        <button onClick={() => downloadSummary(index)}>
                           Generate Summary
                         </button>
                       </details>
@@ -233,6 +246,7 @@ function MaterialsTable({
           </tbody>
         </table>
       )}
+      <ToastContainer />
     </div>
   );
 }

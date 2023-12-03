@@ -33,20 +33,20 @@ function QuizSetupForm() {
         <div className="input-container">
           <StepperField
             min={0}
-            max={50}
-            value={quiz.mcq}
-            label="Number of MCQ"
-            name="mcq"
+            max={10}
+            value={quiz.tf}
+            label="Number of T/F"
+            name="tf"
           />
         </div>
 
         <div className="input-container">
           <StepperField
             min={0}
-            max={10}
-            value={quiz.tf}
-            label="Number of T/F"
-            name="tf"
+            max={50}
+            value={quiz.mcq}
+            label="Number of MCQ"
+            name="mcq"
           />
         </div>
 
@@ -71,7 +71,6 @@ function StepperField(props: {
   max: number;
 }) {
   const [quiz, setQuiz] = useAtom(quizAtom);
-  // @ts-ignore
   const value = quiz[props.name];
 
   const clamp = (val: number) => {
@@ -79,10 +78,20 @@ function StepperField(props: {
     if (val < props.min) return props.min;
     return val;
   };
+
   function handleChange(n: number) {
     const copy = JSON.parse(JSON.stringify(quiz));
     const newVal = clamp(parseInt(copy[props.name]) + n);
     copy[props.name] = newVal;
+    if (newVal == 0) {
+      if (props.name == "tf") {
+        copy.TfArr = [];
+      } else if (props.name == "mcq") {
+        copy.mcqArr = [];
+      } else if (props.name == "fillBlank") {
+        copy.fibArr = [];
+      }
+    }
     setQuiz(copy);
   }
 

@@ -60,9 +60,18 @@ function Materials() {
             <h1>Upload Course Content</h1>
             <div className="upload-container">
               <StorageManager
-                maxFileCount={5}
+                maxFileCount={10}
                 accessLevel="public"
                 path={`${userId}/${course_id}/materials/`}
+                acceptedFileTypes={[
+                  "pdf",
+                  "docx",
+                  "pptx",
+                  "mp4",
+                  "png",
+                  "jpg",
+                  "jpeg",
+                ]}
               />
             </div>
           </div>
