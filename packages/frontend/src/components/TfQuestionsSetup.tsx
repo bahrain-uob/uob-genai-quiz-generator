@@ -75,7 +75,12 @@ function TfQuestionsSetup(props: { inFlight: any }) {
       <div className="questions">
         <div ref={parent} className="generated">
           <h4 style={{ textAlign: "center" }}>Generated Questions</h4>
-
+          {generated.length + selected.length < no_questions && (
+            <div className="loading-state">
+              <div className="lds-dual-ring"></div>
+              <p>generating..</p>
+            </div>
+          )}
           {generated.map((question, index) => (
             <TfQuestionArea
               key={gArr[index].id}
@@ -88,7 +93,10 @@ function TfQuestionsSetup(props: { inFlight: any }) {
         </div>
 
         <div ref={parent} className="selected">
-          <h4 style={{ textAlign: "center" }}>Selected Questions</h4>
+          <h4 style={{ textAlign: "center" }}>
+            Selected Questions
+            <span className="selected-length">{selected.length}</span>
+          </h4>
 
           {selected.map((question, index) => (
             <TfQuestionArea

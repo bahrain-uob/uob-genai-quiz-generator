@@ -610,6 +610,54 @@ input[type="checkbox"] {
   align-items: center;
 }
 
+.questions-setup .selected .selected-length {
+  color: white;
+  background: #606585;
+  border-radius: 50%;
+  padding: 5px 10px;
+  margin-left: 10px;
+  font-size: small;
+  transition: 1s;
+}
+
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-state p {
+  color: #3a3e53;
+  font-size: small;
+  font-weight: 600;
+  color: darkgreen;
+}
+
+.lds-dual-ring {
+  display: inline-block;
+  width: 60px;
+  height: 60px;
+}
+.lds-dual-ring:after {
+  content: " ";
+  display: block;
+  width: 20px;
+  height: 20px;
+  margin: 8px;
+  border-radius: 50%;
+  border: 6px solid #fff;
+  border-color: darkgreen transparent rgb(4, 147, 4) transparent;
+  animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .questions-setup h3 {
   letter-spacing: 0px;
 }

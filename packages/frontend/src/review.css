@@ -124,10 +124,20 @@ input:focus {
   height: 4em;
   padding: 5px;
   padding-left: 7px;
-  overflow-y: scroll;
   color: #606060;
   font-size: small;
 }
+
+.choice-area {
+  width: 100%;
+  background-color: #bdbdbd22;
+  padding-left: 7px;
+  font-size: small;
+  color: #606060;
+  border-radius: 15px;
+  margin-bottom: 0.3rem;
+}
+
 .mcq-review {
   background-color: #e7e7e768;
   font-size: small;

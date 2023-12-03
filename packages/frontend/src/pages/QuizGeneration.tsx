@@ -57,21 +57,21 @@ function Quizzes() {
           quiz["TfArr"].length !== quiz["tf"] &&
           errorMsg == "tf" && (
             <Alert variation="error">
-              Please select exactly {quiz["tf"]} questions
+              Please select exactly {quiz["tf"]} question(s)
             </Alert>
           )}
         {pages[stepNo].type === McqQuestionsSetup &&
           quiz["mcqArr"].length !== quiz["mcq"] &&
           errorMsg == "mcq" && (
             <Alert variation="warning">
-              Please select exactly {quiz["mcq"]} questions
+              Please select exactly {quiz["mcq"]} question(s)
             </Alert>
           )}
         {pages[stepNo].type === FillBlankQuestionsSetup &&
           quiz["fibArr"].length !== quiz["fillBlank"] &&
           errorMsg == "fillBlank" && (
             <Alert variation="error">
-              Please select exactly {quiz["fillBlank"]} questions
+              Please select exactly {quiz["fillBlank"]} question(s)
             </Alert>
           )}
       </div>
@@ -121,7 +121,7 @@ function Quizzes() {
 }
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials"),
+  optic.prop("materials")
 );
 
 function CoursesTable() {
