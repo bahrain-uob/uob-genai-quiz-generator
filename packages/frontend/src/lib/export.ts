@@ -1,4 +1,5 @@
 import Excel from "exceljs";
+import { Mcq } from "./store";
 
 export const exportKahoot = async (quiz: any) => {
   // start from cell 9
@@ -46,4 +47,77 @@ const downloadBlob = (blob: Blob, filename: string) => {
   a.addEventListener("click", clickHandler, false);
   a.click();
   return a;
+};
+export const convertXML = (data) => {
+  const quiz = data;
+  let xml = "<quiz>\n";
+  xml += '  <question type="category">\n';
+  xml += "    <category>\n";
+  xml += `     <text>${quiz.name}</text>\n`;
+  xml += "    </category>\n";
+  xml += "  </question>\n";
+
+  // Convert mcqArr
+  quiz.mcqArr.forEach((mcq: Mcq) => {
+    xml += '  <question type="multichoice">\n';
+    xml += "    <name>\n";
+    xml += `      <text><![CDATA[question]]></text>\n`;
+    xml += "    </name>\n";
+    xml += '    <questiontext format="html">\n';
+    xml += `      <text><![CDATA[${mcq.question}]]></text>\n`;
+    xml += "    </questiontext>\n";
+
+    mcq.choices.forEach((choice, index) => {
+      xml += `    <answer fraction="${
+        index === mcq.answer_index ? "100" : "0"
+      }">\n`;
+      xml += `      <text><![CDATA[${choice}]]></text>\n`;
+      xml += "    </answer>\n";
+    });
+
+    xml += "    <shuffleanswers>0</shuffleanswers>\n";
+    xml += "    <single>true</single>\n";
+    xml += "    <answernumbering>none</answernumbering>\n";
+    xml += "  </question>\n";
+  });
+
+  // Convert TfArr
+  quiz.TfArr.forEach((tf) => {
+    xml += '  <question type="truefalse">\n';
+    xml += "    <name>\n";
+    xml += `      <text><![CDATA[question]]></text>\n`;
+    xml += "    </name>\n";
+    xml += '    <questiontext format="html">\n';
+    xml += `      <text><![CDATA[${tf.question}]]></text>\n`;
+    xml += "    </questiontext>\n";
+
+    xml += `    <answer fraction="100">\n`;
+    xml += "      <text><![CDATA[true]]></text>\n";
+    xml += "    </answer>\n";
+    xml += `    <answer fraction="0">\n`;
+    xml += "      <text><![CDATA[false]]></text>\n";
+    xml += "    </answer>\n";
+
+    xml += "  </question>\n";
+  });
+
+  // Convert fibArr
+  quiz.fibArr.forEach((fib) => {
+    xml += '  <question type="shortanswer">\n';
+    xml += "    <name>\n";
+    xml += `      <text><![CDATA[question]]></text>\n`;
+    xml += "    </name>\n";
+    xml += '    <questiontext format="html">\n';
+    xml += `      <text><![CDATA[${fib.question}]]></text>\n`;
+    xml += "    </questiontext>\n";
+
+    xml += `    <answer fraction="100">\n`;
+    xml += `      <text><![CDATA[${fib.answer}]]></text>\n`;
+    xml += "    </answer>\n";
+
+    xml += "  </question>\n";
+  });
+
+  xml += "</quiz>";
+  return xml;
 };

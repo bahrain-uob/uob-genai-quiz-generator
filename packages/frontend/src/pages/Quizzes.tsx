@@ -28,6 +28,7 @@ import coolkid from "../assets/Cool Kids - Alone Time.svg";
 import Modal from "react-modal";
 import "../quiz.css";
 import JsPDF from "jspdf";
+import { convertXML } from "../lib/export";
 
 function Quizzes() {
   const [courses, setCourses] = useAtom(coursesAtom);
@@ -345,6 +346,16 @@ function Quiz(props: {
         pdf.save("quiz.pdf");
       });
   };
+  const exportMoodle = () => {
+    const xmlData = convertXML(quiz);
+    const blob = new Blob([xmlData], { type: "text/xml" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "quiz.xml";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
 
   if (!quiz) {
     return <></>;
@@ -398,8 +409,9 @@ function Quiz(props: {
                 </button>
               }
               menu={[
-                <button onClick={props.onClick}>Export as Moodle</button>,
+                <button onClick={props.onClick}>Export to Kahoot</button>,
                 <button onClick={exportPDF}>Export as PDF</button>,
+                <button onClick={exportMoodle}>Export to Moodle</button>,
               ]}
             />
           </div>
