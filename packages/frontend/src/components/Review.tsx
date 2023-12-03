@@ -89,7 +89,7 @@ function Questions(props: { type: string; stepNo: number }) {
         <div className="form-container">
           {mcqQuestions.map((question: Mcq) => (
             <div className="question-container review">
-              <div className="question-area" style={{ height: "7rem" }}>
+              <div className="question-area" style={{ height: "auto" }}>
                 <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
 
@@ -104,17 +104,18 @@ function Questions(props: { type: string; stepNo: number }) {
                   <label style={{ fontSize: "medium", paddingTop: "12px" }}>
                     {index + 1})
                   </label>
-                  <input
+                  <div
+                    className="choice-area review"
                     style={{
+                      height: "auto",
                       backgroundColor:
                         question.answer_index === index
                           ? "rgba(77, 187, 67, 0.46)"
                           : "",
                     }}
-                    type="text"
-                    value={choice}
-                    disabled
-                  />
+                  >
+                    <p style={{ lineHeight: "1rem" }}>{choice}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -126,8 +127,8 @@ function Questions(props: { type: string; stepNo: number }) {
         <div className="form-container">
           {fillBlankQuestions.map((question: FillBlank) => (
             <div className="question-container review">
-              <div className="question-area">
-                <p>{question.question}</p>
+              <div className="question-area" style={{ height: "auto" }}>
+                <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
 
               <label>Answer Key:</label>
@@ -149,8 +150,8 @@ function Questions(props: { type: string; stepNo: number }) {
         <div className="form-container">
           {tfQuestions.map((question: Tf) => (
             <div className="question-container review">
-              <div className="question-area">
-                <p>{question.question}</p>
+              <div className="question-area" style={{ height: "auto" }}>
+                <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
               <label>Answer Key:</label>
               <input

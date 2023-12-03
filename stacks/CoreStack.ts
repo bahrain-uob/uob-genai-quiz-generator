@@ -12,7 +12,16 @@ export function CoreStack({ stack }: StackContext) {
   });
 
   // stores the material uploaded by the user
-  const materialBucket = new Bucket(stack, "MaterialBucket");
+  const materialBucket = new Bucket(stack, "MaterialBucket", {
+    cors: [
+      {
+        allowedHeaders: ["*"],
+        allowedMethods: ["GET", "PUT", "HEAD", "POST", "DELETE"],
+        allowedOrigins: ["*"],
+        exposedHeaders: ["ETag"],
+      },
+    ],
+  });
   // stores the text version of the file after processing it
   const materialText = new Bucket(stack, "MaterialText");
 
