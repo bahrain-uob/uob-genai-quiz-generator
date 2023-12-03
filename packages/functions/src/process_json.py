@@ -1,11 +1,12 @@
 import json
 import boto3
+import urllib
 
 
 def extract_transcript(event, context):
     # Get the S3 bucket and JSON file information from the event
     bucket_name = event["Records"][0]["s3"]["bucket"]["name"]
-    json_key = event["Records"][0]["s3"]["object"]["key"].replace("+", " ")
+    json_key = urllib.parse.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
 
     # Set the output file name
     output_file_name = json_key.replace(".json", ".txt")
@@ -37,4 +38,3 @@ def extract_transcript(event, context):
 
     except Exception as e:
         return {"statusCode": 500, "body": f"Error: {str(e)}"}
-

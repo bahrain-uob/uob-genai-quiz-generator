@@ -3,6 +3,7 @@ import boto3
 import io
 from botocore.exceptions import ClientError
 import os
+import urllib
 
 s3 = boto3.client("s3")
 OUTPUT_BUCKET = os.environ["OUTPUT_BUCKET"]
@@ -10,7 +11,7 @@ OUTPUT_BUCKET = os.environ["OUTPUT_BUCKET"]
 
 def handler(event, context):
     bucket_name = event["Records"][0]["s3"]["bucket"]["name"]
-    object_key = event["Records"][0]["s3"]["object"]["key"].replace("+", " ")
+    object_key = urllib.parse.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
 
     try:
         response = s3.get_object(Bucket=bucket_name, Key=object_key)
