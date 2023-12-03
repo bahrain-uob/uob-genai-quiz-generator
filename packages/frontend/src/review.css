@@ -114,6 +114,7 @@ input:focus {
   outline: none;
   border-bottom: 2px solid #22223b;
 }
+
 .question-area {
   width: 100%;
   border-radius: 6px;
@@ -146,5 +147,6 @@ input:focus {
 }
 .question-container.review {
   background-color: #e2e2e225;
+  width: 30%;
 }
 /* end of review stage */

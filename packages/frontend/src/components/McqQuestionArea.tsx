@@ -1,10 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faPlusCircle,
-  faMinus,
-  faPlus,
-  faMinusCircle,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faMinusCircle } from "@fortawesome/free-solid-svg-icons";
 import { Mcq } from "../lib/store";
 import { PrimitiveAtom, useAtom } from "jotai";
 
@@ -37,7 +32,7 @@ function QuestionArea(props: {
       <div className="question-container">
         <form onSubmit={(e) => e.preventDefault()}>
           <div
-            style={{ display: "flex", justifyContent: "center", gap: "5px" }}
+            style={{ display: "flex", justifyContent: "center", gap: "15px" }}
           >
             <FontAwesomeIcon
               icon={faMinusCircle}
@@ -61,6 +56,7 @@ function QuestionArea(props: {
             cols={35}
             defaultValue={question.question}
             onChange={(e) => handleQuestionChange(e)}
+            placeholder="Question here.."
           ></textarea>
 
           {question.choices.map((choice: string, index: number) => (
@@ -71,7 +67,14 @@ function QuestionArea(props: {
                 gap: "5px",
               }}
             >
-              <label style={{ fontSize: "medium" }}>{index + 1})</label>
+              <input
+                type="radio"
+                name="choice"
+                checked={index == question.answer_index}
+                onClick={() => handleAnswerChange(index)}
+                className="choice-radio"
+              />
+
               <textarea
                 rows={2}
                 cols={35}
@@ -82,80 +85,12 @@ function QuestionArea(props: {
                       : "",
                 }}
                 defaultValue={choice}
+                placeholder="choice here.."
                 onChange={(e) => handleChoiceChange(e, index)}
               ></textarea>
             </div>
           ))}
-
-          <StepperField
-            min={0}
-            max={question.choices.length - 1}
-            value={question.answer_index}
-            onChange={handleAnswerChange}
-          />
         </form>
-      </div>
-    </>
-  );
-}
-function StepperField(props: {
-  value: number;
-  min: number;
-  max: number;
-  onChange: any;
-}) {
-  const clamp = (val: number) => {
-    if (val > props.max) return props.max;
-    if (val < props.min) return props.min;
-    return val;
-  };
-
-  const handleChange = (n: number) => {
-    const newVal = clamp(props.value + n);
-    props.onChange(newVal);
-  };
-
-  return (
-    <>
-      <div className="input-container">
-        <label>Answer: </label>
-        <input
-          className="stepperfield"
-          type="number"
-          value={props.value + 1}
-          disabled
-          style={{ textAlign: "center" }}
-        />
-        <button
-          className="minus"
-          style={{
-            top: "40px",
-            backgroundColor: "white",
-            boxShadow: "0px 0px 4px #c3c3c3",
-            borderTopLeftRadius: "7px",
-          }}
-        >
-          <FontAwesomeIcon
-            className="minus-icon"
-            icon={faMinus}
-            onClick={() => handleChange(-1)}
-          />
-        </button>
-        <button
-          className="plus"
-          style={{
-            top: "40px",
-            backgroundColor: "white",
-            boxShadow: "0px 0px 4px #c3c3c3",
-            borderTopRightRadius: "7px",
-          }}
-        >
-          <FontAwesomeIcon
-            onClick={() => handleChange(1)}
-            className="plus-icon"
-            icon={faPlus}
-          />
-        </button>
       </div>
     </>
   );

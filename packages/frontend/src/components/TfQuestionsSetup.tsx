@@ -68,6 +68,17 @@ function TfQuestionsSetup(props: { inFlight: any }) {
     return () => generatedDispatch({ type: "remove", atom: question });
   };
 
+  const addCustomQuestion = () => {
+    selectedDispatch({
+      type: "insert",
+      value: {
+        id: crypto.randomUUID(),
+        question: "",
+        answer: true,
+      },
+    });
+  };
+
   return (
     <div className="questions-setup" style={{ backgroundColor: "#F2E9E4" }}>
       <h3>Customize the True/False Questions</h3>
@@ -106,6 +117,10 @@ function TfQuestionsSetup(props: { inFlight: any }) {
               remove={removeSelected(question)}
             />
           ))}
+
+          <button className="add-custom" onClick={addCustomQuestion}>
+            Add custom
+          </button>
         </div>
       </div>
     </div>

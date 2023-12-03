@@ -26,7 +26,7 @@ function QuestionArea(props: {
       <div className="question-container">
         <form onSubmit={(e) => e.preventDefault()}>
           <div
-            style={{ display: "flex", justifyContent: "center", gap: "5px" }}
+            style={{ display: "flex", justifyContent: "center", gap: "15px" }}
           >
             <FontAwesomeIcon
               icon={faMinusCircle}
@@ -50,6 +50,7 @@ function QuestionArea(props: {
             cols={35}
             defaultValue={question.question}
             onChange={(e) => handleQuestionChange(e)}
+            placeholder="Question here.."
           ></textarea>
 
           <label>Answer Key:</label>
@@ -57,6 +58,7 @@ function QuestionArea(props: {
             type="text"
             defaultValue={question.answer}
             onChange={handleAnswerChange}
+            placeholder="Answer here.."
           />
         </form>
       </div>
