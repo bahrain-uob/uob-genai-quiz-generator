@@ -1,6 +1,5 @@
 import { useState, useCallback, useEffect } from "react";
-// import { useSearchParams } from "react-router-dom";
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import useWebSocket from "react-use-websocket";
 import "../caravalClient.css";
 import {
   faCheck,
@@ -53,11 +52,8 @@ export function GameClient() {
   const gameId = useSearchParams()[0].get("gameId")!;
   const socketUrl = `${import.meta.env.VITE_APP_SOCKET_URL}?gameId=${gameId}`;
 
-  const {
-    sendMessage: innerSendMessage,
-    lastMessage,
-    readyState,
-  } = useWebSocket(socketUrl);
+  const { sendMessage: innerSendMessage, lastMessage } =
+    useWebSocket(socketUrl);
 
   useEffect(() => {
     if (lastMessage !== null) {
@@ -88,14 +84,6 @@ export function GameClient() {
     if (data.action) innerSendMessage(JSON.stringify({ ...data, gameId }));
   }, []);
 
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
-
   return (
     <>
       {state.kind == "preGameState" && (
@@ -107,9 +95,6 @@ export function GameClient() {
       )}
       {state.kind == "resultState" && <Result state={state} />}
       {state.kind == "endGameState" && <EndGame state={state} />}
-      <h1>IGNORE BELOW</h1>
-      <span>The WebSocket is currently {connectionStatus}</span>
-      {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
     </>
   );
 }

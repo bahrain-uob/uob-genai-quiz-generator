@@ -9,7 +9,7 @@ import { caravalAtom, caravalQuestion } from "../lib/store";
 import { atom, useAtom, useAtomValue } from "jotai";
 import { QRCodeSVG } from "qrcode.react";
 import { useState, useCallback, useEffect, useRef } from "react";
-import useWebSocket, { ReadyState } from "react-use-websocket";
+import useWebSocket from "react-use-websocket";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import caraval from "../assets/Caraval-comp.svg";
 import Confetti from "react-confetti";
@@ -53,11 +53,8 @@ export function GameServer() {
   const [state, setState] = useState({ kind: "preGameState" } as ServerState);
   const questions = useAtomValue(caravalAtom);
 
-  const {
-    sendMessage: innerSendMessage,
-    lastMessage,
-    readyState,
-  } = useWebSocket(socketUrl);
+  const { sendMessage: innerSendMessage, lastMessage } =
+    useWebSocket(socketUrl);
   const [events, setEvents] = useState([] as string[]);
 
   const [usernames, innerSetUsernames] = useState(new Map());
@@ -92,14 +89,6 @@ export function GameServer() {
     if (message.action)
       innerSendMessage(JSON.stringify({ ...message, gameId }));
   }, []);
-
-  const connectionStatus = {
-    [ReadyState.CONNECTING]: "Connecting",
-    [ReadyState.OPEN]: "Open",
-    [ReadyState.CLOSING]: "Closing",
-    [ReadyState.CLOSED]: "Closed",
-    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
-  }[readyState];
 
   return (
     <div>
@@ -138,49 +127,13 @@ export function GameServer() {
           send={send}
         />
       )}
-      <button onClick={() => setState({ kind: "preGameState" })}>
-        preGame
-      </button>
-      <button onClick={() => setState({ kind: "registerState" })}>
-        Register
-      </button>
-      <button onClick={() => setState({ kind: "questionState" })}>
-        Question
-      </button>
-      <button onClick={() => setState({ kind: "scoreboardState" })}>
-        Scoreboard
-      </button>
-      <button onClick={() => setState({ kind: "endGameState" })}>
-        endGameState
-      </button>
-      <h1>IGNORE BELOW</h1>
-      <span>The WebSocket is currently {connectionStatus}</span>
-      <h1>localhost:3000/join?gameId={gameId}</h1>
-      {lastMessage ? <span>Last message: {lastMessage.data}</span> : null}
-      <div style={{ display: "flex" }}>
-        <div style={{ margin: "10px" }}>
-          <QRCodeSVG
-            style={{ margin: "50px" }}
-            value={`${window.location.origin}/join?gameId=${gameId}`}
-          />
-          <p>{gameId}</p>
-        </div>
-        <div style={{ marginLeft: "20px" }}>
-          <h1>Events</h1>
-          {events.map((message) => (
-            <div key={crypto.randomUUID()}>
-              <span>{message}</span>
-              <br />
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }
 
 function PreGame(props: { setState: (s: RegisterState) => void }) {
-  const [timer, setTimer] = useState(2);
+  const [timer, setTimer] = useState(4);
+
   useEffect(() => {
     if (timer <= 0) {
       props.setState({ kind: "registerState" });
@@ -224,7 +177,11 @@ function Register(props: {
           </ul>
         </div>
         <div className="header">
-          <div className={`header-text ${modal ? "modal" : ""}`}>
+          <div
+            className={`header-text ${modal ? "modal" : ""}`}
+            style={{ cursor: "pointer" }}
+            onClick={() => setModal(true)}
+          >
             Join by scanning the QR
           </div>
           <div
@@ -285,7 +242,6 @@ function Register(props: {
             style={{
               width: "450px",
               height: "450px",
-              cursor: "pointer",
             }}
             value={`${window.location.origin}/join?gameId=${gameId}`}
           />
@@ -402,15 +358,15 @@ function QuestionOptions(props: {
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
-        ...props.answers.current.map((obj: any) => obj.time)
+        ...props.answers.current.map((obj: any) => obj.time),
       );
       const max = Math.max(
         ...props.answers.current
           .filter(
             (answer: sendAnswer) =>
-              answer.answer == currentQuestion.answer_index
+              answer.answer == currentQuestion.answer_index,
           )
-          .map((obj: sendAnswer) => obj.time)
+          .map((obj: sendAnswer) => obj.time),
       );
       const range = max - min + 1;
 
@@ -425,17 +381,17 @@ function QuestionOptions(props: {
         currentScore.set(answer.connectionId, score);
         props.scores.current.set(
           answer.connectionId,
-          (props.scores.current.get(answer.connectionId) ?? 0) + score
+          (props.scores.current.get(answer.connectionId) ?? 0) + score,
         );
         props.marks.current.set(
           answer.connectionId,
           (props.marks.current.get(answer.connectionId) ?? 0) +
-            (correct ? 1 : 0)
+            (correct ? 1 : 0),
         );
       }
 
       const rankMap = new Map(
-        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
       );
 
       let i = 0;
@@ -553,7 +509,7 @@ function Scoreboard(props: {
   };
 
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
   );
 
   return (
@@ -591,7 +547,7 @@ function Endgame(props: {
   send: (m: pubEnd) => void;
 }) {
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
   );
   const totalQuestions = useAtomValue(caravalAtom).length;
 
