@@ -113,6 +113,7 @@ function MaterialsTable({
   };
 
   const selectMaterial = (key: string) => {
+    if (!isSelecting) return;
     const target: any = document.getElementById(key);
     target.checked = !target.checked;
     if (target.checked) setQuizMaterials(quizMaterials.concat(target.id));

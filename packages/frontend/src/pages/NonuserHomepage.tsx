@@ -5,25 +5,17 @@ import quiestionsimg from "../assets/questions.svg";
 import "../nonuser.css";
 import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
-import { Container } from "tsparticles-engine";
 import { useCallback } from "react";
 import logo from "../assets/logo-comp.svg";
 
 function NonuserHomepage() {
   const particlesInit = async (main: any) => {
-    console.log(main);
-
     // you can initialize the tsParticles instance (main) here, adding custom shapes or presets
     // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
     // starting from v2 you can add only the features you need reducing the bundle size
     await loadFull(main);
   };
-  const particlesLoaded = useCallback(
-    async (container: Container | undefined) => {
-      await console.log(container);
-    },
-    []
-  );
+  const particlesLoaded = useCallback(async () => {}, []);
   return (
     <>
       <Particles
@@ -153,9 +145,9 @@ function NonuserHomepage() {
                 <g
                   id="arrow"
                   stroke="none"
-                  stroke-width="1"
+                  strokeWidth="1"
                   fill="none"
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                 >
                   <path
                     className="one"

@@ -58,7 +58,6 @@ export function GameClient() {
   useEffect(() => {
     if (lastMessage !== null) {
       const message = JSON.parse(lastMessage.data) as ServerMessage;
-      console.log(message);
       if (message.action == "pubQuestion") {
         setState({ kind: "questionState", ...message });
       }

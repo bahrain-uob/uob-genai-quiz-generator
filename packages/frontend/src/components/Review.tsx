@@ -89,13 +89,14 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "MCQ Setup" && (
         <div className="form-container">
           {mcqQuestions.map((question: Mcq) => (
-            <div className="question-container review">
+            <div key={question.id} className="question-container review">
               <div className="question-area" style={{ height: "auto" }}>
                 <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
 
               {question.choices.map((choice: string, index: number) => (
                 <div
+                  key={index}
                   style={{
                     display: "flex",
                     flexDirection: "row",
@@ -127,7 +128,7 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "Fill-in Blank Setup" && (
         <div className="form-container">
           {fillBlankQuestions.map((question: FillBlank) => (
-            <div className="question-container review">
+            <div key={question.id} className="question-container review">
               <div className="question-area" style={{ height: "auto" }}>
                 <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>
@@ -150,7 +151,7 @@ function Questions(props: { type: string; stepNo: number }) {
       {props.type == "T/F Setup" && (
         <div className="form-container">
           {tfQuestions.map((question: Tf) => (
-            <div className="question-container review">
+            <div key={question.id} className="question-container review">
               <div className="question-area" style={{ height: "auto" }}>
                 <p style={{ lineHeight: "1rem" }}>{question.question}</p>
               </div>

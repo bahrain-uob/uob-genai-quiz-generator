@@ -1,11 +1,17 @@
 import { useAuthenticator } from "@aws-amplify/ui-react";
 import Logo from "../assets/Logo.svg";
-import { clearQuiz } from "../lib/helpers";
+import { clearAll, clearQuiz } from "../lib/helpers";
 
 function Navbar(props: { active: string }) {
-  const { signOut } = useAuthenticator((context: { signOut: any }) => [
-    context.signOut,
-  ]);
+  const { signOut: innerSignOut } = useAuthenticator(
+    (context: { signOut: any }) => [context.signOut],
+  );
+
+  const signOut = () => {
+    clearAll();
+    innerSignOut();
+  };
+
   return (
     <div>
       <nav>
@@ -36,9 +42,8 @@ function Navbar(props: { active: string }) {
             >
               <p>CREATE QUIZ</p>
             </a>
-          </div>{" "}
+          </div>
           <div className="sign-out">
-            {" "}
             <a onClick={signOut}>
               <p>SIGN OUT</p>
             </a>

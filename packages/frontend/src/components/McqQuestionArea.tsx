@@ -61,6 +61,7 @@ function QuestionArea(props: {
 
           {question.choices.map((choice: string, index: number) => (
             <div
+              key={index}
               style={{
                 display: "flex",
                 flexDirection: "row",
@@ -73,6 +74,7 @@ function QuestionArea(props: {
                 checked={index == question.answer_index}
                 onClick={() => handleAnswerChange(index)}
                 className="choice-radio"
+                readOnly={true}
               />
 
               <textarea

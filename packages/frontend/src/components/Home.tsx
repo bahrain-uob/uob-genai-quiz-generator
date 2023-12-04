@@ -4,7 +4,6 @@ import NonuserHomepage from "../pages/NonuserHomepage";
 
 function Home() {
   const { route } = useAuthenticator((context) => [context.route]);
-  console.log(route);
   if (route === "idle") return <></>;
   if (route === "authenticated") return <Homepage />;
   return <NonuserHomepage />;

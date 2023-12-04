@@ -20,7 +20,6 @@ def summarize(event, context):
     prompt = """
               Write a summary of the following text delimited by triple backticks. Return your response which covers the key points of the text.
               ```{{topic}}```
-             
     """
     topics = partition(topic)
     for ben in topics:

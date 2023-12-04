@@ -31,8 +31,6 @@ export const main: APIGatewayProxyHandler = async (event) => {
     }),
   );
 
-  console.log(messageData);
-
   const apiG = new ApiGatewayManagementApiClient({
     endpoint: `https://${domainName}/${stage}`,
   });
