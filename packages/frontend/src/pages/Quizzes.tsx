@@ -77,7 +77,7 @@ function Quizzes() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string,
+    course_name: string
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -245,7 +245,7 @@ function McqQuestion(props: {
           <h4>Q: {props.question}</h4>
           <div className="answers-container">
             {props.choices.map((choice, index) => (
-              <p>{`${index + 1}) ${choice}`}</p>
+              <p key={index}>{`${index + 1}) ${choice}`}</p>
             ))}
             <p>
               {`Answer:    
@@ -327,7 +327,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
         question: q.question,
         choices: ["True", "False"],
         answer_index: q.answer ? 0 : 1,
-      })),
+      }))
     );
 
     // add the mcq questions
@@ -336,7 +336,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
         question: q.question,
         choices: q.choices,
         answer_index: q.answer_index,
-      })),
+      }))
     );
 
     // shuffle the questions
@@ -430,6 +430,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
             {checked == "rec" && <h1>True/False</h1>}
             {quiz.TfArr.map((question: Tf) => (
               <TfQuestion
+                key={question.id}
                 question={question.question}
                 answer={question.answer}
                 list={checked}
@@ -440,6 +441,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
             {checked == "rec" && <h1>MCQ</h1>}
             {quiz.mcqArr.map((question: Mcq) => (
               <McqQuestion
+                key={question.id}
                 question={question.question}
                 choices={question.choices}
                 ans_index={question.answer_index}
@@ -451,6 +453,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
             {checked == "rec" && <h1>Fill-in Blank</h1>}
             {quiz.fibArr.map((question: FillBlank) => (
               <FillBlankQuestion
+                key={question.id}
                 question={question.question}
                 answer={question.answer}
                 list={checked}
