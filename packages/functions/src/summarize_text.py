@@ -55,7 +55,7 @@ def summarize(event, context):
         Key=object_key.removesuffix(".txt").replace("materials", "summaries")
         + ".summary",
     )
-
+    convert_text_to_speech(summary,object_key)
 
 def partition(text):
     cuts = []
@@ -70,30 +70,16 @@ def partition(text):
 
 
 def convert_text_to_speech(text,obKey):
-    # Create a client for the Amazon Polly service
     polly_client = boto3.client('polly')
 
-    # Specify the desired voice and language
-    voice_id = 'Joanna'  # Example voice ID, you can choose a different one
-    language_code = 'en-US'  # Example language code, you can choose a different one
-
-    # Configure the speech synthesis task
     response = polly_client.synthesize_speech(
         Text=text,
         OutputFormat='mp3',
-        VoiceId=voice_id,
-        LanguageCode=language_code
+        VoiceId='Joanna',
+        LanguageCode='en-US'
     )
 
-    # Upload the synthesized speech audio to an S3 bucket
-    bucket_name = MATERIAL_BUCKET  # Name of the S3 bucket
-    #audio_output = 'speech_output.mp3'  # Output file name
-    #S3.put_object(
-     #       Body=response['AudioStream'], Bucket=MATERIAL_BUCKET, Key=obKey.removesuffix(".txt").replace("materials","summaries") + ".summary" + ".mp3"
-      #  )
+    bucket_name = MATERIAL_BUCKET  
 
     s3_client = boto3.client('s3')
-    s3_client.upload_fileobj(response['AudioStream'], bucket_name, obKey.removesuffix(".txt").replace("materials", "summaries") + ".summary"+".mp3")
-    #audio_output)
-
-    #print(f'Speech output saved to: s3://{bucket_name}/{audio_output}')
+    s3_client.upload_fileobj(response['AudioStream'], bucket_name, obKey.removesuffix(".txt").replace("materials", "summaries")".summaryAudio")
