@@ -119,7 +119,6 @@ export function CoreStack({ stack }: StackContext) {
       function: {
         handler: "packages/functions/src/summarize_text.summarize",
         runtime: "python3.11",
-        timeout: "2 minutes",
         permissions: ["sagemaker", "s3"],
         environment: {
           MATERIAL_BUCKET: materialBucket.bucketName,
