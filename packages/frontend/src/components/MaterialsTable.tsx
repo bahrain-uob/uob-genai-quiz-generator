@@ -96,6 +96,22 @@ function MaterialsTable({
     }
   };
 
+  const downloadSummaryAudio = async (index: number) => {
+    const name = materials[courseId][index].key + ".summaryAudio";
+    const userId = await getUserId();
+    const key = `${userId}/${courseId}/summaries/${name}`;
+    try {
+      const result = await Storage.get(key, {
+        download: true,
+      });
+      downloadBlob(result.Body, name + ".mp3");
+    } catch (err) {
+      toast("This might take a while, try again later", {
+        type: "error",
+      });
+    }
+  };
+
   const downloadBlob = (blob: any, filename: string) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -194,9 +210,14 @@ function MaterialsTable({
                     <>
                       <details style={{ textAlign: "left" }}>
                         <summary>{material.key}</summary>
-                        <button onClick={() => downloadSummary(index)}>
-                          Generate Summary
-                        </button>
+                        <div className="summary-buttons">
+                          <button onClick={() => downloadSummary(index)}>
+                            Download Summary
+                          </button>
+                          <button onClick={() => downloadSummaryAudio(index)}>
+                            Download Audio
+                          </button>
+                        </div>
                       </details>
                     </>
                   )}

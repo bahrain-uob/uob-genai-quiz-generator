@@ -1146,6 +1146,12 @@ details {
   cursor: pointer;
 }
 
+.summary-buttons {
+  display: flex;
+  animation-name: slideToRight;
+  animation-duration: 1s;
+}
+
 details button {
   background: #606584;
   color: white;
@@ -1155,8 +1161,6 @@ details button {
   margin: 0.5rem 0 0 1rem;
   border-radius: 7px;
   cursor: pointer;
-  animation-name: slideToRight;
-  animation-duration: 1s;
   box-shadow: 1px 1px 2px #8e8e8e;
   transform: scale(0.95);
   transition: box-shadow 0.5s, transform 0.5s;
@@ -1170,7 +1174,7 @@ details button {
 
 @keyframes slideToRight {
   from {
-    margin-left: 20%;
+    margin-left: 50%;
     width: auto;
   }
   to {
