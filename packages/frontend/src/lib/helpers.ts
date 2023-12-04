@@ -14,3 +14,12 @@ export const clearQuiz = () => {
   localStorage.removeItem("quiz");
   localStorage.removeItem("stage");
 };
+
+export const clearAll = () => {
+  localStorage.removeItem("nav");
+  localStorage.removeItem("coursesList");
+  localStorage.removeItem("materialsList");
+  localStorage.removeItem("quizzesList");
+  localStorage.removeItem("quiz");
+  localStorage.removeItem("stage");
+};
