@@ -301,7 +301,11 @@ function Homepage() {
                         select a course
                       </option>
                       {courses.map((course: any) => (
-                        <option id={course.id} value={course.id}>
+                        <option
+                          key={course.id}
+                          id={course.id}
+                          value={course.id}
+                        >
                           {course.code}
                         </option>
                       ))}
