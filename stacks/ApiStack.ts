@@ -1,4 +1,4 @@
-import { Api, StackContext, use } from "sst/constructs";
+import { Api, StackContext, Table, WebSocketApi, use } from "sst/constructs";
 import { AuthStack } from "./AuthStack";
 import { CoreStack } from "./CoreStack";
 
@@ -48,5 +48,32 @@ export function ApiStack({ stack }: StackContext) {
     },
   });
 
-  return { api };
+  const connectionsTable = new Table(stack, "Connections", {
+    fields: {
+      id: "string",
+      username: "string",
+      gameId: "string",
+      master: "string",
+    },
+    primaryIndex: { partitionKey: "id" },
+  });
+
+  const socket = new WebSocketApi(stack, "Socket", {
+    defaults: {
+      function: {
+        bind: [connectionsTable],
+      },
+    },
+    routes: {
+      $connect: "packages/api/src/connect.main",
+      $disconnect: "packages/api/src/disconnect.main",
+      pubQuestion: "packages/api/src/pubQuestion.main",
+      pubResult: "packages/api/src/pubResults.main",
+      pubEnd: "packages/api/src/pubEnd.main",
+      sendAnswer: "packages/api/src/sendAnswer.main",
+      sendUsername: "packages/api/src/sendUsername.main",
+    },
+  });
+
+  return { api, socket };
 }

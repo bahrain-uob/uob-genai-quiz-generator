@@ -4,7 +4,7 @@ import { ApiStack } from "./ApiStack";
 import { AuthStack } from "./AuthStack";
 
 export function FrontendStack({ stack, app }: StackContext) {
-  const { api } = use(ApiStack);
+  const { api, socket } = use(ApiStack);
   const { auth } = use(AuthStack);
   const { materialBucket } = use(CoreStack);
 
@@ -15,6 +15,7 @@ export function FrontendStack({ stack, app }: StackContext) {
     buildOutput: "dist",
     environment: {
       VITE_APP_API_URL: api.url,
+      VITE_APP_SOCKET_URL: socket.url,
       VITE_APP_REGION: app.region,
       VITE_APP_USER_POOL_ID: auth.userPoolId,
       VITE_APP_USER_POOL_CLIENT_ID: auth.userPoolClientId,

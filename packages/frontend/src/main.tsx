@@ -10,6 +10,8 @@ import { Authenticator } from "@aws-amplify/ui-react";
 import { RequireAuth } from "./RequireAuth.tsx";
 import { Login } from "./pages/SignIn.tsx";
 import Home from "./components/Home.tsx";
+import { GameClient } from "./pages/GameClient.tsx";
+import { GameServer } from "./pages/GameServer.tsx";
 
 Amplify.configure({
   Auth: {
@@ -86,6 +88,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             }
           />
           <Route path="/signin" element={<Login />} />
+          <Route path="/serve" element={<GameServer />} />
+          <Route path="/join" element={<GameClient />} />
         </Routes>
       </BrowserRouter>
     </Authenticator.Provider>

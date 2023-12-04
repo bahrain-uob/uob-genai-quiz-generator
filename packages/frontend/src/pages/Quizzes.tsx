@@ -16,6 +16,7 @@ import {
   FillBlank,
   Mcq,
   Tf,
+  caravalAtom,
   coursesAtom,
   navAtom,
   quizzesAtom,
@@ -306,6 +307,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
   const [modal, setModal] = useState(false);
   const [checked, setChecked] = useState("norm");
   const [quiz, setQuiz] = useState(null as any);
+  const setCaraval = useSetAtom(caravalAtom);
 
   useEffect(() => {
     const fn = async () => {
@@ -318,6 +320,35 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
     };
     fn();
   }, []);
+
+  const navigate = useNavigate();
+  const playCaraval = () => {
+    const questions = [];
+
+    // add the tf questions
+    questions.push(
+      ...quiz.TfArr.map((q: Tf) => ({
+        question: q.question,
+        choices: ["True", "False"],
+        answer_index: q.answer ? 0 : 1,
+      })),
+    );
+
+    // add the mcq questions
+    questions.push(
+      ...quiz.mcqArr.map((q: Mcq) => ({
+        question: q.question,
+        choices: q.choices,
+        answer_index: q.answer_index,
+      })),
+    );
+
+    // shuffle the questions
+    const shuffledQuestions = questions.sort(() => 0.5 - Math.random());
+
+    setCaraval(shuffledQuestions);
+    navigate("/serve");
+  };
 
   if (!quiz) {
     return <></>;
@@ -357,7 +388,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
             <h1 className="quiz-name">{quiz.name}</h1>
           </div>
           <div className="actions-menu">
-            <button className="play-caraval">
+            <button onClick={playCaraval} className="play-caraval">
               <FontAwesomeIcon icon={faPlay} /> Play Caraval
             </button>
             <Dropdown

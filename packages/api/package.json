@@ -10,6 +10,7 @@
     "sst": "^2.28.1"
   },
   "dependencies": {
+    "@aws-sdk/client-apigatewaymanagementapi": "^3.449.0",
     "@aws-sdk/client-dynamodb": "^3.428.0",
     "@aws-sdk/client-s3": "^3.428.0"
   }
