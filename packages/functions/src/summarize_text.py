@@ -82,4 +82,4 @@ def convert_text_to_speech(text,obKey):
     bucket_name = MATERIAL_BUCKET  
 
     s3_client = boto3.client('s3')
-    s3_client.upload_fileobj(response['AudioStream'], bucket_name, obKey.removesuffix(".txt").replace("materials", "summaries")".summaryAudio")
+    s3_client.upload_fileobj(response['AudioStream'], bucket_name, obKey.removesuffix(".txt").replace("materials", "summaries")+".summaryAudio")
