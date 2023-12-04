@@ -1,4 +1,5 @@
 import Excel from "exceljs";
+import { FillBlank, Mcq, Tf } from "./store";
 
 export const exportKahoot = async (quiz: any) => {
   // start from cell 9
@@ -30,6 +31,120 @@ export const exportKahoot = async (quiz: any) => {
   }
   const buffer = await book.xlsx.writeBuffer();
   downloadBlob(new Blob([buffer]), `${quiz.name}-kahoot.xlsx`);
+};
+
+export const exportMoodle = (quiz: any) => {
+  let xml = "<quiz>\n";
+  xml += '  <question type="category">\n';
+  xml += "    <category>\n";
+  xml += `     <text>${quiz.name}</text>\n`;
+  xml += "    </category>\n";
+  xml += "  </question>\n";
+
+  // Convert mcqArr
+  quiz.mcqArr.forEach((mcq: Mcq) => {
+    xml += '  <question type="multichoice">\n';
+    xml += "    <name>\n";
+    xml += `      <text><![CDATA[question]]></text>\n`;
+    xml += "    </name>\n";
+    xml += '    <questiontext format="html">\n';
+    xml += `      <text><![CDATA[${mcq.question}]]></text>\n`;
+    xml += "    </questiontext>\n";
+
+    mcq.choices.forEach((choice, index) => {
+      xml += `    <answer fraction="${
+        index === mcq.answer_index ? "100" : "0"
+      }">\n`;
+      xml += `      <text><![CDATA[${choice}]]></text>\n`;
+      xml += "    </answer>\n";
+    });
+
+    xml += "    <shuffleanswers>0</shuffleanswers>\n";
+    xml += "    <single>true</single>\n";
+    xml += "    <answernumbering>none</answernumbering>\n";
+    xml += "  </question>\n";
+  });
+
+  // Convert TfArr
+  quiz.TfArr.forEach((tf: Tf) => {
+    xml += '  <question type="truefalse">\n';
+    xml += "    <name>\n";
+    xml += `      <text><![CDATA[question]]></text>\n`;
+    xml += "    </name>\n";
+    xml += '    <questiontext format="html">\n';
+    xml += `      <text><![CDATA[${tf.question}]]></text>\n`;
+    xml += "    </questiontext>\n";
+
+    xml += `    <answer fraction="100">\n`;
+    xml += "      <text><![CDATA[true]]></text>\n";
+    xml += "    </answer>\n";
+    xml += `    <answer fraction="0">\n`;
+    xml += "      <text><![CDATA[false]]></text>\n";
+    xml += "    </answer>\n";
+
+    xml += "  </question>\n";
+  });
+
+  // Convert fibArr
+  quiz.fibArr.forEach((fib: FillBlank) => {
+    xml += '  <question type="shortanswer">\n';
+    xml += "    <name>\n";
+    xml += `      <text><![CDATA[question]]></text>\n`;
+    xml += "    </name>\n";
+    xml += '    <questiontext format="html">\n';
+    xml += `      <text><![CDATA[${fib.question}]]></text>\n`;
+    xml += "    </questiontext>\n";
+
+    xml += `    <answer fraction="100">\n`;
+    xml += `      <text><![CDATA[${fib.answer}]]></text>\n`;
+    xml += "    </answer>\n";
+
+    xml += "  </question>\n";
+  });
+
+  xml += "</quiz>";
+
+  downloadBlob(new Blob([xml]), `${quiz.name}.xml`);
+};
+
+export const exportMarkdown = (quiz: any) => {
+  let question_number = 1;
+  let md = `# ${quiz.name}\n\n`;
+  const letter = ["a", "b", "c", "d"];
+
+  // Convert TfArr
+  md += "### True or False\n\n";
+  quiz.TfArr.forEach((q: Tf) => {
+    md += `${question_number}. **${q.question}**\n\n`;
+    md += `    Answer:  **${q.answer}**\n\n`;
+    question_number++;
+  });
+  md += "---\n";
+
+  // Convert mcqArr
+  md += "### Multiple Choices\n\n";
+  quiz.mcqArr.forEach((q: Mcq) => {
+    md += `${question_number}. **${q.question}**\n\n`;
+
+    q.choices.forEach((choice, index) => {
+      md += `    - ${letter[index]}) ${choice}\n`;
+    });
+
+    md += `  - Answer: **(${letter[q.answer_index]})**\n\n`;
+    question_number++;
+  });
+  md += "---\n";
+
+  // Convert fibArr
+  md += "### Fill in the Blank\n\n";
+  quiz.fibArr.forEach((q: FillBlank) => {
+    md += `${question_number}. **${q.question}**\n\n`;
+    md += `    Answer:  **${q.answer}**\n\n`;
+    question_number++;
+  });
+  md += "---\n";
+
+  downloadBlob(new Blob([md]), `${quiz.name}.txt`);
 };
 
 const downloadBlob = (blob: Blob, filename: string) => {
