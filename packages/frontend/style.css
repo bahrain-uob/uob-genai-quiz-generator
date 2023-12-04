@@ -1288,6 +1288,12 @@ details[open] {
     transition: transform 0.5s;
   }
 }
+
+.quiz-item .contents span {
+  font-weight: normal;
+  font-family: "Noto Sans", sans-serif;
+}
+
 .lines {
   border-left: 1px solid #ffaa9f;
   border-right: 1px solid #ffaa9f;
