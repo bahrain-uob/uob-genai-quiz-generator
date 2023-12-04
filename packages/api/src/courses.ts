@@ -1,4 +1,5 @@
 import {
+  DeleteItemCommand,
   DynamoDBClient,
   PutItemCommand,
   QueryCommand,
@@ -75,5 +76,28 @@ export const post = async (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
       code: code,
       name: name,
     }),
+  };
+};
+
+export const del = async (event: APIGatewayProxyEventV2WithJWTAuthorizer) => {
+  if (!event.body) return { statusCode: 400 };
+  const user_id = event.requestContext.authorizer.jwt.claims.sub as string;
+
+  const course_id: string = JSON.parse(event.body).id;
+  if (!course_id) return { statusCode: 400 };
+
+  const command = new DeleteItemCommand({
+    TableName: Table.Courses.tableName,
+    Key: { user_id: { S: user_id }, course_id: { S: course_id } },
+  });
+
+  try {
+    await dynamodb.send(command);
+  } catch {
+    return { statusCode: 500 };
+  }
+
+  return {
+    statusCode: 200,
   };
 };

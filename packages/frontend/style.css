@@ -1032,6 +1032,38 @@ input[type="number"] {
   align-items: center;
 }
 
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10%;
+}
+
+.modal-buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.modal-buttons-container button {
+  box-shadow: 2px 2px 3px #c3c3c3;
+  border-radius: 10px;
+  background: #ac341e;
+  padding: 10px 15px;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.modal-buttons-container button:first-child {
+  background: #ac341e;
+}
+
+.modal-buttons-container button:last-child {
+  background-color: #5e6384;
+}
+
 /* upload section components for materials page */
 
 .upload-container {

@@ -6,51 +6,96 @@ import { StorageManager } from "@aws-amplify/ui-react-storage";
 import "@aws-amplify/ui-react/styles.css";
 import Modal from "react-modal";
 import { useEffect, useState } from "react";
-import { faX, faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import {
+  faX,
+  faCloudArrowUp,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 import { getUserId } from "../lib/helpers";
 import { navAtom } from "../lib/store";
 import { useAtomValue } from "jotai";
+import { API } from "aws-amplify";
+import { useNavigate } from "react-router-dom";
 
 function Materials() {
   const { course_id, course_code, course_name } = useAtomValue(navAtom);
-  const [modalIsOpen, setIsOpen] = useState(false);
+  const [uploadModal, setUploadModal] = useState(false);
+  const [deleteModal, setDeleteModal] = useState(false);
   const [userId, setUserId] = useState("");
   useEffect(() => {
     getUserId(setUserId);
   }, []);
 
-  function openModal() {
-    setIsOpen(true);
-  }
-  function closeModal() {
-    setIsOpen(false);
-    window.location.reload();
-  }
+  const navigation = useNavigate();
+  const deleteCourse = async () => {
+    await API.del("api", "/courses", { body: { id: course_id } });
+    navigation("/courses");
+  };
 
   return (
     <div>
       <Navbar active="none" />
       <div className="top-materials">
         <Titles title={[`${course_code} ${course_name}`, "Course Content"]} />
-        <button className="upload-button" onClick={openModal}>
-          <FontAwesomeIcon
-            icon={faCloudArrowUp}
-            className="cloud-icon"
-            size="xl"
-            style={{ color: "white" }}
-          />
-          <p>Upload</p>
-        </button>
+        <div style={{ marginLeft: "auto", display: "flex" }}>
+          <button
+            className="upload-button"
+            onClick={() => setDeleteModal(true)}
+            style={{ background: "#ac341e" }}
+          >
+            <FontAwesomeIcon
+              icon={faTrash}
+              className="cloud-icon"
+              size="xl"
+              style={{ color: "white" }}
+            />
+            <p>Delete course</p>
+          </button>
+          <Modal
+            isOpen={deleteModal}
+            onRequestClose={() => setDeleteModal(false)}
+            contentLabel="Delete course"
+            style={bg}
+          >
+            <div className="modal-container">
+              <h1>
+                Are you sure you want to delete {course_code} {course_name}?
+              </h1>
+              <div className="modal-buttons-container">
+                <button onClick={deleteCourse}>Confirm</button>{" "}
+                <button onClick={() => setDeleteModal(false)}>Cancel</button>
+              </div>
+            </div>
+          </Modal>
+          <button
+            className="upload-button"
+            onClick={() => setUploadModal(true)}
+          >
+            <FontAwesomeIcon
+              icon={faCloudArrowUp}
+              className="cloud-icon"
+              size="xl"
+              style={{ color: "white" }}
+            />
+            <p>Upload</p>
+          </button>
+        </div>
         <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
+          isOpen={uploadModal}
+          onRequestClose={() => {
+            setUploadModal(false);
+            window.location.reload();
+          }}
           contentLabel="Upload Material Modal"
           style={bg}
         >
           <div className="x">
             <FontAwesomeIcon
               icon={faX}
-              onClick={closeModal}
+              onClick={() => {
+                setUploadModal(false);
+                window.location.reload();
+              }}
               className="x-icon"
               size="xl"
               style={{ color: "#5c617f" }}

@@ -45,6 +45,14 @@ export function ApiStack({ stack }: StackContext) {
           bind: [coursesTable],
         },
       },
+
+      "DELETE /courses": {
+        function: {
+          handler: "packages/api/src/courses.del",
+          runtime: "nodejs18.x",
+          bind: [coursesTable],
+        },
+      },
     },
   });
 
