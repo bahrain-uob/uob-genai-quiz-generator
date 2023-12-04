@@ -5,7 +5,6 @@ import re
 import random
 import math
 
-# endpoint_name = os.environ["LLAMA_2_13B_ENDPOINT"]
 endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-13b"  # need to make environ
 sm_client = boto3.client("sagemaker-runtime", region_name="us-east-1")
 s3 = boto3.client("s3")
