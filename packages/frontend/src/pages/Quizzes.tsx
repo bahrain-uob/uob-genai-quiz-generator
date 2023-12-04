@@ -77,7 +77,7 @@ function Quizzes() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -223,8 +223,6 @@ function McqQuestion(props: {
   ans_index: number;
   list: string;
 }) {
-  console.log("HEER");
-  console.log(props.ans_index);
   return (
     <>
       {props.list == "rec" && (
@@ -265,7 +263,6 @@ function TfQuestion(props: {
   answer: boolean;
   list: string;
 }) {
-  console.log(props);
   return (
     <>
       {props.list == "rec" && (
@@ -315,7 +312,6 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
       const key = `${userId}/${props.courseId}/quizzes/${props.name}.json`;
       const response = await Storage.get(key, { download: true });
       const fetchedQuiz = JSON.parse(await response.Body!.text());
-      console.log(fetchedQuiz);
       setQuiz(fetchedQuiz);
     };
     fn();

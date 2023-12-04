@@ -9,7 +9,6 @@ export const main: APIGatewayProxyHandler = async (event) => {
   const rank = JSON.parse(event.body!).rank;
   const correctQuestions = JSON.parse(event.body!).correctQuestions;
   const totalQuestions = JSON.parse(event.body!).totalQuestions;
-  console.log(event.body);
   const { stage, domainName } = event.requestContext;
 
   const apiG = new ApiGatewayManagementApiClient({

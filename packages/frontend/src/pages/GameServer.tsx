@@ -69,7 +69,6 @@ export function GameServer() {
   useEffect(() => {
     if (lastMessage !== null) {
       const message = JSON.parse(lastMessage.data) as ClientMessage;
-      console.log(message);
       if (message.action == "sendUsername") {
         setUsernames(message.connectionId!, message.username);
         scores.current.set(message.connectionId!, 0);
