@@ -195,7 +195,7 @@ function MaterialsTable({
                       <details style={{ textAlign: "left" }}>
                         <summary>{material.key}</summary>
                         <button onClick={() => downloadSummary(index)}>
-                          Generate Summary
+                          Download Summary
                         </button>
                       </details>
                     </>
