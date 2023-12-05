@@ -59,7 +59,11 @@ function Materials() {
           >
             <div className="modal-container">
               <h1>
-                Are you sure you want to delete {course_code} {course_name}?
+                Are you sure you want to delete
+                <strong>
+                  {course_code} {course_name}
+                </strong>
+                ?
               </h1>
               <div className="modal-buttons-container">
                 <button onClick={deleteCourse}>Confirm</button>{" "}
