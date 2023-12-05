@@ -44,12 +44,12 @@ function QuizSetup() {
             <label htmlFor="quiz-name">Quiz Name</label>
             <input name="quiz-name" placeholder={`${name}`} disabled />
           </div>
-        </div>
-        <div className="right">
           <div className="input-container">
             <label htmlFor="mcq">Number of MCQ</label>
             <input name="mcq" placeholder={`${mcq}`} disabled />
           </div>
+        </div>
+        <div className="right">
           <div className="input-container">
             <label htmlFor="tf">Number of T/F</label>
             <input name="tf" placeholder={`${tf}`} disabled />

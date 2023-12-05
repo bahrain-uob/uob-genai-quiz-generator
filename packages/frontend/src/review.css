@@ -149,7 +149,7 @@ input:focus {
   background-color: #e2e2e225;
   width: 30%;
   @media (max-width: 800px) {
-    width: 45%;
+    width: 90%;
   }
 }
 /* end of review stage */
