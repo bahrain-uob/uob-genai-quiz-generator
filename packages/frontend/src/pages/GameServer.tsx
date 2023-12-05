@@ -213,7 +213,10 @@ function Register(props: {
           </div>
           <div className="names-container">
             {[...props.usernames.values()].map((username) => (
-              <div key={crypto.randomUUID()} className="name-area">
+              <div
+                key={crypto.randomUUID()}
+                className={`name-area ${modal ? "modal" : ""}`}
+              >
                 <p>{username}</p>
               </div>
             ))}
@@ -357,15 +360,15 @@ function QuestionOptions(props: {
   useEffect(() => {
     if (timer == 0) {
       const min = Math.min(
-        ...props.answers.current.map((obj: any) => obj.time),
+        ...props.answers.current.map((obj: any) => obj.time)
       );
       const max = Math.max(
         ...props.answers.current
           .filter(
             (answer: sendAnswer) =>
-              answer.answer == currentQuestion.answer_index,
+              answer.answer == currentQuestion.answer_index
           )
-          .map((obj: sendAnswer) => obj.time),
+          .map((obj: sendAnswer) => obj.time)
       );
       const range = max - min + 1;
 
@@ -380,17 +383,17 @@ function QuestionOptions(props: {
         currentScore.set(answer.connectionId, score);
         props.scores.current.set(
           answer.connectionId,
-          (props.scores.current.get(answer.connectionId) ?? 0) + score,
+          (props.scores.current.get(answer.connectionId) ?? 0) + score
         );
         props.marks.current.set(
           answer.connectionId,
           (props.marks.current.get(answer.connectionId) ?? 0) +
-            (correct ? 1 : 0),
+            (correct ? 1 : 0)
         );
       }
 
       const rankMap = new Map(
-        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+        [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
       );
 
       let i = 0;
@@ -508,7 +511,7 @@ function Scoreboard(props: {
   };
 
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
   );
 
   return (
@@ -546,7 +549,7 @@ function Endgame(props: {
   send: (m: pubEnd) => void;
 }) {
   const rankMap = new Map(
-    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1]),
+    [...props.scores.current.entries()].sort((a, b) => b[1] - a[1])
   );
   const totalQuestions = useAtomValue(caravalAtom).length;
 

@@ -81,7 +81,8 @@
 .QR.modal,
 .register-caraval .header-text.modal,
 .register-caraval .body-title.modal,
-.start-wrapper.modal {
+.start-wrapper.modal,
+.name-area.modal {
   z-index: 0;
 }
 
