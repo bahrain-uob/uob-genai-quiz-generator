@@ -75,42 +75,6 @@ export function CoreStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".mp4" }],
     },
-    png: {
-      function: {
-        handler: "packages/functions/src/process_image.lambda_handler",
-        runtime: "python3.11",
-        permissions: ["s3", "textract"],
-        environment: {
-          OUTPUT_BUCKET: materialText.bucketName,
-        },
-      },
-      events: ["object_created"],
-      filters: [{ suffix: ".png" }],
-    },
-    jpg: {
-      function: {
-        handler: "packages/functions/src/process_image.lambda_handler",
-        runtime: "python3.11",
-        permissions: ["s3", "textract"],
-        environment: {
-          OUTPUT_BUCKET: materialText.bucketName,
-        },
-      },
-      events: ["object_created"],
-      filters: [{ suffix: ".jpg" }],
-    },
-    jpeg: {
-      function: {
-        handler: "packages/functions/src/process_image.lambda_handler",
-        runtime: "python3.11",
-        permissions: ["s3", "textract"],
-        environment: {
-          OUTPUT_BUCKET: materialText.bucketName,
-        },
-      },
-      events: ["object_created"],
-      filters: [{ suffix: ".jpeg" }],
-    },
   });
 
   materialText.addNotifications(stack, {
