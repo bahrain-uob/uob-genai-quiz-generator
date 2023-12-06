@@ -25,6 +25,25 @@
 .register-caraval {
   background-color: #4a4e69;
   height: 100vh;
+  position: relative;
+}
+
+.register-caraval .home-button {
+  position: absolute;
+  left: 10px;
+  top: 165px;
+  font-weight: 300;
+  font-size: larger;
+  transition: 0.2s ease-out;
+  padding: 10px 20px;
+  text-align: center;
+  width: 130px;
+  &:hover {
+    font-weight: 400;
+    transition: 0.2s ease-in;
+    background-color: white;
+    color: #333;
+  }
 }
 
 .register-caraval .header {

@@ -199,6 +199,10 @@ function Register(props: {
           </div>
         </div>
         <div className="body">
+          <a href="/" className="home-button">
+            HOME
+          </a>
+
           <div
             className={`start-wrapper ${modal ? "modal" : ""}`}
             onClick={start}
