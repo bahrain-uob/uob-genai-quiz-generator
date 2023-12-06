@@ -88,7 +88,7 @@ function MaterialsTable({
       const result = await Storage.get(key, {
         download: true,
       });
-      downloadBlob(result.Body, name + ".txt");
+      downloadBlob(await result.Body!.blob(), name + ".txt");
     } catch (err) {
       toast("This might take a while, try again later", {
         type: "error",
