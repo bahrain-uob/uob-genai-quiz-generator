@@ -82,7 +82,7 @@
 .register-caraval .header-text.modal,
 .register-caraval .body-title.modal,
 .start-wrapper.modal,
-.name-area.modal {
+.names-container .name-area.modal {
   z-index: 0;
 }
 
@@ -482,6 +482,23 @@
   height: 100vh;
   overflow: hidden;
   background: #22223b;
+}
+
+.end-game .header {
+  padding: 50px;
+}
+
+.end-game .header a {
+  border-radius: 10px;
+  font-size: larger;
+  padding: 15px 20px;
+  font-weight: 200;
+  transition: 3s ease-in;
+
+  &:hover {
+    animation: color 9s infinite linear;
+    transition: 3s ease-in;
+  }
 }
 
 .end-game .ranks {

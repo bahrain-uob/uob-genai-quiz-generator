@@ -573,6 +573,9 @@ function Endgame(props: {
   return (
     <>
       <div className="end-game">
+        <div className="header">
+          <a href="/">HOME</a>
+        </div>
         <Confetti
           colors={["#f44336", "#9c27b0", "#3f51b5"]}
           wind={0.03}
