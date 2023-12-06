@@ -45,7 +45,6 @@ export const quizAtom = atomWithStorage("quiz", {
   courseId: "",
   materials: [] as string[],
   name: "",
-  versions: 1,
   mcq: 0,
   tf: 0,
   fillBlank: 0,

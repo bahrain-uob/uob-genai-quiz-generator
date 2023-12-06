@@ -385,7 +385,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
           </div>
           <div className="actions-menu">
             <button onClick={playCaraval} className="play-caraval">
-              <FontAwesomeIcon icon={faPlay} /> Play Caraval
+              <FontAwesomeIcon icon={faPlay} /> Play Caraval Game
             </button>
             <Dropdown
               trigger={

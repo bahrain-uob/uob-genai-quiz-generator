@@ -25,6 +25,25 @@
 .register-caraval {
   background-color: #4a4e69;
   height: 100vh;
+  position: relative;
+}
+
+.register-caraval .home-button {
+  position: absolute;
+  left: 10px;
+  top: 165px;
+  font-weight: 300;
+  font-size: larger;
+  transition: 0.2s ease-out;
+  padding: 10px 20px;
+  text-align: center;
+  width: 130px;
+  &:hover {
+    font-weight: 400;
+    transition: 0.2s ease-in;
+    background-color: white;
+    color: #333;
+  }
 }
 
 .register-caraval .header {
@@ -81,7 +100,8 @@
 .QR.modal,
 .register-caraval .header-text.modal,
 .register-caraval .body-title.modal,
-.start-wrapper.modal {
+.start-wrapper.modal,
+.names-container .name-area.modal {
   z-index: 0;
 }
 
@@ -481,6 +501,23 @@
   height: 100vh;
   overflow: hidden;
   background: #22223b;
+}
+
+.end-game .header {
+  padding: 50px;
+}
+
+.end-game .header a {
+  border-radius: 10px;
+  font-size: larger;
+  padding: 15px 20px;
+  font-weight: 200;
+  transition: 3s ease-in;
+
+  &:hover {
+    animation: color 9s infinite linear;
+    transition: 3s ease-in;
+  }
 }
 
 .end-game .ranks {

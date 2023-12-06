@@ -7,6 +7,8 @@ import Particles from "react-tsparticles";
 import { loadFull } from "tsparticles";
 import { useCallback } from "react";
 import logo from "../assets/logo-comp.svg";
+import caraval from "../assets/caraval-feature.svg";
+import summary from "../assets/summary.svg";
 
 function NonuserHomepage() {
   const particlesInit = async (main: any) => {
@@ -175,13 +177,13 @@ function NonuserHomepage() {
         <div className="cards-container">
           <Card
             img={materialsimg}
-            title="Any Pdf, Word, Text, Video, Link"
-            paragraph="EduCraft has the ability to generate questions in various formats, including Multiple-Choice, Fill in the Blanks, True/False, Matching, and Blooms Taxonomy levels. Whether you provide a text, link, or video, EduCraft can analyze the content and create questions accordingly."
+            title="Any Pdf, Word, Text, Video"
+            paragraph="EduCraft has the ability to generate questions in various formats, including Multiple-Choice, Fill in the Blanks and True/False. Whether you provide a text, or video, EduCraft can analyze the content and create questions accordingly."
           />
           <Card
             img={quizsetupimg}
             title="play with the Settings of Your Quiz"
-            paragraph="One of the key aspects of EduCraft is the flexibility to change the number of each type of questions and the number of versions of the quiz."
+            paragraph="One of the key aspects of EduCraft is the flexibility to change the name and the number of each type of questions of the quiz."
           />
           <Card
             img={quiestionsimg}
@@ -192,6 +194,16 @@ function NonuserHomepage() {
             img={quizzesimg}
             title="Save Your Quizzes"
             paragraph="The ability to save generated questions for future editing or publishing is a valuable feature in EduCraft. It allows quiz organizers to streamline the process and efficiently manage their question bank. By saving the generated questions, they can revisit and edit them at a later time, making necessary modifications or improvements."
+          />
+          <Card
+            img={caraval}
+            title="Caraval: Interactive Sessions"
+            paragraph="Instructors have the capability to initiate engaging interactive sessions following the creation of a new quiz. Students can seamlessly join these sessions by scanning the provided QR code. During these sessions, students will actively compete with one another to provide the quickest and most accurate answers. At the conclusion of the session, a podium display will showcase the participants' performances, and scores will be meticulously calculated, ensuring an enjoyable and competitive learning experience."
+          />
+          <Card
+            img={summary}
+            title="Summary"
+            paragraph="Our AI system will generate summaries automatically upon the upload of new instructional materials. Instructors will have the option to download these summaries, providing a convenient and efficient means of accessing concise and relevant information from the uploaded materials."
           />
         </div>
       </div>

@@ -26,7 +26,7 @@ function Review(props: { stepNo: number }) {
 }
 
 function QuizSetup() {
-  const { name, versions, mcq, tf, fillBlank } = useAtomValue(quizAtom);
+  const { name, mcq, tf, fillBlank } = useAtomValue(quizAtom);
   const setStepNo = useSetAtom(stageAtom);
 
   return (
@@ -45,15 +45,11 @@ function QuizSetup() {
             <input name="quiz-name" placeholder={`${name}`} disabled />
           </div>
           <div className="input-container">
-            <label htmlFor="versions">Number of Versions</label>
-            <input name="versions" placeholder={`${versions}`} disabled />
-          </div>
-        </div>
-        <div className="right">
-          <div className="input-container">
             <label htmlFor="mcq">Number of MCQ</label>
             <input name="mcq" placeholder={`${mcq}`} disabled />
           </div>
+        </div>
+        <div className="right">
           <div className="input-container">
             <label htmlFor="tf">Number of T/F</label>
             <input name="tf" placeholder={`${tf}`} disabled />

@@ -13,7 +13,7 @@ import { loadFull } from "tsparticles";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { useCallback, useEffect, useState } from "react";
-import { getUserId } from "../lib/helpers";
+import { clearQuiz, getUserId } from "../lib/helpers";
 import { useAtom } from "jotai";
 import { coursesAtom } from "../lib/store";
 
@@ -139,6 +139,7 @@ function Homepage() {
           <div className="access-cards">
             <Link
               to="/createquiz"
+              onClick={clearQuiz}
               style={{ color: "white" }}
               className="access-item"
             >
