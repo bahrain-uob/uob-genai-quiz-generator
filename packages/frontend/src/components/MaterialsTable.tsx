@@ -77,7 +77,7 @@ function MaterialsTable({
     const key = `${userId}/${courseId}/materials/${name}`;
     toast("Download is in progress", { type: "info" });
     const result = await Storage.get(key, { download: true });
-    downloadBlob(result.Body, name);
+    downloadBlob(await result.Body!.blob(), name);
   };
 
   const downloadSummary = async (index: number) => {
@@ -97,7 +97,7 @@ function MaterialsTable({
   };
 
   const downloadBlob = (blob: any, filename: string) => {
-    const url = URL.createObjectURL(new Blob([blob]));
+    const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
     a.download = filename || "download";
