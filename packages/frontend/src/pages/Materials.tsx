@@ -108,7 +108,7 @@ function Materials() {
                 maxFileCount={10}
                 accessLevel="public"
                 path={`${userId}/${course_id}/materials/`}
-                acceptedFileTypes={["pdf", "docx", "pptx", "mp4"]}
+                acceptedFileTypes={["pdf", "docx", "pptx", "mp4", "txt"]}
               />
             </div>
           </div>

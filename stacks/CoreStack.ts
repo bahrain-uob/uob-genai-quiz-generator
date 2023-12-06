@@ -75,6 +75,18 @@ export function CoreStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".mp4" }],
     },
+    txt: {
+      function: {
+        handler: "packages/functions/src/process_txt.handler",
+        runtime: "python3.11",
+        permissions: ["s3"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".txt" }],
+    },
   });
 
   materialText.addNotifications(stack, {
