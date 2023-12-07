@@ -1,5 +1,7 @@
 import Excel from "exceljs";
 import { FillBlank, Mcq, Tf } from "./store";
+// @ts-ignore
+import * as br from "braille";
 
 export const exportKahoot = async (quiz: any) => {
   // start from cell 9
@@ -145,6 +147,45 @@ export const exportMarkdown = (quiz: any) => {
   md += "---\n";
 
   downloadBlob(new Blob([md]), `${quiz.name}.txt`);
+};
+
+export const exportBraille = (quiz: any) => {
+  let question_number = 1;
+  let braille = br.toBraille(`${quiz.name}`) + "\n\n";
+  const letter = ["a", "b", "c", "d"];
+
+  // Convert TfArr
+  braille += br.toBraille("True or False") + "\n\n";
+  quiz.TfArr.forEach((q: Tf) => {
+    braille += br.toBraille(`${question_number}. ${q.question}`) + "\n\n";
+    braille += br.toBraille(`    Answer  ${q.answer}`) + "\n\n";
+    question_number++;
+  });
+  braille += br.toBraille("--------------------") + "\n\n";
+
+  // Convert mcqArr
+  braille += br.toBraille("Multiple Choices") + "\n\n";
+  quiz.mcqArr.forEach((q: Mcq) => {
+    braille += br.toBraille(`${question_number}. ${q.question}`) + "\n\n";
+    q.choices.forEach((choice, index) => {
+      braille += br.toBraille(`    - ${letter[index]} ${choice}`) + "\n\n";
+    });
+
+    braille += br.toBraille(`  - Answer (${letter[q.answer_index]})`) + "\n\n";
+    question_number++;
+  });
+  braille += br.toBraille("--------------------") + "\n\n";
+
+  // Convert fibArr
+  braille += br.toBraille("Fill in the Blank") + "\n\n";
+  quiz.fibArr.forEach((q: FillBlank) => {
+    braille += br.toBraille(`${question_number}. ${q.question}`) + "\n\n";
+    braille += br.toBraille(`    Answer  ${q.answer}`) + "\n\n";
+    question_number++;
+  });
+  braille += br.toBraille("--------------------") + "\n\n";
+
+  downloadBlob(new Blob([braille]), `${quiz.name}.braille.txt`);
 };
 
 const downloadBlob = (blob: Blob, filename: string) => {
