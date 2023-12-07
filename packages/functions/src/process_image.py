@@ -45,7 +45,7 @@ def lambda_handler(event, context):
             for text in detected_text:
                 text_content += f"{text['Text']}\n"
 
-            file_name = os.path.splitext(key)[0]
+            file_name = key
             output_key = f"{file_name}.txt"
 
             s3.put_object(

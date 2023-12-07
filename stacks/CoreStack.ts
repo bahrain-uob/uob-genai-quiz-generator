@@ -75,41 +75,17 @@ export function CoreStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".mp4" }],
     },
-    png: {
+    txt: {
       function: {
-        handler: "packages/functions/src/process_image.lambda_handler",
+        handler: "packages/functions/src/process_txt.handler",
         runtime: "python3.11",
-        permissions: ["s3", "textract"],
+        permissions: ["s3"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
         },
       },
       events: ["object_created"],
-      filters: [{ suffix: ".png" }],
-    },
-    jpg: {
-      function: {
-        handler: "packages/functions/src/process_image.lambda_handler",
-        runtime: "python3.11",
-        permissions: ["s3", "textract"],
-        environment: {
-          OUTPUT_BUCKET: materialText.bucketName,
-        },
-      },
-      events: ["object_created"],
-      filters: [{ suffix: ".jpg" }],
-    },
-    jpeg: {
-      function: {
-        handler: "packages/functions/src/process_image.lambda_handler",
-        runtime: "python3.11",
-        permissions: ["s3", "textract"],
-        environment: {
-          OUTPUT_BUCKET: materialText.bucketName,
-        },
-      },
-      events: ["object_created"],
-      filters: [{ suffix: ".jpeg" }],
+      filters: [{ suffix: ".txt" }],
     },
   });
 
