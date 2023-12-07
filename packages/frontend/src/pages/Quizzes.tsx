@@ -24,7 +24,7 @@ import {
 import { clearQuiz, getUserId, isEqual } from "../lib/helpers";
 import { Storage } from "aws-amplify";
 import { useImmerAtom } from "jotai-immer";
-import { exportKahoot, exportMarkdown } from "../lib/export";
+import { exportBraille, exportKahoot, exportMarkdown } from "../lib/export";
 import coolkid from "../assets/Cool Kids - Alone Time.svg";
 import Modal from "react-modal";
 import "../quiz.css";
@@ -77,7 +77,7 @@ function Quizzes() {
   function navigate(
     course_id: string,
     course_code: string,
-    course_name: string
+    course_name: string,
   ) {
     setNav({ course_id, course_code, course_name });
     navigation("/materials");
@@ -327,7 +327,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
         question: q.question,
         choices: ["True", "False"],
         answer_index: q.answer ? 0 : 1,
-      }))
+      })),
     );
 
     // add the mcq questions
@@ -336,7 +336,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
         question: q.question,
         choices: q.choices,
         answer_index: q.answer_index,
-      }))
+      })),
     );
 
     // shuffle the questions
@@ -406,6 +406,9 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
                 </button>,
                 <button onClick={() => exportMoodle(quiz)}>
                   Export to Moodle
+                </button>,
+                <button onClick={() => exportBraille(quiz)}>
+                  Export to Braille
                 </button>,
               ]}
             />
