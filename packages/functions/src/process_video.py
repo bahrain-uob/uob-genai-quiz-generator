@@ -2,6 +2,7 @@ import boto3
 import os
 import uuid
 import urllib
+import base64
 
 
 def lambda_handler(event, context):
@@ -20,7 +21,7 @@ def lambda_handler(event, context):
             MediaFormat="mp4",
             Media={"MediaFileUri": s3Path},
             OutputBucketName=os.environ["OUTPUT_BUCKET"],
-            OutputKey=s3object + ".json",
+            OutputKey=str(base64.b16encode(s3object.encode()), "utf-8") + ".json",
         )
 
         return {
