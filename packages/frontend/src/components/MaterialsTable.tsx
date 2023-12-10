@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileArrowDown, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faFileArrowDown, faTrash, faVolumeHigh } from "@fortawesome/free-solid-svg-icons";
 import { useEffect } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
@@ -13,6 +13,9 @@ import koala from "../assets/Sweet Koala-comp.svg";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
+let audiovoice=false;
+let x:any;
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
   optic.prop("materials")
 );
@@ -197,7 +200,70 @@ function MaterialsTable({
                         <button onClick={() => downloadSummary(index)}>
                           Download Summary
                         </button>
+                        <FontAwesomeIcon 
+                              className="volume-icon"
+                              style={{
+                                cursor: "pointer",
+                                color: "#4a4e69",
+                                marginLeft: "5px",
+                              }}
+                              icon={faVolumeHigh}
+                              size="xl"
+                              onClick={async () => {                             
+                                const name =
+                                  materials[courseId][index].key +
+                                  ".summary" +
+                                  ".mp3";
+                                const userId = await getUserId();
+                                const key = `${userId}/${courseId}/summaries/${name}`;
+                                const result = await Storage.get(key, {
+                                  download: true,
+                                });
+                                
+                                const audioBlob = await result.Body?.blob();
+                                //let audioPlaying = false;
+                                if (audioBlob) {
+                                  const audioUrl = URL.createObjectURL(audioBlob);
+                                  let audio = new Audio(audioUrl);
+                                  // Check if audio is playing    
+                                  let durationInSeconds=0; 
+                                  console.log(audiovoice) ;
+                                  audio.addEventListener('ended', function() {
+                                  audiovoice = false; // Set audiovoice to false when audio playback ends
+                                  console.log('Audio playback complete');
+                                  });
+                                                         
+                                  if (audiovoice==true) {
+                                    // If audio is playing, stop or pause it
+                                    audiovoice=false;
+                                    x.pause();
+                                    audio.currentTime=0;                                  
+                                    console.log(audiovoice)   
+                                    durationInSeconds=audio.duration;
+                                    
+
+                                    // or audio.stop() if available
+
+                                  }
+                               
+                                  else if(audiovoice==false){
+                                    // If audio is not playing, start playing it
+                                    //const audio = new Audio(audioUrl);    
+                                    audiovoice=true;                        
+                                    audio.play();
+                                    x=audio;
+                                    console.log(audiovoice)   
+                                    
+                                }  
+                            }                                 
+                            } 
+                            }
+                            
+                            />
                       </details>
+
+                           
+                      
                     </>
                   )}
                 </td>

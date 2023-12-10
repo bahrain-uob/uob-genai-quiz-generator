@@ -87,6 +87,45 @@ export function CoreStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".txt" }],
     },
+    png: {
+      function: {
+        handler: "packages/functions/src/process_image.lambda_handler",
+        runtime: "python3.11",
+        permissions: ["s3", "textract"],
+        timeout: "2 minutes",
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".png" }],
+    },
+    jpeg: {
+      function: {
+        handler: "packages/functions/src/process_image.lambda_handler",
+        runtime: "python3.11",
+        timeout: "2 minutes",
+        permissions: ["s3", "textract"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".jpeg" }],
+    },
+    jpg: {
+      function: {
+        handler: "packages/functions/src/process_image.lambda_handler",
+        runtime: "python3.11",
+        timeout: "2 minutes",
+        permissions: ["s3", "textract"],
+        environment: {
+          OUTPUT_BUCKET: materialText.bucketName,
+        },
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".jpg" }],
+    },
   });
 
   materialText.addNotifications(stack, {
@@ -96,7 +135,7 @@ export function CoreStack({ stack }: StackContext) {
         handler: "packages/functions/src/summarize_text.summarize",
         runtime: "python3.11",
         timeout: "2 minutes",
-        permissions: ["sagemaker", "s3"],
+        permissions: ["sagemaker", "s3", "polly"],
         environment: {
           MATERIAL_BUCKET: materialBucket.bucketName,
         },
