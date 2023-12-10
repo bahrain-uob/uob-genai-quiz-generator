@@ -1,6 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileArrowDown, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useEffect } from "react";
+import {
+  faFileArrowDown,
+  faTrash,
+  faVolumeHigh,
+} from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useRef } from "react";
 import { Storage } from "aws-amplify";
 import { getUserId } from "../lib/helpers";
 import { filesize } from "filesize";
@@ -14,7 +18,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials")
+  optic.prop("materials"),
 );
 
 function MaterialsTable({
@@ -43,7 +47,7 @@ function MaterialsTable({
       `${userId}/${courseId}/materials/`,
       {
         pageSize: 1000,
-      }
+      },
     );
     const prefix_len = userId.length + courseId.length + 9 + 3;
     const results = response.map((obj) => {
@@ -118,6 +122,28 @@ function MaterialsTable({
     target.checked = !target.checked;
     if (target.checked) setQuizMaterials(quizMaterials.concat(target.id));
     else setQuizMaterials(quizMaterials.filter((m) => m != key));
+  };
+
+  const audiostream = useRef(null as HTMLAudioElement | null);
+  const handleAudio = async (index: number) => {
+    if (audiostream.current && audiostream.current.paused == false) {
+      audiostream.current.pause();
+      return;
+    }
+
+    const name = materials[courseId][index].key + ".summary.mp3";
+    const userId = await getUserId();
+    const key = `${userId}/${courseId}/summaries/${name}`;
+    const result = await Storage.get(key, {
+      download: true,
+    });
+
+    const audioBlob = await result.Body?.blob();
+    if (audioBlob) {
+      const audio = new Audio(URL.createObjectURL(audioBlob));
+      audio.play();
+      audiostream.current = audio;
+    }
   };
 
   return (
@@ -197,6 +223,15 @@ function MaterialsTable({
                         <button onClick={() => downloadSummary(index)}>
                           Download Summary
                         </button>
+                        <FontAwesomeIcon
+                          style={{
+                            cursor: "pointer",
+                            color: "#4a4e69",
+                          }}
+                          icon={faVolumeHigh}
+                          size="xl"
+                          onClick={() => handleAudio(index)}
+                        />
                       </details>
                     </>
                   )}
