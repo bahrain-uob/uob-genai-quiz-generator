@@ -126,6 +126,16 @@ export function CoreStack({ stack }: StackContext) {
       events: ["object_created"],
       filters: [{ suffix: ".jpg" }],
     },
+    summary_to_audio: {
+      function: {
+        handler: "packages/functions/src/summarize_text.part",
+        runtime: "python3.11",
+        timeout: "2 minutes",
+        permissions: ["sagemaker", "s3", "polly"],
+      },
+      events: ["object_created"],
+      filters: [{ suffix: ".summary" }],
+    },
   });
 
   materialText.addNotifications(stack, {
