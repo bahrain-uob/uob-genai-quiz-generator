@@ -92,7 +92,6 @@ export function CoreStack({ stack }: StackContext) {
         handler: "packages/functions/src/process_image.lambda_handler",
         runtime: "python3.11",
         permissions: ["s3", "textract"],
-        timeout: "2 minutes",
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
         },
@@ -104,7 +103,6 @@ export function CoreStack({ stack }: StackContext) {
       function: {
         handler: "packages/functions/src/process_image.lambda_handler",
         runtime: "python3.11",
-        timeout: "2 minutes",
         permissions: ["s3", "textract"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -117,7 +115,6 @@ export function CoreStack({ stack }: StackContext) {
       function: {
         handler: "packages/functions/src/process_image.lambda_handler",
         runtime: "python3.11",
-        timeout: "2 minutes",
         permissions: ["s3", "textract"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
