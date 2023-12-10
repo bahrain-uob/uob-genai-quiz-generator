@@ -71,24 +71,22 @@ def partition(text):
 
 
 def convert_text_to_speech(text):
-    polly_client = boto3.client('polly',region_name="me-south-1")
+    polly_client = boto3.client("polly")
 
     response = polly_client.synthesize_speech(
-        Text=text,
-        OutputFormat='mp3',
-        VoiceId='Joanna',
-        LanguageCode='en-US'
+        Text=text, OutputFormat="mp3", VoiceId="Joanna", LanguageCode="en-US"
     )
     return response["AudioStream"].read()
 
-def part(event,context):
+
+def audio(event, context):
     bucket_name = event["Records"][0]["s3"]["bucket"]["name"]
     object_key = urllib.parse.unquote_plus(event["Records"][0]["s3"]["object"]["key"])
     response = S3.get_object(Bucket=bucket_name, Key=object_key)
     summary = response["Body"].read().decode("utf-8")
 
     chunk_size = 1000
-    chunks = [summary[i:i+chunk_size] for i in range(0, len(summary), chunk_size)]
+    chunks = [summary[i : i + chunk_size] for i in range(0, len(summary), chunk_size)]
     audio_streams = []
     for chunk in chunks:
         audio_stream = convert_text_to_speech(chunk)
@@ -96,10 +94,5 @@ def part(event,context):
     concatenated_audio = b"".join(audio_streams)
     audio_fileobj = BytesIO(concatenated_audio)
 
-    s3_client = boto3.client("s3", region_name="me-south-1")
+    S3.put_object(Body=audio_fileobj, Bucket=bucket_name, Key=object_key + ".mp3")
 
-    s3_client.put_object(
-        Body=audio_fileobj,
-        Bucket=bucket_name,
-        Key=object_key+".mp3"
-    )

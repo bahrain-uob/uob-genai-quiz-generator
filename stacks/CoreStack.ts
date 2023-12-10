@@ -128,7 +128,7 @@ export function CoreStack({ stack }: StackContext) {
     },
     summary_to_audio: {
       function: {
-        handler: "packages/functions/src/summarize_text.part",
+        handler: "packages/functions/src/summarize_text.audio",
         runtime: "python3.11",
         timeout: "2 minutes",
         permissions: ["sagemaker", "s3", "polly"],
