@@ -26,6 +26,16 @@ export function ImageBuilderForCodeCatalyst({ stack, app }: StackContext) {
         'utf8'
       )
   });
+
+  const dockerComponenet = new imagebuilder.CfnComponent(stack, "DockerComponenet", {
+    name: app.logicalPrefixedName("Docker"),
+    platform: "Linux",
+    version: "1.0.2",
+    data: fs.readFileSync(
+        path.resolve('.codecatalyst/imagebuilder/docker.yaml'),
+        'utf8'
+      )
+  });
   
   const ecrRepoForImageBuilderCodeCatalyst = new ecr.Repository(stack, "EcrRepoForImageBuilderCodeCatalyst")
 
@@ -36,6 +46,9 @@ export function ImageBuilderForCodeCatalyst({ stack, app }: StackContext) {
       },
       {
         componentArn : nodejsComponenet.attrArn,
+      },
+      {
+        componentArn : dockerComponenet.attrArn,
       }
     ],
     containerType: "DOCKER",
@@ -46,7 +59,7 @@ export function ImageBuilderForCodeCatalyst({ stack, app }: StackContext) {
       repositoryName: ecrRepoForImageBuilderCodeCatalyst.repositoryName,
       service : "ECR"
     },
-    version: "2.0.0"
+    version: "2.1.2"
   })
 
   const instanceProfileForImageBuilder = new iam.InstanceProfile(stack, "InstanceProfileForImageBuilder", {
