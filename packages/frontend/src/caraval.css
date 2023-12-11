@@ -505,6 +505,8 @@
 
 .end-game .header {
   padding: 50px;
+  padding-bottom: 0px;
+  margin-bottom: -60px;
 }
 
 .end-game .header a {
