@@ -31,7 +31,7 @@ Actions:
         - Run: ./.codecatalyst/scripts/sst_deploy.sh
       Container:
         Registry: ECR
-        Image: 407248890687.dkr.ecr.us-west-2.amazonaws.com/devops-uob-genai-quiz-generator-imagebuilderforcodecatalyst-ecrrepoforimagebuildercodecatalystbf634ba6-zgehmpgd3kj3:devops-uob-genai-quiz-generator-amazonlinux2023withgit-2.0.0-1
+        Image: 407248890687.dkr.ecr.us-west-2.amazonaws.com/devops-uob-genai-quiz-generator-imagebuilderforcodecatalyst-ecrrepoforimagebuildercodecatalystbf634ba6-zgehmpgd3kj3:2.1.2-1
     Compute:
       Type: EC2
     Environment:
