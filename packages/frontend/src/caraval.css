@@ -505,6 +505,8 @@
 
 .end-game .header {
   padding: 50px;
+  padding-bottom: 0px;
+  margin-bottom: -60px;
 }
 
 .end-game .header a {
@@ -513,6 +515,7 @@
   padding: 15px 20px;
   font-weight: 200;
   transition: 3s ease-in;
+  padding-bottom: 0px;
 
   &:hover {
     animation: color 9s infinite linear;
