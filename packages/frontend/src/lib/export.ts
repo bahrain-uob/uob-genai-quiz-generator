@@ -31,6 +31,19 @@ export const exportKahoot = async (quiz: any) => {
     sheet.getCell(`H${cursor}`).value = mcq.answer_index + 1; // anwser index starting from 1
     cursor++;
   }
+
+  for (const tf of quiz.TfArr) {
+    sheet.getCell(`B${cursor}`).value = tf.question; // stem
+
+    let char = 67; // ascii C
+    sheet.getCell(`${String.fromCharCode(char++)}${cursor}`).value = "True";
+    sheet.getCell(`${String.fromCharCode(char++)}${cursor}`).value = "False";
+
+    sheet.getCell(`G${cursor}`).value = 15; // TODO: allow for setting variable time limit
+    sheet.getCell(`H${cursor}`).value = tf.answer ? 1 : 2;
+    cursor++;
+  }
+
   const buffer = await book.xlsx.writeBuffer();
   downloadBlob(new Blob([buffer]), `${quiz.name}-kahoot.xlsx`);
 };
