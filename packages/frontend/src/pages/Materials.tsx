@@ -93,19 +93,19 @@ function Materials() {
           contentLabel="Upload Material Modal"
           style={bg}
         >
-          <div className="x">
-            <FontAwesomeIcon
-              icon={faX}
-              onClick={() => {
-                setUploadModal(false);
-                window.location.reload();
-              }}
-              className="x-icon"
-              size="xl"
-              style={{ color: "#5c617f" }}
-            />
-          </div>
           <div className="modal-content">
+            <div className="x">
+              <FontAwesomeIcon
+                icon={faX}
+                onClick={() => {
+                  setUploadModal(false);
+                  window.location.reload();
+                }}
+                className="x-icon"
+                size="xl"
+                style={{ color: "#5c617f" }}
+              />
+            </div>
             <h1>Upload Course Content</h1>
             <div className="upload-container">
               <StorageManager
