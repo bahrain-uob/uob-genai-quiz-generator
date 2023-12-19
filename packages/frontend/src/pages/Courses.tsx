@@ -115,16 +115,16 @@ function CreateCourse(props: { updateCourses: any; isempty: boolean }) {
         style={bg}
         ariaHideApp={false}
       >
-        <div className="x">
-          <FontAwesomeIcon
-            icon={faX}
-            onClick={() => setModal(false)}
-            className="x-icon"
-            size="xl"
-            style={{ color: "#5c617f" }}
-          />
-        </div>
         <div className="modal-content">
+          <div className="x">
+            <FontAwesomeIcon
+              icon={faX}
+              onClick={() => setModal(false)}
+              className="x-icon"
+              size="xl"
+              style={{ color: "#5c617f" }}
+            />
+          </div>
           <h1>Create a New Course</h1>
           <div className="input-container">
             <TextField
@@ -133,7 +133,7 @@ function CreateCourse(props: { updateCourses: any; isempty: boolean }) {
               placeholder="ITCS444"
               inputStyles={{
                 backgroundColor: "white",
-                width: "30rem",
+                width: "70%",
                 boxShadow: "1px 1px 5px #c9c9c9",
                 borderRadius: "15px",
                 border: "none",
@@ -150,7 +150,7 @@ function CreateCourse(props: { updateCourses: any; isempty: boolean }) {
               placeholder="Mobile Application"
               inputStyles={{
                 backgroundColor: "white",
-                width: "30rem",
+                width: "70%",
                 boxShadow: "1px 1px 5px #c9c9c9",
                 borderRadius: "15px",
                 border: "none",
@@ -170,7 +170,7 @@ function CreateCourse(props: { updateCourses: any; isempty: boolean }) {
 }
 const bg = {
   content: {
-    background: "#f5efec",
+    background: "transparent",
     borderRadius: "15px",
     border: "none",
   },
