@@ -184,16 +184,16 @@ function Homepage() {
               contentLabel="Upload Material Modal"
               style={bg}
             >
-              <div className="x">
-                <FontAwesomeIcon
-                  icon={faX}
-                  onClick={closeUploadModal}
-                  className="x-icon"
-                  size="xl"
-                  style={{ color: "#5c617f" }}
-                />
-              </div>
               <div className="modal-content">
+                <div className="x">
+                  <FontAwesomeIcon
+                    icon={faX}
+                    onClick={closeUploadModal}
+                    className="x-icon"
+                    size="xl"
+                    style={{ color: "#5c617f" }}
+                  />
+                </div>
                 <h1>Upload Course Content</h1>
                 <form>
                   <div className="select-container">
@@ -208,6 +208,8 @@ function Homepage() {
                           value={course.id}
                         >
                           {course.code}
+                          {` - `}
+                          {course.name}
                         </option>
                       ))}
                     </select>
@@ -229,7 +231,7 @@ function Homepage() {
 
 const bg = {
   content: {
-    background: "#f5efec",
+    background: "transparent",
     borderRadius: "15px",
     border: "none",
   },

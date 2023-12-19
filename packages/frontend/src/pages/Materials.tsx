@@ -57,9 +57,9 @@ function Materials() {
             contentLabel="Delete course"
             style={bg}
           >
-            <div className="modal-container">
+            <div className="modal-container delete">
               <h1>
-                Are you sure you want to delete
+                Are you sure you want to delete {` `}
                 <strong>
                   {course_code} {course_name}
                 </strong>
@@ -93,19 +93,19 @@ function Materials() {
           contentLabel="Upload Material Modal"
           style={bg}
         >
-          <div className="x">
-            <FontAwesomeIcon
-              icon={faX}
-              onClick={() => {
-                setUploadModal(false);
-                window.location.reload();
-              }}
-              className="x-icon"
-              size="xl"
-              style={{ color: "#5c617f" }}
-            />
-          </div>
           <div className="modal-content">
+            <div className="x">
+              <FontAwesomeIcon
+                icon={faX}
+                onClick={() => {
+                  setUploadModal(false);
+                  window.location.reload();
+                }}
+                className="x-icon"
+                size="xl"
+                style={{ color: "#5c617f" }}
+              />
+            </div>
             <h1>Upload Course Content</h1>
             <div className="upload-container">
               <StorageManager
@@ -133,7 +133,7 @@ function Materials() {
 }
 const bg = {
   content: {
-    background: "#f5efec",
+    background: "transparent",
     borderRadius: "15px",
     border: "none",
   },

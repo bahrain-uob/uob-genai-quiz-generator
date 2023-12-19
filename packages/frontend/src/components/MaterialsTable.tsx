@@ -18,7 +18,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const quizMaterialsAtom = focusAtom(quizAtom, (optic) =>
-  optic.prop("materials"),
+  optic.prop("materials")
 );
 
 function MaterialsTable({
@@ -47,7 +47,7 @@ function MaterialsTable({
       `${userId}/${courseId}/materials/`,
       {
         pageSize: 1000,
-      },
+      }
     );
     const prefix_len = userId.length + courseId.length + 9 + 3;
     const results = response.map((obj) => {
@@ -220,18 +220,20 @@ function MaterialsTable({
                     <>
                       <details style={{ textAlign: "left" }}>
                         <summary>{material.key}</summary>
-                        <button onClick={() => downloadSummary(index)}>
-                          Download Summary
-                        </button>
-                        <FontAwesomeIcon
-                          style={{
-                            cursor: "pointer",
-                            color: "#4a4e69",
-                          }}
-                          icon={faVolumeHigh}
-                          size="xl"
-                          onClick={() => handleAudio(index)}
-                        />
+                        <div className="summary-container">
+                          <button onClick={() => downloadSummary(index)}>
+                            Download Summary
+                          </button>
+                          <FontAwesomeIcon
+                            style={{
+                              cursor: "pointer",
+                              color: "#4a4e69",
+                            }}
+                            icon={faVolumeHigh}
+                            size="xl"
+                            onClick={() => handleAudio(index)}
+                          />
+                        </div>
                       </details>
                     </>
                   )}
