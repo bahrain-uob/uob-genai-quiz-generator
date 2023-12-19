@@ -1040,6 +1040,15 @@ input[type="number"] {
   margin-top: 10%;
 }
 
+.modal-container.delete {
+  background: #f2e9e4;
+  width: 60%;
+  margin: auto;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 1px 1px 10px #c3c3c3;
+}
+
 .modal-container h1 {
   text-align: center;
   max-width: 600px;
