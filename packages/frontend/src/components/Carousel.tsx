@@ -44,8 +44,8 @@ function Carousel() {
               }}
             >
               You can seamlessly upload course materials for future reference
-              for generating quizzes. You can generate summaries for the
-              uploaded materials, providing the option to download these
+              for generating quizzes. Summaries of the uploaded materials are
+              automatically generated, providing the option to download these
               summaries. An auditory experience is available, allowing you to
               listen to the generated summaries.
             </p>
@@ -146,9 +146,8 @@ function Carousel() {
               }}
             >
               you may fine-tune the settings of your quizzes with utmost
-              precision. You can specify the number of quiz versions and control
-              the distribution of different question types according to your
-              preferences.
+              precision. You can control the distribution of different question
+              types according to your preferences.
             </p>
           </div>
         </div>
