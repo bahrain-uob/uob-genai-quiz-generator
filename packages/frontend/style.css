@@ -1174,11 +1174,9 @@ details button {
   padding: 0.75em 1.6em;
   font-size: small;
   border: none;
-  margin: 0.5rem 0 0 1rem;
+  /* margin: 0.5rem 0 0 1rem; */
   border-radius: 7px;
   cursor: pointer;
-  animation-name: slideToRight;
-  animation-duration: 1s;
   box-shadow: 1px 1px 2px #8e8e8e;
   transform: scale(0.95);
   transition: box-shadow 0.5s, transform 0.5s;
@@ -1190,9 +1188,17 @@ details button {
   }
 }
 
+details .summary-container {
+  animation-name: slideToRight;
+  animation-duration: 1s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
 @keyframes slideToRight {
   from {
-    margin-left: 20%;
+    margin-left: 6%;
     width: auto;
   }
   to {
