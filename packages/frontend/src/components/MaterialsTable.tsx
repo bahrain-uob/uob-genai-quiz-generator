@@ -81,6 +81,7 @@ function MaterialsTable({
     const key = `${userId}/${courseId}/materials/${name}`;
     toast("Download is in progress", { type: "info" });
     const result = await Storage.get(key, { download: true });
+    // @ts-ignore
     downloadBlob(await result.Body!.blob(), name);
   };
 
@@ -92,6 +93,7 @@ function MaterialsTable({
       const result = await Storage.get(key, {
         download: true,
       });
+      // @ts-ignore
       downloadBlob(await result.Body!.blob(), name + ".txt");
     } catch (err) {
       toast("This might take a while, try again later", {
@@ -138,6 +140,7 @@ function MaterialsTable({
       download: true,
     });
 
+    // @ts-ignore
     const audioBlob = await result.Body?.blob();
     if (audioBlob) {
       const audio = new Audio(URL.createObjectURL(audioBlob));

@@ -311,6 +311,7 @@ function Quiz(props: { name: string; courseId: string; date: string }) {
       const userId = await getUserId();
       const key = `${userId}/${props.courseId}/quizzes/${props.name}.json`;
       const response = await Storage.get(key, { download: true });
+      // @ts-ignore
       const fetchedQuiz = JSON.parse(await response.Body!.text());
       setQuiz(fetchedQuiz);
     };
