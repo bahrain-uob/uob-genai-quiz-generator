@@ -28,10 +28,12 @@ function FillBlankQuestionsSetup(props: { inFlight: any }) {
   const [maybeGen, setMaybeGen] = useState({});
 
   // generating question using AI, MAGIC
+  const MAX_INFLIGHT_REQUESTS = 3;
   useEffect(() => {
-    if (props.inFlight.current) return;
-    if (gArr.length + sArr.length < no_questions) {
-      props.inFlight.current = true;
+    if (gArr.length + sArr.length >= no_questions) return;
+    for (let i = 0; i < no_questions - (gArr.length + sArr.length + props.inFlight.current); i++) {
+      if (props.inFlight.current >= MAX_INFLIGHT_REQUESTS) continue;
+      props.inFlight.current += 1;
       (async () => {
         try {
           const question = await API.post("api", "/fib", {
@@ -40,12 +42,14 @@ function FillBlankQuestionsSetup(props: { inFlight: any }) {
               course_id: courseId,
             },
           });
+          props.inFlight.current -= 1;
           generatedDispatch({
             type: "insert",
             value: { id: crypto.randomUUID(), ...question },
           });
-        } catch {}
-        props.inFlight.current = false;
+        } catch {
+          props.inFlight.current -= 1;
+        }
         setMaybeGen({});
       })();
     }

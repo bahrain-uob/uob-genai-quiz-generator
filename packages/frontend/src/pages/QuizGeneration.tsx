@@ -23,7 +23,7 @@ function Quizzes() {
   const quiz = useAtomValue(quizAtom);
   const [stepNo, setStepNo] = useAtom(stageAtom);
   const courseId = useAtomValue(courseIdAtom);
-  const inFlight = useRef(false);
+  const inFlight = useRef(0);
 
   const navigate = useNavigate();
   const saveQuiz = async () => {
