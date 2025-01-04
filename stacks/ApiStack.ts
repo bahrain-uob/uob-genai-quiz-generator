@@ -21,7 +21,7 @@ export function ApiStack({ stack }: StackContext) {
     defaults: {
       authorizer: "jwt",
       function: {
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["sagemaker", "s3"],
         environment: {
           TEXT_BUCKET: materialText.bucketName,
@@ -40,14 +40,14 @@ export function ApiStack({ stack }: StackContext) {
       "GET /courses": {
         function: {
           handler: "packages/api/src/courses.get",
-          runtime: "nodejs18.x",
+          runtime: "nodejs22.x",
           bind: [coursesTable],
         },
       },
       "POST /courses": {
         function: {
           handler: "packages/api/src/courses.post",
-          runtime: "nodejs18.x",
+          runtime: "nodejs22.x",
           bind: [coursesTable],
         },
       },
@@ -55,7 +55,7 @@ export function ApiStack({ stack }: StackContext) {
       "DELETE /courses": {
         function: {
           handler: "packages/api/src/courses.del",
-          runtime: "nodejs18.x",
+          runtime: "nodejs22.x",
           bind: [coursesTable],
         },
       },

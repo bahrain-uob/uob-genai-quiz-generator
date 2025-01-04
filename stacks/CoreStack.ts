@@ -31,7 +31,7 @@ export function CoreStack({ stack }: StackContext) {
     pdf: {
       function: {
         handler: "packages/functions/src/process_pdf.handler",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -43,7 +43,7 @@ export function CoreStack({ stack }: StackContext) {
     docx: {
       function: {
         handler: "packages/functions/src/process_docx.handler",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -55,7 +55,7 @@ export function CoreStack({ stack }: StackContext) {
     pptx: {
       function: {
         handler: "packages/functions/src/process_pptx.handler",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -67,7 +67,7 @@ export function CoreStack({ stack }: StackContext) {
     mp4: {
       function: {
         handler: "packages/functions/src/process_video.lambda_handler",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3", "transcribe"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -79,7 +79,7 @@ export function CoreStack({ stack }: StackContext) {
     txt: {
       function: {
         handler: "packages/functions/src/process_txt.handler",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -91,7 +91,7 @@ export function CoreStack({ stack }: StackContext) {
     png: {
       function: {
         handler: "packages/functions/src/process_image.lambda_handler",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3", "textract"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -103,7 +103,7 @@ export function CoreStack({ stack }: StackContext) {
     jpeg: {
       function: {
         handler: "packages/functions/src/process_image.lambda_handler",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3", "textract"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -115,7 +115,7 @@ export function CoreStack({ stack }: StackContext) {
     jpg: {
       function: {
         handler: "packages/functions/src/process_image.lambda_handler",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3", "textract"],
         environment: {
           OUTPUT_BUCKET: materialText.bucketName,
@@ -127,7 +127,7 @@ export function CoreStack({ stack }: StackContext) {
     summary_to_audio: {
       function: {
         handler: "packages/functions/src/summarize_text.audio",
-        runtime: "python3.11",
+        runtime: "python3.12",
         timeout: "2 minutes",
         permissions: ["sagemaker", "s3", "polly"],
       },
@@ -141,7 +141,7 @@ export function CoreStack({ stack }: StackContext) {
     summarize: {
       function: {
         handler: "packages/functions/src/summarize_text.summarize",
-        runtime: "python3.11",
+        runtime: "python3.12",
         timeout: "2 minutes",
         permissions: ["sagemaker", "s3", "polly"],
         environment: {
@@ -159,7 +159,7 @@ export function CoreStack({ stack }: StackContext) {
     json: {
       function: {
         handler: "packages/functions/src/process_json.extract_transcript",
-        runtime: "python3.11",
+        runtime: "python3.12",
         permissions: ["s3"],
       },
       events: ["object_created"],
