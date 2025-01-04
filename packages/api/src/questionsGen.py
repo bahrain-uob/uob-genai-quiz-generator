@@ -5,47 +5,61 @@ import re
 import random
 import math
 
-endpoint_name = "jumpstart-dft-meta-textgeneration-llama-2-13b"  # need to make environ
-sm_client = boto3.client("sagemaker-runtime", region_name="us-east-1")
+bedrock_runtime = boto3.client("bedrock-runtime", region_name="us-east-1")
 s3 = boto3.client("s3")
 TEXT_BUCKET = os.environ["TEXT_BUCKET"]
 
 
-# def create_prompt(instruction: str, user: str):
-#     p = "<s>[INST] <<SYS>>\n"
-#     p += instruction
-#     p += "\n<</SYS>>\n\n"
-#     p += user
-#     return p
+def invoke_model(body, model_id, accept, content_type):
+    """
+    Invokes Amazon bedrock model to run an inference
+    using the input provided in the request body.
+
+    Args:
+        body (dict): The invokation body to send to bedrock
+        model_id (str): the model to query
+        accept (str): input accept type
+        content_type (str): content type
+    Returns:
+        Inference response from the model.
+    """
+
+    try:
+        response = bedrock_runtime.invoke_model(
+            body=json.dumps(body),
+            modelId=model_id,
+            accept=accept,
+            contentType=content_type,
+        )
+
+        return response
+
+    except Exception as e:
+        print(f"Couldn't invoke {model_id}")
+        raise e
 
 
-def create_prompt(s: str):
-    return "<s>[INST] {s} [/INST]".replace("{s}", s)
+def create(prompt_data):
+    messages = [{"role": "user", "content": prompt_data}]
 
+    body = {
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 500,
+        "messages": messages,
+    }
 
-def create(prompt):
-    response = sm_client.invoke_endpoint(
-        EndpointName=endpoint_name,
-        ContentType="application/json",
-        Body=json.dumps(
-            {
-                "inputs": create_prompt(prompt),
-                "parameters": {
-                    "max_new_tokens": 128,
-                    "top_p": 0.9,
-                    # "temperature": random.uniform(0.2, 0.3),
-                    "temperature": 0.9,
-                    "return_full_text": False,
-                },
-            }
-        ),
-        CustomAttributes="accept_eula=true",
-    )
-    result = json.loads(response["Body"].read().decode())[0]["generated_text"]
-    print(result)
-    parse = re.search(r"{\n(.*?)}", result, re.DOTALL).group(0)
-    print(parse)
-    return json.loads(parse)
+    modelId = "us.anthropic.claude-3-5-sonnet-20240620-v1:0"  # change this to use a different version from the model provider
+    accept = "application/json"
+    contentType = "application/json"
+
+    response = invoke_model(body, modelId, accept, contentType)
+    response_body = json.loads(response.get("body").read())
+
+    resp_text = response_body["content"][0]["text"]
+    resp_text = re.search(r"{\n(.*?)}", resp_text, re.DOTALL).group(0)
+    resp_text = json.loads(resp_text)
+
+    return resp_text
 
 
 def mcq(event, context):
@@ -61,19 +75,19 @@ def mcq(event, context):
         cutted_text.extend(partition(topic))
     topic = cutted_text[random.randint(0, len(cutted_text) - 1)]
     prompt = """
-    i want you to generate 1 MCQ question about this :
+    I want you to generate 1 MCQ question about this:
     {{topic}}
 
-    The output should be a code snippet formatted in the following schema(JSON) with only one correct answer:
+    The output should be a code snippet formatted in the following schema (JSON) with only one correct answer:
     {
       "question": string, // the question
       "choices": string, // an array containg all the choices of the question, with only one correct choice, the others should be wrong
-      "correct_answer": string // the correct answer from the choices, should be the answer itself, not the index of the choice, 
+      "answer_index": number // the correct answer from the choices, should be the index of the answer 
     }
     """
     prompt = prompt.replace("{{topic}}", topic)
     question = create(prompt)
-    question["answer_index"] = question["choices"].index(question["correct_answer"])
+    print(question)
     return question
 
 
@@ -90,13 +104,13 @@ def tf(event, context):
         cutted_text.extend(partition(topic))
     topic = cutted_text[random.randint(0, len(cutted_text) - 1)]
     prompt = """ 
-    i want you to generate 1 TRUE or FAlSE question about this :
+    I want you to generate 1 TRUE or FAlSE question about this :
     {{topic}}
 
-    The output should be a code snippet formatted in the following schema(JSON) with only one correct answer
+    The output should be a code snippet formatted in the following schema (JSON) with only one correct answer
     {
       "question": string, // the true or false question
-      "answer": boolean// the answer of the question (either true or false)
+      "answer": boolean // the answer of the question (either true or false)
     }
     """
     prompt = prompt.replace("{{topic}}", topic)
@@ -117,10 +131,10 @@ def fib(event, context):
         cutted_text.extend(partition(topic))
     topic = cutted_text[random.randint(0, len(cutted_text) - 1)]
     prompt = """
-    i want you to generate 1 fill-in-the-blank question about this : 
+    I want you to generate 1 fill-in-the-blank question about this: 
     {{topic}}
 
-    The output should be a code snippet formatted in the following schema(JSON) with one blank to be filled:
+    The output should be a code snippet formatted in the following schema (JSON) with one blank to be filled:
     {
       "question": string, // the question with 1 blank to be filled
       "answer": string // the correct answer to fill the blank 

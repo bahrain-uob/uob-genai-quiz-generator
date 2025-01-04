@@ -1,6 +1,7 @@
 import { Api, StackContext, Table, WebSocketApi, use } from "sst/constructs";
 import { AuthStack } from "./AuthStack";
 import { CoreStack } from "./CoreStack";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 export function ApiStack({ stack }: StackContext) {
   const { auth } = use(AuthStack);
@@ -25,6 +26,11 @@ export function ApiStack({ stack }: StackContext) {
         environment: {
           TEXT_BUCKET: materialText.bucketName,
         },
+        initialPolicy: [new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ["bedrock:InvokeModel*"],
+          resources: ["*"],
+        }) as any]
       },
     },
     routes: {
