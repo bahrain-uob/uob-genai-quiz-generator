@@ -1,4 +1,5 @@
 import { Bucket, StackContext, Table } from "sst/constructs";
+import * as iam from "aws-cdk-lib/aws-iam";
 
 export function CoreStack({ stack }: StackContext) {
   const coursesTable = new Table(stack, "Courses", {
@@ -146,6 +147,11 @@ export function CoreStack({ stack }: StackContext) {
         environment: {
           MATERIAL_BUCKET: materialBucket.bucketName,
         },
+        initialPolicy: [new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: ["bedrock:InvokeModel*"],
+          resources: ["*"],
+        }) as any]
       },
       events: ["object_created"],
       filters: [{ suffix: ".txt" }],
