@@ -57,6 +57,10 @@ EduCraft leverages cutting-edge technologies to deliver a seamless and powerful 
 - API Gateway: Seamless API and WebSocket management
 - Cognito: Effortless and secure user authentication with granular AWS permissions
 
+## Cloud Architecture
+
+![Cloud Architecture of Educraft](/docs/cloud-architecture.svg)
+
 ## Development
 
 After cloning run
